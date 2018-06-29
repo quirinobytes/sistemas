@@ -32,9 +32,9 @@ console.log("° Horário de inicio: "+ String(start).grey+"............. ".grey 
 veiculos = {};
 
 //array para armazenar o valor dos veiculos realtime
-veiculos['GXC4180'] = {'placa':'GXC4180' , 'marca':'GM', cor:'branco',  'entrada':1530025997691};
-veiculos['HIN2807'] = {'placa':'HIN2807' , 'marca':"FIAT", cor:'preto', 'entrada':1530201700000};
-veiculos['ABC2807'] = {'placa':'ABC2807' , 'marca':"FIAT", cor:'preto', 'entrada':1530163007691};
+//veiculos['GXC4180'] = {'placa':'GXC4180' , 'marca':'GM', cor:'silver',  'entrada':1530025997691};
+//veiculos['HIN2807'] = {'placa':'HIN2807' , 'marca':"FIAT", cor:'black', 'entrada':1530201700000};
+//veiculos['COM0102'] = {'placa':'ABC2807' , 'marca':"FIAT", cor:'green', 'entrada':1530163007691};
 
 //###############		/ 			###############################
 app.get ('/',function (req,res) {

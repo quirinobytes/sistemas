@@ -1,9 +1,9 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-var port = 2018;
+var port = 2020;
+var ip = '192.168.200.1';
 
 var app = module.exports = express();
-var ip = '127.0.0.1';
 
 app.listen(port,ip);
 
