@@ -117,7 +117,7 @@ td {
 		return Math.abs(Math.round(diff));
 	  	}
 
-
+		// retorna TRUE se placa valida. e FALSE se invalida.
 		$scope.validaPlaca = function(){	
 		var erro = 0; //Erros	
 		var msg = "";
@@ -132,7 +132,7 @@ td {
 		 				er.lastIndex = 0;
 		 				pl = $scope.veiculo.placa;
 		 				if (!er.test(pl)){	
-		 		msg = msg + "Placa inválida. Uma placa tem que ter 3 letras e 4 números.\n";
+		 		msg = msg + "Placa inválida. A placa tem que ter 3 letras e 4 números.";
 		 		erro = erro + 1;
 		 	}
 		 }
@@ -144,9 +144,6 @@ td {
 				return false;
 			 }
 		}
-
-
-
 
 
 		//funcao que calcula qtos tickets de 30minutos será necessário
@@ -184,7 +181,7 @@ td {
 	<div class="jumbotron jumbotron-fluid">
 			<h3> {{titulo}} &nbsp; &nbsp; &nbsp; | &nbsp;  &nbsp; &nbsp; Total {{total}}</h3> 
 			<hr>
-			<input id="txtPlaca" style="width: 100px; height: 30px;" value={{veiculo.placa}} ng-model="veiculo.placa" ng-readonly="!($placa == eEditable)" ng-dblclick="eEditable = $placa ; " class="ng-pristine ng-valid ng-touched" readonly="readonly" ng-blur="validaPlaca();" >
+			<input id="txtPlaca" style="width: 100px; height: 30px;" value="{{ veiculo.placa | uppercase }}" ng-model="veiculo.placa" ng-readonly="!($placa == eEditable)" ng-dblclick="eEditable = $placa ; " class="ng-pristine ng-valid ng-touched" readonly="readonly" ng-blur="validaPlaca();" >
 			<select style="width: 100px; height: 30px;" ng-model='veiculo.cor' id='paraMudar' onClick="changeColor(this.value);">
 				<option style="background-color: red"    value='red'></option>
 				<option style="background-color: green"  value='green'></option>

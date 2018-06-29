@@ -7,7 +7,7 @@ var product = require('./models/product');
 var productController = require('./controllers/productController');
 const { spawn } = require('child_process');
 var fs = require("fs");
-var faturamento=0, total=3;
+var faturamento=0, total=0;
 var path = require('path');
 
 // ### CONFIG ###
@@ -32,9 +32,9 @@ console.log("° Horário de inicio: "+ String(start).grey+"............. ".grey 
 veiculos = {};
 
 //array para armazenar o valor dos veiculos realtime
-veiculos['GXC4180'] = {'placa':'GXC4180' , 'marca':'GM', 'cor':'silver',  'valor':0 ,  'entrada':1530025997691};
-veiculos['HIN2807'] = {'placa':'HIN2807' , 'marca':"FIAT", 'cor':'black', 'valor':0 ,  'entrada':1530201700000};
-veiculos['COM0102'] = {'placa':'COM0102' , 'marca':"VW", 'cor':'green', 'valor':0 ,  'entrada':1530163007691};
+//veiculos['GXC4180'] = {'placa':'GXC4180' , 'marca':'GM', 'cor':'silver',  'valor':0 ,  'entrada':1530025997691};
+//veiculos['HIN2807'] = {'placa':'HIN2807' , 'marca':"FIAT", 'cor':'black', 'valor':0 ,  'entrada':1530201700000};
+//veiculos['COM0102'] = {'placa':'COM0102' , 'marca':"VW", 'cor':'green', 'valor':0 ,  'entrada':1530163007691};
 
 //###############		/ 			###############################
 app.get ('/',function (req,res) {
