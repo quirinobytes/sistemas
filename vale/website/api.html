@@ -1,0 +1,117 @@
+<!DOCTYPE HTML>
+<html>
+
+	<title> ibSYM </title>
+	<link rel="stylesheet" type="text/css" href="lib/bootstrap.css">
+	<style type="text/css">
+		.jumbotron{
+			width: auto;
+			margin-left: auto;
+			margin-right: auto;
+			margin-top:20px;
+			text-align: center;
+			padding: 10px;
+		}
+		.container{
+			margin-left: auto;
+			margin-right: auto;
+			margin-top:20px;
+			text-align: center;
+			padding: 10px;
+		}
+		.table{ 
+			width: 700px;
+			margin-top:20px;
+			margin-right: auto;
+			margin-left: auto;
+			background-color: light-blue;
+			text-align: justify;
+		}
+	</style>
+
+<script>
+	var now = new Date();
+	var day = ("0" + now.getDate()).slice(-2);
+	var month = ("0" + (now.getMonth() + 1)).slice(-2);
+	var today = now.getFullYear() + "-" + (month) + "-" + (day);
+</script>
+
+</script>
+
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<META HTTP-EQUIV="refresh" CONTENT="10">
+    <title>ibSYM - Bolsa Cognitive</title>
+</head>
+
+<body>
+
+<div class='container'> 
+<table class='jumbotron'>
+	<tr><td>
+		<section>
+			<article>
+				<header>
+				<h2> ibSYM - Cognitive Stock API ® v.1.3 </h2>
+				<h4> <script> document.write(today) </script>  - <a href="http://bluehack.org">BlueHack</a>
+				</header>
+			</article>
+		</section><br>
+	  <h4>Nossa inteligencia conta com a inteligência cognitiva dos sistemas.</h4>
+    </td></tr>
+</table>
+
+<hr  class="my-2">
+
+<div class='container'>
+   <h2>Documentação, API e Robo Trader</h2>
+
+	<table class="table table-striped table-bordered">
+		<tr>
+			<th>Metodos	</td>
+			<th>Verbo</td>
+			<th>Descrição:</td>
+		</tr>
+		<tr>
+			<td> /total/</td>
+			<td> GET </td>
+			<td> Lista o valor total negociado na bolsa.</td>
+		</tr>
+		<tr>
+			<td> /comprar/</td>
+			<td> POST (nome:string,valor:float,quantidade:integer,token:string)</td>
+			<td> Comprar as ações.</td>
+		</tr>
+		<tr>
+			<td> /vender/</td>
+			<td> POST (nome:string,valor:float,quantidade:integer,token:string)</td>
+			<td> Vender as ações.</td>
+		</tr>
+		<tr>
+			<td> /listar/</td>
+			<td> GET /</td>
+			<td> Lista o valor das ações durante o pregão.</td>
+		</tr>
+
+		<tr>
+			<td> /</td>
+			<td> GET </td>
+			<td> Url Base do Site.</td>
+		</tr>
+
+	</table>
+
+			 <a href=../ > <button type="button" class="btn btn-primary btn-lg">Voltar</button></a>
+</div>
+
+<footer align='center'>
+<br>
+<p>Copyright 2016 &nbsp; &nbsp; ® &nbsp; &nbsp; quirinobytes</p>
+</footer>
+
+
+
+</body>
+
+</html>

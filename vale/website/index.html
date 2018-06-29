@@ -1,0 +1,106 @@
+<!DOCTYPE HTML>
+<html>
+
+	<title> ibSYM </title>
+	<link rel="stylesheet" type="text/css" href="website/lib/bootstrap.css">
+	<style type="text/css">
+		.jumbotron{
+			width: auto;
+			margin-left: auto;
+			margin-right: auto;
+			margin-top:20px;
+			text-align: center;
+			padding: 10px;
+		}
+		.list-group{
+			width: 400px;
+			margin-left: auto;
+			margin-right: auto;
+			margin-top:20px;
+			text-align: center;
+			padding: 10px;
+		}
+		.container{
+			margin-left: auto;
+			margin-right: auto;
+			margin-top:20px;
+			text-align: center;
+			padding: 10px;
+		}
+		.table{ 
+			margin-top:20px;
+			background-color: light-blue;
+			text-align: center;
+		}
+	</style>
+
+<script>
+	var now = new Date();
+	var day = ("0" + now.getDate()).slice(-2);
+	var month = ("0" + (now.getMonth() + 1)).slice(-2);
+	var today = now.getFullYear() + "-" + (month) + "-" + (day);
+</script>
+
+<script>
+   function loadDoc() {
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+		  if (this.readyState == 4 && this.status == 200) {
+		   document.getElementById("totalajax").innerHTML = this.responseText;
+		  }
+		};
+		xhttp.open("GET", "http://189.55.194.115:3000/total", true);
+		xhttp.send();
+   }
+</script>
+
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<META HTTP-EQUIV="refresh" CONTENT="10">
+    <title>ibSYM - Bolsa Cognitive</title>
+</head>
+
+<body>
+
+<div class='container'> 
+<table class='jumbotron'>
+	<tr><td>
+		<section>
+			<article>
+				<header>
+				<h2> Vale - Estacionamento ® v.0.1 </h2>
+				<h4> <script> document.write(today) </script>  - <a href="http://bluehack.org">BlueHack</a>
+				</header>
+			</article>
+		</section><br>
+	  <h4>Sistema de estacionamento.</h4>
+    </td></tr>
+</table>
+
+<hr  class="my-2">
+
+<div class='container'>
+   <h2>Documentação, API e Robo Trader</h2>
+
+	   <div class="list-group">
+		 <a href="/website/api.html" class="list-group-item ">Mensalista</a>
+		 <a href="/website/como-funciona.html" class="list-group-item ">Relatório Mensal</a>
+		 <a href="#" class="list-group-item disabled">Atrasados</a>
+	   </div>
+
+		<div id="website">
+		     <br>
+   			 <h2>Estacionar</h2> <h3 id="totalajax"></h3>
+			 <button type="button" class="btn btn-primary btn-lg" onclick="loadDoc()">Volume</button> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+			 <a href='./website/vale.html'> <button type="button" class="btn btn-primary btn-lg" >Placa </button> </a>
+	   </div>
+</div>
+
+<footer align='center'>
+<br>
+<p>Copyright 2016 &nbsp; &nbsp; ® &nbsp; &nbsp; quirinobytes</p>
+</footer>
+
+</body>
+</html>

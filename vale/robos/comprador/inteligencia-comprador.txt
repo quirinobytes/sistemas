@@ -1,0 +1,10 @@
+
+
+
+
+Quando alta expressiva do minerio no dia anterior, e media movel abaixo dos
+ultimos 5 dias, quando a acao tiver historico de ter boas altas e quando
+acao tiver com volume acima da media no dia e no horario.
+quando volume subir muito nos ultimos 30 minutos e alta maior de 1.5%
+
+

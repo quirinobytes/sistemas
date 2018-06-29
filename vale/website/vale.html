@@ -1,0 +1,227 @@
+<html ng-app=SISTEMA>
+<head>
+	<title> Vale - Estacionamento</title>
+	<link rel="stylesheet" type="text/css" href="lib/bootstrap.css">
+	<style type="text/css">
+		.jumbotron{
+			width: 600px;
+			margin-left: auto;
+			margin-right: auto;
+			margin-top:20px;
+			text-align: center;
+			padding: 10px;
+		}
+		.carteira{
+		    background:#dddddc;
+			border-size:1px;
+			border-style:solid;
+			border-color:black;
+			margin-top:20px;
+		}		
+
+		.cotacoes{
+			font-size:small;
+		}		
+		.table{ 
+			margin-top:20px;
+			background-color: light-blue;
+		}
+		.form-control{
+			margin-bottom: 4px;
+		}
+		.selecionado{
+						background-color: #55AAFF;
+		}
+
+.highlight-red {
+       background-color: Tomato;
+}
+.highlight-green {
+       background-color: MediumSeaGreen ;
+}
+td {
+		-webkit-transition: 1s linear all;
+		transition: 1s linear all;
+		background-color: clear;
+		border-radius: 4px;
+}
+
+	</style>
+	<!-- ####  Incluindo os fontes #### -->	
+	<script id="angularScript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	
+	<script> 
+	var app = angular.module("SISTEMA", []);
+		angular.module("SISTEMA").controller("exibir",function($scope,$http,$interval){
+		angular.module("SISTEMA").run(function(editableOptions) { editableOptions.theme = 'bs3';});	
+			// TITULO E VERSAO DO PROGRAMA #############
+			$scope.eEditable = -1;	
+			$scope.titulo = "Vale Estacionamento"
+			$scope.faturamento=0;
+			$scope.cotacoes_array = [];
+			$scope.veiculos_array= [];
+			$scope.veiculo = [];
+			$scope.timestamp = new Date();
+			$scope.vezes30m = 0;
+
+			$scope.montadoras= [
+					{nome:"GM",tipo:"NACIONAL"},
+					{nome:"Fiat",tipo:"NACIONAL"},
+					{nome:"Ford",tipo:"NACIONAL"},
+					{nome:"VW",tipo:"NACIONAL"},
+					{nome:"Honda",tipo:"IMPORTADA"},
+					{nome:"Hyundai",tipo:"IMPORTADA"},
+					{nome:"Dodge",tipo:"IMPORTADA"},
+			];
+
+			$scope.cores = [
+					{nome:"Branco", tipo: "SOLIDAS", codigo:"white"},
+					{nome:"Preto", tipo: "SOLIDAS", codigo:"black"},
+					{nome:"Azul", tipo: "SOLIDAS", codigo:"blue"},
+					{nome:"Prata", tipo: "SOLIDAS", codigo:"silver"},
+					{nome:"Vermelho", tipo: "SOLIDAS", codigo:"red"},
+					{nome:"Verde", tipo: "SOLIDAS", codigo:"green"},
+					{nome:"Marron", tipo: "SOLIDAS", codigo:"brown"},
+			];
+
+
+			//################ ENTRADA DE VEICULOS
+			$scope.entrar = function(veiculo){
+						console.log(veiculo);
+						 $scope.retorno='';
+						 $http({
+								 method: 'POST',
+								 url: './../entrar',
+								 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+								 data: 'marca='+veiculo.marca+'&cor='+veiculo.cor+'&placa=' + veiculo.placa 
+						 }).success(function (response) { 
+									if (!response.Entrada) {
+										$scope.retorno = 'Erro: '+response.retorno;
+									}
+									else{
+										load_veiculos();
+										$scope.retorno = 'Entrada executada!';
+									} 
+							});
+			};
+	
+			//################ ENTRADA DE VEICULOS
+			$scope.sair = function(placa){
+						 $http({
+								 method: 'POST',
+								 url: './../sair',
+								 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+								 data: 'marca=GM&cor=branco&placa=' + placa 
+						 }).success(function (response) { 
+									if (!response.Saida) {
+										$scope.retorno = 'Erro: '+response.retorno;
+									}
+									else{
+										load_veiculos();
+										$interval(function(){ limpar_retorno(); },5000); 
+										$scope.retorno = 'Saida ok!';
+									} 
+							});
+			};
+
+		function limpar_retorno(){	$scope.retorno = ''; };
+
+		load_veiculos();
+		$interval(function(){ load_veiculos(); },5000);
+		function load_veiculos(){
+					$http.get('../listar').then(function(response){
+					$scope.timestamp = Date.now();
+					$scope.veiculos_array = response.data; });
+	    };
+	   
+	    load_total();
+		$interval(function(){ load_total(); },5000);
+		function load_total(){
+   				 	$http.get('../total').then(function(response){
+					$scope.total = response.data; });
+	    };
+	
+	$scope.diff_minutes = function (entrada) {
+		var agoraDate = new Date();
+		entradaDate = new Date(entrada);
+		var diff =(agoraDate.getTime() - entradaDate.getTime()) / 1000;
+		diff /= 60;
+		return Math.abs(Math.round(diff));
+  	}
+
+	$scope.tickets = function(minutos){
+		if (minutos > 30) {
+			$scope.vezes30m++;
+			return (1 + $scope.tickets(minutos-30));
+		}
+		
+		else if (minutos <= 30 ) { return 1; }
+	}
+
+	$scope.tempo = function(minutes){ 
+  		  var h = Math.floor(minutes / 60);
+		  var m = minutes % 60;
+		  h = h < 10 ? '0' + h : h;
+		  m = m < 10 ? '0' + m : m;
+		  return h + ':' + m;
+	}
+
+    $scope.cobrar = function(horas) {
+		var valor=0.0;
+		if ( horas > 0.5 )   valor = 4 * horas; 
+		else 				 valor = 2; 
+	    
+		return Math.ceil(valor);
+	};
+
+});
+   </script>
+</head>
+
+<body ng-controller="exibir">
+	<div class="jumbotron jumbotron-fluid">
+			<h3> {{titulo}} </h3>
+			Placa <input type="veiculo" style="width: 100px;" value={{veiculo.placa}} ng-model="veiculo.placa" ng-readonly="!($placa == eEditable)" ng-dblclick="eEditable = $placa ; " class="ng-pristine ng-valid ng-touched" readonly="readonly">
+			Cor	  <select ng-model='veiculo.cor' ng-options='cor.nome group by cor.tipo for cor in cores'>
+			   		  <option value='{{veiculo.cor}}'> cor </option>
+				  </select>
+			Marca  <select ng-model='veiculo.marca' ng-options='montadora.nome group by montadora.tipo for montadora in montadoras'>
+			   		  <option value='{{veiculo.marca}}'> marca </option>
+				  </select>
+			<button class="btn btn-success" ng-click="entrar(veiculo)"> Entrar </button>
+			<br>
+			<div class='container'>
+				<table magin-left='100px' class='table' ng-controller="exibir">
+					<tr>
+						<td> Estacionados: {{total}} </td>
+					  	<td> <font size="3" color="red"> {{ retorno }} </font> </td>
+					</tr>
+				</table>
+			</div>
+
+			<div class='container'> 
+				<table class='table table-striped'>
+				   <tr>
+					  <th> Placa   </th>
+					  <th> Entrada </th>
+					  <th> Tempo   </th>
+					  <th> Saída   </th>
+					  <th> </th>
+				  </tr>
+				<tr ng-repeat="veiculo in veiculos_array">
+					<td> {{veiculo.placa}} </td>
+					<td> {{veiculo.entrada | date: 'dd/MM/yy - hh:mm' }} </td>
+					<td> {{ tempo(diff_minutes(veiculo.entrada)) }}h </td>
+					<td> R$ {{ tickets(diff_minutes(veiculo.entrada)) * 2.00 | number:'2' }}  </td>
+					<td>  <button class="btn btn-danger btn-block" ng-click="sair(veiculo.placa)"> X </button>  </td>
+				</tr>
+				</table>
+			</div>
+
+			<br>
+			<!-- <button class="btn btn-danger" ng-click="ordemVenda(carteira_array)"> Fechamento </button> -->
+	   		<hr>
+	</div>
+</body>
+</html>

@@ -1,0 +1,18 @@
+{
+  "name": "robos",
+  "version": "1.0.0",
+  "description": "Robots",
+  "main": "vendedor.js",
+  "dependencies": {
+    "express": "^4.14.0",
+    "request": "^2.76.0",
+    "chance": "^1.0.4"
+   },
+
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "forever.sh node vendedor.js"
+  },
+  "author": "",
+  "license": "ISC"
+}

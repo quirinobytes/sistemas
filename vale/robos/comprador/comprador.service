@@ -1,0 +1,14 @@
+[Unit]
+Description=Robo Comprador
+Requires=docker.service
+After=bolsa.service docker.service mining.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+
+ExecStart=/usr/bin/docker run -d comprador
+#ExecStop=/usr/bin/docker stop -t 2 my-agario-server
+
+[Install]
+WantedBy=multi-user.target

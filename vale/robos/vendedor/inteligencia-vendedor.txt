@@ -1,0 +1,7 @@
+
+
+
+pode vender toda vez que ler indice do ibov em queda maior que 1% no ultimo 30minutos e
+dolar em alta maior que 5 centavos.
+
+

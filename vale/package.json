@@ -1,0 +1,24 @@
+{
+  "name": "Vale",
+  "version": "1.0.0",
+  "description": "Sistema de Estacionamento",
+  "main": "vale.js",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "chance": "^1.0.4",
+    "colors": "^1.1.2",
+    "express": "^4.14.0",
+    "mongoose": "^4.6.3",
+    "react": "16.4.0",
+    "request": "^2.76.0",
+	"crawler-js": "^2.0.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "test.js",
+    "start": "vale.js -v",
+    "load": "/root/sistemas/vale"
+  },
+  "author": "",
+  "license": "ISC"
+}
