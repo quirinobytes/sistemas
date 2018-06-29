@@ -3,8 +3,9 @@ var bodyParser = require('body-parser');
 var port = 2018;
 
 var app = module.exports = express();
+var ip = '127.0.0.1';
 
-app.listen(port);
+app.listen(port,ip);
 
 //Configurar o uso do body-parser para receber URL encoded
 app.use(bodyParser.urlencoded({extended:true}));

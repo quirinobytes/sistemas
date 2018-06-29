@@ -1,0 +1,155 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title></title>
+
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="icon" href="images/favicon.png">
+</head>
+
+<body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular.min.js"></script>
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootswatch/3.2.0/sandstone/bootstrap.min.css">
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+<script>
+var clienteApp = angular.module("ClienteApp", []);
+clienteApp.factory("$servicoGenerico", function($http, $q) {
+  function ajax(url, parametros, metodo) {
+    var requisicao = $http({
+      method: metodo,
+      url: url,
+      data: parametros
+    });
+
+    var promessa = requisicao.then(function(resposta) {
+        return (resposta.data);
+      },
+      function(resposta) {
+        return ($q.reject("Something went wrong"));
+      }
+    );
+    return promessa;
+  }
+  return ({
+    ajax: ajax
+  });
+});
+
+clienteApp.factory("$cliente", function($servicoGenerico) {
+  return {
+    consultarPorNomeTelefone: function(nome, telefone) {
+      var promessa = $servicoGenerico.ajax("<url consulta back-end>/" + nome + "/" + telefone, "", "<metodo consulta(POST, GET, ETC...)>");
+      return promessa;
+    }
+  };
+});
+
+clienteApp.controller("ClienteController", function($scope, $cliente) {
+  $scope.ordenacao = "nome";
+  $scope.ordenacaoReversa = "false";
+
+  $scope.consultar = function() {
+    /* Aqui simularia a consulta no back-end */
+    //$scope.cliente = $cliente.consultarPorNomeTelefone($scope.nome, $scope.telefone);
+
+    /* Colocando um mock para simular comportamento */
+    $scope.cliente = [{
+      nome: "SSA Comunicações",
+      telefone: "(47)8899-6788",
+      cidade: "Rio do Sul"
+    }, {
+      nome: "Argoville",
+      telefone: "(47)3465-5435",
+      cidade: "Joinville"
+    }, {
+      nome: "Brahma",
+      telefone: "(51)4367-9877",
+      cidade: "Joinville"
+    }, {
+      nome: "Antartica",
+      telefone: "(67)8977-6655",
+      cidade: "Blumenau"
+    }, {
+      nome: "Stackoverflow",
+      telefone: "(77)8644-3334",
+      cidade: "Jaraguá do Sul"
+    }];
+  };
+});
+
+</script>
+
+<div class="container" ng-app="ClienteApp" ng-controller="ClienteController">
+  <div class="form-group">
+    <div class="input-group">
+      <label>Nome:</label>
+      <input type="text" class="form-control" ng-model="nome">
+      <a href="#" class="btn btn-sucess btn-sm" ng-click="consultar();">Buscar</a>
+    </div>
+    <div class="input-group">
+      <label>Telefone:</label>
+      <input type="text" class="form-control" ng-model="telefone">
+      <a href="#" class="btn btn-sucess btn-sm" ng-click="consultar();">Buscar</a>
+    </div>
+  </div>
+
+  <br>
+  <div class="alert alert-info">
+    <p>Sort Type: {{ ordenacao }}</p>
+    <p>Sort Reverse: {{ ordenacaoReversa }}</p>
+    <p>Search Query: {{ filtro }}</p>
+  </div>
+  <div class="form-group">
+    <div class="input-group">
+      <div class="input-group-addon"><i class="fa fa-search"></i>
+      </div>
+      <input type="text" class="form-control" placeholder="Filtrar" ng-model="filtro">
+    </div>
+  </div>
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <td>
+          <a href="#" ng-click="ordenacao = 'nome'; ordenacaoReversa = !ordenacaoReversa">
+                        Nome
+                        <span ng-show="ordenacao == 'nome' && !ordenacaoReversa" class="fa fa-caret-down"></span>
+                        <span ng-show="ordenacao == 'nome' && ordenacaoReversa" class="fa fa-caret-up"></span>
+                    </a>
+        </td>
+        <td>
+          <a href="#" ng-click="ordenacao = 'telefone'; ordenacaoReversa = !ordenacaoReversa">
+                        Telefone
+                        <span ng-show="ordenacao == 'telefone' && !ordenacaoReversa" class="fa fa-caret-down"></span>
+                        <span ng-show="ordenacao == 'telefone' && ordenacaoReversa" class="fa fa-caret-up"></span>
+                    </a>
+        </td>
+        <td>
+          <a href="#" ng-click="ordenacao = 'cidade'; ordenacaoReversa = !ordenacaoReversa">
+                        Cidade
+                        <span ng-show="ordenacao == 'cidade' && !ordenacaoReversa" class="fa fa-caret-down"></span>
+                        <span ng-show="ordenacao == 'cidade' && ordenacaoReversa" class="fa fa-caret-up"></span>
+                    </a>
+        </td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="item in cliente | orderBy:ordenacao:ordenacaoReversa | filter:filtro">
+        <td>{{ item.nome }}</td>
+        <td>{{ item.telefone }}</td>
+        <td>{{ item.cidade }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+</body>
+
+</html>

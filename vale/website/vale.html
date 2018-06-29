@@ -50,7 +50,6 @@ td {
 	<!-- ####  Incluindo os fontes #### -->	
 	<script id="angularScript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-	
 	<script> 
 	var app = angular.module("SISTEMA", []);
 		angular.module("SISTEMA").controller("exibir",function($scope,$http,$interval){
@@ -58,144 +57,137 @@ td {
 			// TITULO E VERSAO DO PROGRAMA #############
 			$scope.eEditable = -1;	
 			$scope.titulo = "Vale Estacionamento"
-			$scope.faturamento=0;
-			$scope.cotacoes_array = [];
 			$scope.veiculos_array= [];
 			$scope.veiculo = [];
 			$scope.timestamp = new Date();
-			$scope.vezes30m = 0;
-
-			$scope.montadoras= [
-					{nome:"GM",tipo:"NACIONAL"},
-					{nome:"Fiat",tipo:"NACIONAL"},
-					{nome:"Ford",tipo:"NACIONAL"},
-					{nome:"VW",tipo:"NACIONAL"},
-					{nome:"Honda",tipo:"IMPORTADA"},
-					{nome:"Hyundai",tipo:"IMPORTADA"},
-					{nome:"Dodge",tipo:"IMPORTADA"},
-			];
-
-			$scope.cores = [
-					{nome:"Branco", tipo: "SOLIDAS", codigo:"white"},
-					{nome:"Preto", tipo: "SOLIDAS", codigo:"black"},
-					{nome:"Azul", tipo: "SOLIDAS", codigo:"blue"},
-					{nome:"Prata", tipo: "SOLIDAS", codigo:"silver"},
-					{nome:"Vermelho", tipo: "SOLIDAS", codigo:"red"},
-					{nome:"Verde", tipo: "SOLIDAS", codigo:"green"},
-					{nome:"Marron", tipo: "SOLIDAS", codigo:"brown"},
-			];
 
 
-			//################ ENTRADA DE VEICULOS
+			//################ ENTRADA 
 			$scope.entrar = function(veiculo){
-						console.log(veiculo);
+						 console.log(veiculo);
 						 $scope.retorno='';
 						 $http({
 								 method: 'POST',
 								 url: './../entrar',
 								 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
 								 data: 'marca='+veiculo.marca+'&cor='+veiculo.cor+'&placa=' + veiculo.placa 
-						 }).success(function (response) { 
-									if (!response.Entrada) {
-										$scope.retorno = 'Erro: '+response.retorno;
-									}
-									else{
-										load_veiculos();
-										$scope.retorno = 'Entrada executada!';
-									} 
-							});
+						 	   }).success(function (response) { 
+									if (!response.Entrada) {	$scope.retorno = 'Erro: '+response.retorno;	}
+									else{	load_veiculos();$scope.retorno = 'Entrada executada!';	} 
+						 });
 			};
 	
-			//################ ENTRADA DE VEICULOS
-			$scope.sair = function(placa){
+			//################ SAIDA
+			$scope.sair = function(placa,tempoGasto,valor){
+						 var saida = new Date();
 						 $http({
 								 method: 'POST',
 								 url: './../sair',
 								 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-								 data: 'marca=GM&cor=branco&placa=' + placa 
-						 }).success(function (response) { 
-									if (!response.Saida) {
-										$scope.retorno = 'Erro: '+response.retorno;
-									}
-									else{
-										load_veiculos();
-										$interval(function(){ limpar_retorno(); },5000); 
-										$scope.retorno = 'Saida ok!';
-									} 
-							});
+								 data: 'placa=' + placa + "&valor=" + valor + "&tempogasto="+ tempoGasto + "&saida="+ saida
+						 	   }).success(function (response) { 
+									if (!response.Saida) {	$scope.retorno = 'Erro: '+response.retorno;	}
+									else{	load_veiculos();  $interval(function(){ limpar_retorno(); },5000); 	$scope.retorno = 'Saida ok!';  } 
+						  });
 			};
 
-		function limpar_retorno(){	$scope.retorno = ''; };
+		function limpar_retorno(){	$scope.retorno = ''; }
 
-		load_veiculos();
 		$interval(function(){ load_veiculos(); },5000);
 		function load_veiculos(){
 					$http.get('../listar').then(function(response){
 					$scope.timestamp = Date.now();
 					$scope.veiculos_array = response.data; });
-	    };
+	    }
 	   
-	    load_total();
 		$interval(function(){ load_total(); },5000);
 		function load_total(){
    				 	$http.get('../total').then(function(response){
 					$scope.total = response.data; });
-	    };
+	    }
 	
-	$scope.diff_minutes = function (entrada) {
+		$scope.diff_minutes = function (entrada) {
 		var agoraDate = new Date();
 		entradaDate = new Date(entrada);
 		var diff =(agoraDate.getTime() - entradaDate.getTime()) / 1000;
 		diff /= 60;
 		return Math.abs(Math.round(diff));
-  	}
+	  	}
 
-	$scope.tickets = function(minutos){
-		if (minutos > 30) {
-			$scope.vezes30m++;
-			return (1 + $scope.tickets(minutos-30));
+		//funcao que calcula qtos tickets de 30minutos será necessário
+		$scope.tickets = function(minutos){
+			if (minutos > 30) {
+				return (1 + $scope.tickets(minutos-30));
+			}
+			
+			else if (minutos <= 30 ) { return 1; }
 		}
-		
-		else if (minutos <= 30 ) { return 1; }
-	}
 
-	$scope.tempo = function(minutes){ 
-  		  var h = Math.floor(minutes / 60);
-		  var m = minutes % 60;
-		  h = h < 10 ? '0' + h : h;
-		  m = m < 10 ? '0' + m : m;
-		  return h + ':' + m;
-	}
-
-    $scope.cobrar = function(horas) {
-		var valor=0.0;
-		if ( horas > 0.5 )   valor = 4 * horas; 
-		else 				 valor = 2; 
-	    
-		return Math.ceil(valor);
-	};
-
+		$scope.tempoGasto = function(minutes){ 
+			  minutes = $scope.diff_minutes(minutes);
+			  var h = Math.floor(minutes / 60);
+			  var m = minutes % 60;
+			  h = h < 10 ? '0' + h : h;
+			  m = m < 10 ? '0' + m : m;
+			  return h + ':' + m;
+		}
+		$scope.veiculo.placa = "  PLACA";
+	    load_total();
+		load_veiculos();
 });
-   </script>
+</script>
+
+	<script type="text/javascript">
+		function changeColor(newColor) {
+    	    var elem = document.getElementById('paraMudar');
+        	elem.style.backgroundColor = newColor;
+	     }
+	</script> 
 </head>
 
 <body ng-controller="exibir">
 	<div class="jumbotron jumbotron-fluid">
-			<h3> {{titulo}} </h3>
-			Placa <input type="veiculo" style="width: 100px;" value={{veiculo.placa}} ng-model="veiculo.placa" ng-readonly="!($placa == eEditable)" ng-dblclick="eEditable = $placa ; " class="ng-pristine ng-valid ng-touched" readonly="readonly">
-			Cor	  <select ng-model='veiculo.cor' ng-options='cor.nome group by cor.tipo for cor in cores'>
-			   		  <option value='{{veiculo.cor}}'> cor </option>
-				  </select>
-			Marca  <select ng-model='veiculo.marca' ng-options='montadora.nome group by montadora.tipo for montadora in montadoras'>
-			   		  <option value='{{veiculo.marca}}'> marca </option>
-				  </select>
+			<h3> {{titulo}} &nbsp; &nbsp; &nbsp;.....&nbsp;  &nbsp; &nbsp; Total: {{total}} veículos</h3> 
+			<hr>
+			<input style="width: 100px; height: 30px;" value={{veiculo.placa}} ng-model="veiculo.placa" ng-readonly="!($placa == eEditable)" ng-dblclick="eEditable = $placa ; " class="ng-pristine ng-valid ng-touched" readonly="readonly" >
+			<select style="width: 100px; height: 30px;" ng-model='veiculo.cor' id='paraMudar' onClick="changeColor(this.value);">
+				<option style="background-color: red"    value='red'></option>
+				<option style="background-color: green"  value='green'></option>
+				<option style="background-color: blue"   value='blue'></option>
+				<option style="background-color: silver" value='silver'></option>
+				<option style="background-color: black"  value='black'></option>
+				<option style="background-color: brown"  value='brown'></option>
+				<option style="background-color: blue"   value='blue'></option>
+				<option style="background-color: white"  value='white'></option>
+				<option style="background-color: pink"   value='pink'></option>
+ 		    </select>
+			<select style="width: 100px;height: 30px;" ng-model='veiculo.marca' >
+			  <optgroup label="NACIONAL">
+				<option value='gm'>GM</option>
+				<option value='ford'>Ford</option>
+				<option value='fiat'>Fiat</option>
+				<option value='vw'>VW</option>
+				<option value='outro'>Outro</option>
+			 </optgroup>
+			 <optgroup label="IMPORTADA">
+				<option value='honda'>Honda</option>
+				<option value='renault'>Renaut</option>
+				<option value='audi'>Audi</option>
+				<option value='kia'>Kia</option>
+				<option value='hyundai'>Hyundai</option>
+				<option value='toyota'>Toyota</option>
+				<option value='jeep'>Jeep</option>
+				<option value='bmw'>BMW</option>
+				<option value='dodge'>Dodge</option>
+				<option value='outro'>Outro</option>
+			  </optgroup>
+			</select>
 			<button class="btn btn-success" ng-click="entrar(veiculo)"> Entrar </button>
 			<br>
 			<div class='container'>
 				<table magin-left='100px' class='table' ng-controller="exibir">
 					<tr>
-						<td> Estacionados: {{total}} </td>
-					  	<td> <font size="3" color="red"> {{ retorno }} </font> </td>
+					  	<td align='center'> <font size="3" color="red"> {{ retorno }} </font> </td>
 					</tr>
 				</table>
 			</div>
@@ -203,6 +195,7 @@ td {
 			<div class='container'> 
 				<table class='table table-striped'>
 				   <tr>
+					  <th> </th>
 					  <th> Placa   </th>
 					  <th> Entrada </th>
 					  <th> Tempo   </th>
@@ -210,11 +203,12 @@ td {
 					  <th> </th>
 				  </tr>
 				<tr ng-repeat="veiculo in veiculos_array">
+					<td style="border-radius:50px;background-color:{{veiculo.cor}}"> </td>
 					<td> {{veiculo.placa}} </td>
-					<td> {{veiculo.entrada | date: 'dd/MM/yy - hh:mm' }} </td>
-					<td> {{ tempo(diff_minutes(veiculo.entrada)) }}h </td>
+					<td> {{veiculo.entrada | date: 'dd/MM HH:mm' }} </td>
+					<td> {{tempoGasto(veiculo.entrada) }}h </td>
 					<td> R$ {{ tickets(diff_minutes(veiculo.entrada)) * 2.00 | number:'2' }}  </td>
-					<td>  <button class="btn btn-danger btn-block" ng-click="sair(veiculo.placa)"> X </button>  </td>
+					<td>  <button class="btn btn-danger btn-block" ng-click="sair(veiculo.placa,tempoGasto(veiculo.entrada),tickets(diff_minutes(veiculo.entrada)) * 2.00)"> X </button>  </td>
 				</tr>
 				</table>
 			</div>

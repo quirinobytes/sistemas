@@ -32,7 +32,7 @@ console.log("° Horário de inicio: "+ String(start).grey+"............. ".grey 
 veiculos = {};
 
 //array para armazenar o valor dos veiculos realtime
-veiculos['GXC4180'] = {'placa':'GXC4180' , 'marca':'GM', cor:'branco',  'entrada':1530325997691};
+veiculos['GXC4180'] = {'placa':'GXC4180' , 'marca':'GM', cor:'branco',  'entrada':1530025997691};
 veiculos['HIN2807'] = {'placa':'HIN2807' , 'marca':"FIAT", cor:'preto', 'entrada':1530201700000};
 veiculos['ABC2807'] = {'placa':'ABC2807' , 'marca':"FIAT", cor:'preto', 'entrada':1530163007691};
 
@@ -47,7 +47,7 @@ app.get ('/',function (req,res) {
 	});
 });
 app.use('/website', express.static(path.join(__dirname, './website')));
-
+ 
 //####################### Total de Veiculos na Loja
 app.get ('/total',function(req,res){
 	res.writeHead(200, {"Content-Type" : "text/html"}); 
@@ -81,23 +81,31 @@ app.post ('/entrar',function(req,res){
 //#######################    		Saida do Estacionamento
 app.post ('/sair', function (req,res) {
 	var placa = req.body.placa;
-    var cor = req.body.cor;
-    var marca = req.body.marca;
-	var convenio = req.body.convenio;
-	var hora = Date.now(); 
-	console.log(placa);
-	if (placa != undefined ){ total--;
+	var valor = req.body.valor;
+	var tempoGasto = req.body.tempogasto;
+	var saida = req.body.saida;
+
+	if (placa != undefined ){
+		total--;
+		veiculos[placa].valor = valor;
+		veiculos[placa].tempogasto = tempoGasto;
+		veiculos[placa].saida = saida;
+
+		gravarRegistro(veiculos[placa]);
 		delete veiculos[placa];
+		res.json({'Saida':true,'placa':placa});
+		mostra_painel();
 	}
-	mostra_painel();
-	res.json({'Saida':true,'placa':placa});
+	else{
+		res.json({'Saida':false,'placa':placa});
+	}
 });
 
 function mostra_painel(){
-	cls();
+//	cls();
 	str_total = total.toString().green;
 	tempo = (new Date() - start)/1000;
-	console.log("\t\t###   Mesa de Operações    ###\t tempo:".yellow + tempo.toFixed(0)+ "s Total: "+str_total+"M"); 
+	console.log("\t\t###  VALE Estacionamento  ###\t tempo:".yellow + tempo.toFixed(0)+ "s Total: "+str_total+"M"); 
 	console.log("\t\t      =================       ".yellow); 
 	console.log("  PLACA   |   ENTRADA     |    CONVENIO      | ENTRADA |    PREÇO ");
 	console.log("==========|=============|===============|===============|=======|=======|==============");
@@ -110,3 +118,47 @@ function cls(){
 	//voltar la no começo da tela
 	console.log ("\033[0;0f");
 }
+
+
+function gravarRegistro(veiculo) {
+		var csv="";
+		var timestamp=new Date(veiculo.entrada).getTime();
+	    var todate=new Date(timestamp).getDate();
+	    var tominute=new Date(timestamp).getMinutes();
+	    var tohour=new Date(timestamp).getHours();
+	    var tomonth=new Date(timestamp).getMonth()+1;
+	    var toyear=new Date(timestamp).getFullYear();
+	    var entrada_date=tomonth+'/'+todate+'/'+toyear + ' - ' +tohour + ':' + tominute ;
+
+		var timestamp=new Date(veiculo.saida).getTime();
+	    var todate=new Date(timestamp).getDate();
+	    var tominute=new Date(timestamp).getMinutes();
+	    var tohour=new Date(timestamp).getHours();
+	    var tomonth=new Date(timestamp).getMonth()+1;
+	    var toyear=new Date(timestamp).getFullYear();
+	    var saida_date=tomonth+'/'+todate+'/'+toyear + ' - ' +tohour + ':' + tominute ;
+
+
+
+
+    	if (veiculo.placa != undefined ) {
+			csv+= '"'+ entrada_date + '"';
+			csv+= ',';
+			csv+= '"'+ veiculo.marca + '"';
+			csv+= ',';
+			csv+= '"'+ veiculo.cor + '"';
+			csv+= ',';
+			csv+= '"'+ veiculo.placa + '"';
+			csv+= ',';
+			csv+= '"'+ veiculo.entrada + '"';
+			csv+= ',';
+			csv+= '"'+ veiculo.tempogasto + '"';
+			csv+= ',';
+			csv+= '"'+ saida_date + '"';
+			csv+= ',';
+			csv+= '"'+ veiculo.valor + '"';
+			csv+= '\n';
+			fs.appendFile('registros.csv', csv, function(err){ if (err) throw err; });
+		}
+}
+
