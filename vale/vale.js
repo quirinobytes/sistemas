@@ -32,9 +32,9 @@ console.log("° Horário de inicio: "+ String(start).grey+"............. ".grey 
 veiculos = {};
 
 //array para armazenar o valor dos veiculos realtime
-//veiculos['GXC4180'] = {'placa':'GXC4180' , 'marca':'GM', cor:'silver',  'entrada':1530025997691};
-//veiculos['HIN2807'] = {'placa':'HIN2807' , 'marca':"FIAT", cor:'black', 'entrada':1530201700000};
-//veiculos['COM0102'] = {'placa':'ABC2807' , 'marca':"FIAT", cor:'green', 'entrada':1530163007691};
+veiculos['GXC4180'] = {'placa':'GXC4180' , 'marca':'GM', 'cor':'silver',  'valor':0 ,  'entrada':1530025997691};
+veiculos['HIN2807'] = {'placa':'HIN2807' , 'marca':"FIAT", 'cor':'black', 'valor':0 ,  'entrada':1530201700000};
+veiculos['COM0102'] = {'placa':'COM0102' , 'marca':"VW", 'cor':'green', 'valor':0 ,  'entrada':1530163007691};
 
 //###############		/ 			###############################
 app.get ('/',function (req,res) {
@@ -102,7 +102,7 @@ app.post ('/sair', function (req,res) {
 });
 
 function mostra_painel(){
-//	cls();
+	cls();
 	str_total = total.toString().green;
 	tempo = (new Date() - start)/1000;
 	console.log("\t\t###  VALE Estacionamento  ###\t tempo:".yellow + tempo.toFixed(0)+ "s Total: "+str_total+"M"); 
@@ -128,7 +128,7 @@ function gravarRegistro(veiculo) {
 	    var tohour=new Date(timestamp).getHours();
 	    var tomonth=new Date(timestamp).getMonth()+1;
 	    var toyear=new Date(timestamp).getFullYear();
-	    var entrada_date=tomonth+'/'+todate+'/'+toyear + ' - ' +tohour + ':' + tominute ;
+	    var entrada_date=todate+'/'+tomonth+'/'+toyear + '-' +tohour + ':' + tominute ;
 
 		var timestamp=new Date(veiculo.saida).getTime();
 	    var todate=new Date(timestamp).getDate();
@@ -136,10 +136,7 @@ function gravarRegistro(veiculo) {
 	    var tohour=new Date(timestamp).getHours();
 	    var tomonth=new Date(timestamp).getMonth()+1;
 	    var toyear=new Date(timestamp).getFullYear();
-	    var saida_date=tomonth+'/'+todate+'/'+toyear + ' - ' +tohour + ':' + tominute ;
-
-
-
+	    var saida_date=todate+'/'+tomonth+'/'+toyear + '-' +tohour + ':' + tominute ;
 
     	if (veiculo.placa != undefined ) {
 			csv+= '"'+ entrada_date + '"';

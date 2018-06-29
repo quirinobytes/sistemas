@@ -76,7 +76,7 @@ td {
 								 data: 'marca='+veiculo.marca+'&cor='+veiculo.cor+'&placa=' + veiculo.placa 
 						 	   }).success(function (response) { 
 									if (!response.Entrada) {	$scope.retorno = 'Erro: '+response.retorno;	}
-									else{	load_veiculos();$scope.retorno = 'Entrada executada!';	} 
+									else{ load_total();	load_veiculos();$scope.retorno = 'Entrada executada!';	} 
 						 });
 			};
 	
@@ -142,7 +142,6 @@ td {
 			else {
 				alert(msg);
 				return false;
-				//document.getElementById('placa').select();
 			 }
 		}
 
@@ -167,7 +166,7 @@ td {
 			  m = m < 10 ? '0' + m : m;
 			  return h + ':' + m;
 		}
-		//$scope.veiculo.placa = "  PLACA";
+		$scope.veiculo.placa = "  PLACA";
 	    load_total();
 		load_veiculos();
 });
