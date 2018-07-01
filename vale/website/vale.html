@@ -10,9 +10,10 @@
 			margin-top:20px;
 			text-align: center;
 			padding: 10px;
+		    background:#dadddc;
 		}
 		.carteira{
-		    background:#dddddc;
+		    background:#aaaaac;
 			border-size:1px;
 			border-style:solid;
 			border-color:black;
@@ -181,19 +182,19 @@ td {
 	<div class="jumbotron jumbotron-fluid">
 			<h3> {{titulo}} &nbsp; &nbsp; &nbsp; | &nbsp;  &nbsp; &nbsp; Total {{total}}</h3> 
 			<hr>
-			<input id="txtPlaca" style="width: 100px; height: 30px;" value="{{ veiculo.placa | uppercase }}" ng-model="veiculo.placa" ng-readonly="!($placa == eEditable)" ng-dblclick="eEditable = $placa ; " class="ng-pristine ng-valid ng-touched" readonly="readonly" ng-blur="validaPlaca();" >
-			<select style="width: 100px; height: 30px;" ng-model='veiculo.cor' id='paraMudar' onClick="changeColor(this.value);">
-				<option style="background-color: red"    value='red'></option>
-				<option style="background-color: green"  value='green'></option>
+			<input id="txtPlaca" style="border-radius: 8px; width: 100px; height: 35px;" value="{{ veiculo.placa | uppercase }}" ng-model="veiculo.placa" ng-readonly="!($placa == eEditable)" ng-dblclick="eEditable = $placa ; " class="ng-pristine ng-valid ng-touched" readonly="readonly" ng-blur="validaPlaca();" ng-model="veiculo.placa" ng-change="veiculo.placa = (veiculo.placa | uppercase)">
+			<select style="border-radius: 8px; width: 100px; height: 35px;" ng-model='veiculo.cor' id='paraMudar' onClick="changeColor(this.value);">
 				<option style="background-color: blue"   value='blue'></option>
 				<option style="background-color: silver" value='silver'></option>
 				<option style="background-color: black"  value='black'></option>
+				<option style="background-color: green"  value='green'></option>
 				<option style="background-color: brown"  value='brown'></option>
-				<option style="background-color: blue"   value='blue'></option>
-				<option style="background-color: white"  value='white'></option>
+				<option style="background-color: yellow" value='yellow'></option>
+				<option style="background-color: red"    value='red'></option>
 				<option style="background-color: pink"   value='pink'></option>
+				<option style="background-color: white"  value='white'></option>
  		    </select>
-			<select style="width: 100px;height: 30px;" ng-model='veiculo.marca' >
+			<select style="border-radius: 8px; width: 100px;height: 35px;" ng-model='veiculo.marca' >
 			  <optgroup label="NACIONAL">
 				<option value='gm'>GM</option>
 				<option value='ford'>Ford</option>
@@ -234,7 +235,7 @@ td {
 					  <th> Saída   </th>
 					  <th> </th>
 				  </tr>
-				<tr ng-repeat="veiculo in veiculos_array">
+				<tr ng-repeat="veiculo in veiculos_array ">
 					<td><table><tr><td style="height:2px;border:0px solid #a1a1a1;border-radius:100px;background-color:{{veiculo.cor}}"> &nbsp; &nbsp; &nbsp; </td> </tr> </table> </td>
 					<td> {{veiculo.placa}} </td>
 					<td> {{veiculo.entrada | date: 'dd/MM HH:mm' }} </td>
