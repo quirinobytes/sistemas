@@ -1,7 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var port = 2020;
-var ip = '192.168.200.1';
+ ip = '0.0.0.0';
 
 var app = module.exports = express();
 
