@@ -40,6 +40,10 @@
 			width: 30px !important;
 			color:red;
 		}
+  
+.retornoBox {
+       background-color: #ddccdd;
+}
 
 .highlight-red {
        background-color: Tomato;
@@ -89,7 +93,7 @@ td {
 								 data: 'marca='+veiculo.marca+'&cor='+veiculo.cor + '&convenio=' +veiculo.convenio  + '&placa=' + veiculo.placa  
 						 	   }).success(function (response) { 
 									if (!response.Entrada) {	$scope.retorno = 'Erro: '+response.retorno;	}
-									else{ load_total();	load_veiculos();$scope.retorno = 'Entrada executada!';	} 
+									else{ load_total();	load_veiculos(); $scope.retorno = 'Entrada executada!'; piscaBanner();	} 
 						 });
 			};
 	
@@ -108,6 +112,12 @@ td {
 			};
 
 		function limpar_retorno(){	$scope.retorno = ''; }
+
+		function piscaBanner(){
+			document.getElementById('retornoBox').style.backgroundColor = 'green';
+			$interval(function(){document.getElementById('retornoBox').style.backgroundColor = '#ddccdd';},1000);
+			
+		}
 
 		$interval(function(){ load_veiculos(); },5000);
 		function load_veiculos(){
@@ -252,7 +262,9 @@ td {
 			<div class='container'>
 				<table magin-left='100px' class='table' ng-controller="exibir">
 					<tr>
-					  	<td style="background-color:#dddddc" align='center'> <font size="3" color="red"> &nbsp; {{ retorno }} &nbsp; </font> </td>
+					  	<td id="retornoBox" class='retornoBox' align='center'>
+							<font size="3" color="red"> &nbsp; <b> {{ retorno }} </b> &nbsp; </font> 
+						</td>
 					</tr>
 				</table>
 			</div>

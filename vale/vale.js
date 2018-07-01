@@ -161,7 +161,7 @@ function gravarRegistro(veiculo) {
 			csv+= ',';
 			csv+= '"'+ saida_date + '"';
 			csv+= ',';
-			if (veiculo.convenio > 0){
+			if (veiculo.convenio >= 0){
 				csv+= '"'+ veiculo.convenio + '"';
 				csv+= '\n';
 			}
