@@ -66,10 +66,11 @@ app.post ('/entrar',function(req,res){
     var cor = req.body.cor;
     var marca = req.body.marca;
 	var convenio = req.body.convenio;
-	var hora = Date.now(); 
+	var hora = Date.now();
 	if (placa != undefined && veiculos[placa] == undefined ){
 		total++;
-		veiculos[placa] = {'placa':placa, 'marca':marca, 'cor':cor, 'entrada':hora};
+		veiculos[placa] = {'placa':placa, 'marca':marca, 'cor':cor, 'entrada':hora, 'convenio': convenio};
+		console.log(veiculos[placa]);
 		res.json({'Entrada':true,'placa':placa});
 		mostra_painel();
 	}
@@ -119,21 +120,24 @@ function cls(){
 	console.log ("\033[0;0f");
 }
 
+function alwaysTwoDigits(n){
+	    return n > 9 ? "" + n: "0" + n;
+}
 
 function gravarRegistro(veiculo) {
 		var csv="";
 		var timestamp=new Date(veiculo.entrada).getTime();
 	    var todate=new Date(timestamp).getDate();
-	    var tominute=new Date(timestamp).getMinutes();
-	    var tohour=new Date(timestamp).getHours();
+	    var tominute= alwaysTwoDigits(new Date(timestamp).getMinutes());
+	    var tohour= alwaysTwoDigits(new Date(timestamp).getHours());
 	    var tomonth=new Date(timestamp).getMonth()+1;
 	    var toyear=new Date(timestamp).getFullYear();
 	    var entrada_date=todate+'/'+tomonth+'/'+toyear + '-' +tohour + ':' + tominute ;
 
 		var timestamp=new Date(veiculo.saida).getTime();
 	    var todate=new Date(timestamp).getDate();
-	    var tominute=new Date(timestamp).getMinutes();
-	    var tohour=new Date(timestamp).getHours();
+	    var tominute= alwaysTwoDigits(new Date(timestamp).getMinutes());
+	    var tohour= alwaysTwoDigits(new Date(timestamp).getHours());
 	    var tomonth=new Date(timestamp).getMonth()+1;
 	    var toyear=new Date(timestamp).getFullYear();
 	    var saida_date=todate+'/'+tomonth+'/'+toyear + '-' +tohour + ':' + tominute ;
@@ -153,9 +157,16 @@ function gravarRegistro(veiculo) {
 			csv+= ',';
 			csv+= '"'+ saida_date + '"';
 			csv+= ',';
-			csv+= '"'+ veiculo.valor + '"';
-			csv+= '\n';
-			fs.appendFile('registros.csv', csv, function(err){ if (err) throw err; });
+			if (veiculo.convenio > 0){
+				csv+= '"'+ veiculo.convenio + '"';
+				csv+= '\n';
+			}
+			else
+				{
+					csv+= '"'+ veiculo.valor + '"';
+					csv+= '\n';
+				}
+						fs.appendFile('registros.csv', csv, function(err){ if (err) throw err; });
 		}
 }
 

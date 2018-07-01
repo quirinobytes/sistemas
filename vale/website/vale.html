@@ -2,6 +2,7 @@
 <head>
 	<title> Vale - Estacionamento</title>
 	<link rel="stylesheet" type="text/css" href="lib/bootstrap.css">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<style type="text/css">
 		.jumbotron{
 			width: 600px;
@@ -33,6 +34,12 @@
 		.selecionado{
 						background-color: #55AAFF;
 		}
+		.material-icons.md-30 {
+			font-size: 30px !important;
+			height: 30px !important;
+			width: 30px !important;
+			color:red;
+		}
 
 .highlight-red {
        background-color: Tomato;
@@ -58,10 +65,14 @@ td {
 			// TITULO E VERSAO DO PROGRAMA #############
 			$scope.eEditable = -1;	
 			$scope.titulo = "Vale Estacionamento"
-			$scope.veiculos_array= [];
 			$scope.veiculo = [];
 			$scope.timestamp = new Date();
-
+			//$scope.pacoteValor = 0;
+			$scope.convenios = [{nome:"",valor: undefined}, 
+							{nome : "Pernoite", valor : 20},
+				    		{nome : "Villa Velha", valor : 0},
+					    	{nome : "Teatro", valor : 10}
+						];
 
 			//################ ENTRADA 
 			$scope.entrar = function(veiculo){
@@ -74,7 +85,7 @@ td {
 								 method: 'POST',
 								 url: './../entrar',
 								 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-								 data: 'marca='+veiculo.marca+'&cor='+veiculo.cor+'&placa=' + veiculo.placa 
+								 data: 'marca='+veiculo.marca+'&cor='+veiculo.cor + '&convenio=' +veiculo.convenio  + '&placa=' + veiculo.placa  
 						 	   }).success(function (response) { 
 									if (!response.Entrada) {	$scope.retorno = 'Erro: '+response.retorno;	}
 									else{ load_total();	load_veiculos();$scope.retorno = 'Entrada executada!';	} 
@@ -164,9 +175,17 @@ td {
 			  m = m < 10 ? '0' + m : m;
 			  return h + ':' + m;
 		}
-		$scope.veiculo.placa = "  PLACA";
+		$scope.veiculo.placa = "  GXC4180";
 	    load_total();
 		load_veiculos();
+
+		$scope.limparCampos = function (){
+			$scope.veiculo.placa="";
+			$scope.veiculo.cor="";
+//			$scope.convenio=convenios;
+			$scope.veiculo.convenio="";
+		}
+	
 });
 </script>
 
@@ -175,12 +194,19 @@ td {
     	    var elem = document.getElementById('paraMudar');
         	elem.style.backgroundColor = newColor;
 	     }
+		function limparCor(){
+			document.getElementById('paraMudar').style.backgroundColor = 'white';
+		}
 	</script> 
 </head>
 
 <body ng-controller="exibir">
 	<div class="jumbotron jumbotron-fluid">
-			<h3> {{titulo}} &nbsp; &nbsp; &nbsp; | &nbsp;  &nbsp; &nbsp; Total {{total}}</h3> 
+			<h3> {{titulo}} &nbsp; &nbsp; &nbsp; | &nbsp;  &nbsp; &nbsp; Total {{total}}   </h3> 
+			<div onClick='limparCor();'>
+				<md-icon ng-click="limparCampos();" class="material-icons md-30"> delete </md-icon>
+			</div>
+
 			<hr>
 			<input id="txtPlaca" style="border-radius: 8px; width: 100px; height: 35px;" value="{{ veiculo.placa | uppercase }}" ng-model="veiculo.placa" ng-readonly="!($placa == eEditable)" ng-dblclick="eEditable = $placa ; " class="ng-pristine ng-valid ng-touched" readonly="readonly" ng-blur="validaPlaca();" ng-model="veiculo.placa" ng-change="veiculo.placa = (veiculo.placa | uppercase)">
 			<select style="border-radius: 8px; width: 100px; height: 35px;" ng-model='veiculo.cor' id='paraMudar' onClick="changeColor(this.value);">
@@ -216,7 +242,12 @@ td {
 			  </optgroup>
 			</select>
 			<button class="btn btn-success" ng-click="entrar(veiculo)"> Entrar </button>
-			<br>
+			<br><br>
+			Convenio:
+			<select  style="border-radius: 8px; width: 100px; height: 35px;" ng-model="veiculo.convenio">
+				<option ng-repeat="convenio in convenios" value="{{convenio.valor | number:'2'}}">{{convenio.nome}}</option>
+			</select>
+
 			<div class='container'>
 				<table magin-left='100px' class='table' ng-controller="exibir">
 					<tr>
@@ -232,7 +263,8 @@ td {
 					  <th> Placa   </th>
 					  <th> Entrada </th>
 					  <th> Tempo   </th>
-					  <th> Saída   </th>
+					  <th> Valor </th>
+					  <th> Saida  </th>
 					  <th> </th>
 				  </tr>
 				<tr ng-repeat="veiculo in veiculos_array ">
@@ -240,7 +272,8 @@ td {
 					<td> {{veiculo.placa}} </td>
 					<td> {{veiculo.entrada | date: 'dd/MM HH:mm' }} </td>
 					<td> {{tempoGasto(veiculo.entrada) }}h </td>
-					<td> R$ {{ tickets(diff_minutes(veiculo.entrada)) * 2.00 | number:'2' }}  </td>
+					<td ng-if="veiculo.convenio >= 0 && veiculo.convenio != 'undefined' "> R$ {{ veiculo.convenio }} </td>
+					<td ng-if="veiculo.convenio == 'undefined' "> R$ {{ tickets(diff_minutes(veiculo.entrada)) * 2.00 | number:'2' }}  </td>
 					<td>  <button class="btn btn-danger btn-block" ng-click="sair(veiculo.placa,tempoGasto(veiculo.entrada),tickets(diff_minutes(veiculo.entrada)) * 2.00)"> X </button>  </td>
 				</tr>
 				</table>
