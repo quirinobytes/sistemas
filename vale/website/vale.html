@@ -32,17 +32,25 @@
 			margin-bottom: 4px;
 		}
 		.selecionado{
-						background-color: #55AAFF;
+			background-color: #55AAFF;
 		}
 		.material-icons.md-30 {
 			font-size: 30px !important;
 			height: 30px !important;
 			width: 30px !important;
-			color:red;
+			color:#cc0000;
 		}
-  
+ 
+.menuBox{
+	display: inline-block;
+	margin-top: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+}
+
 .retornoBox {
-       background-color: #ddccdd;
+       background-color: #caacdd;
 }
 
 .highlight-red {
@@ -93,7 +101,13 @@ td {
 								 data: 'marca='+veiculo.marca+'&cor='+veiculo.cor + '&convenio=' +veiculo.convenio  + '&placa=' + veiculo.placa  
 						 	   }).success(function (response) { 
 									if (!response.Entrada) {	$scope.retorno = 'Erro: '+response.retorno;	}
-									else{ load_total();	load_veiculos(); $scope.retorno = 'Entrada executada!'; piscaBanner();	} 
+									else{ 
+											load_total();
+											load_veiculos();
+											document.getElementById('retornoBox').style.backgroundColor = 'green';
+											$scope.retorno = 'Entrada ok!'; 
+											document.getElementById('retornoBox').style.backgroundColor = '#ddccdd';
+										} 
 						 });
 			};
 	
@@ -113,11 +127,6 @@ td {
 
 		function limpar_retorno(){	$scope.retorno = ''; }
 
-		function piscaBanner(){
-			document.getElementById('retornoBox').style.backgroundColor = 'green';
-			$interval(function(){document.getElementById('retornoBox').style.backgroundColor = '#ddccdd';},1000);
-			
-		}
 
 		$interval(function(){ load_veiculos(); },5000);
 		function load_veiculos(){
@@ -214,10 +223,12 @@ td {
 <body ng-controller="exibir">
 	<div class="jumbotron jumbotron-fluid">
 			<h3> {{titulo}} &nbsp; &nbsp; &nbsp; | &nbsp;  &nbsp; &nbsp; Total {{total}}   </h3> 
-			<div onClick='limparCor();'>
+				<md-icon ng-click="menu();" class="material-icons md-30"> menu </md-icon>
+				<md-icon ng-click="menu();" class="material-icons md-30"> face </md-icon>
+				<md-icon ng-click="menu();" class="material-icons md-30"> drive_eta </md-icon>
+			<div class="menuBox" onClick='limparCor();'>
 				<md-icon ng-click="limparCampos();" class="material-icons md-30"> delete </md-icon>
 			</div>
-
 			<hr>
 			<input id="txtPlaca" style="border-radius: 8px; width: 100px; height: 35px;" value="{{ veiculo.placa | uppercase }}" ng-model="veiculo.placa" ng-readonly="!($placa == eEditable)" ng-dblclick="eEditable = $placa ; " class="ng-pristine ng-valid ng-touched" readonly="readonly" ng-blur="validaPlaca();" ng-model="veiculo.placa" ng-change="veiculo.placa = (veiculo.placa | uppercase)">
 			<select style="border-radius: 8px; width: 100px; height: 35px;" ng-model='veiculo.cor' id='paraMudar' onClick="changeColor(this.value);">
