@@ -68,7 +68,8 @@ td {
 			$scope.veiculo = [];
 			$scope.timestamp = new Date();
 			//$scope.pacoteValor = 0;
-			$scope.convenios = [{nome:"",valor: undefined}, 
+			$scope.convenios = [ 
+							{nome : "", valor : -1},
 							{nome : "Pernoite", valor : 20},
 				    		{nome : "Villa Velha", valor : 0},
 					    	{nome : "Teatro", valor : 10}
@@ -182,8 +183,8 @@ td {
 		$scope.limparCampos = function (){
 			$scope.veiculo.placa="";
 			$scope.veiculo.cor="";
-//			$scope.convenio=convenios;
-			$scope.veiculo.convenio="";
+			$scope.convenio="";
+			//$scope.convenio = $scope.convenios;
 		}
 	
 });
@@ -244,8 +245,8 @@ td {
 			<button class="btn btn-success" ng-click="entrar(veiculo)"> Entrar </button>
 			<br><br>
 			Convenio:
-			<select  style="border-radius: 8px; width: 100px; height: 35px;" ng-model="veiculo.convenio">
-				<option ng-repeat="convenio in convenios" value="{{convenio.valor | number:'2'}}">{{convenio.nome}}</option>
+			<select ng-init="convenio.valor = -1"  style="border-radius: 8px; width: 100px; height: 35px;" ng-model="veiculo.convenio">
+				<option  ng-repeat="convenio in convenios" value="{{convenio.valor | number:'2'}}">{{convenio.nome}}</option>
 			</select>
 
 			<div class='container'>

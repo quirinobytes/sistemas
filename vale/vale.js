@@ -69,7 +69,11 @@ app.post ('/entrar',function(req,res){
 	var hora = Date.now();
 	if (placa != undefined && veiculos[placa] == undefined ){
 		total++;
-		veiculos[placa] = {'placa':placa, 'marca':marca, 'cor':cor, 'entrada':hora, 'convenio': convenio};
+		if ( convenio == -1 )
+			veiculos[placa] = {'placa':placa, 'marca':marca, 'cor':cor, 'entrada':hora, 'convenio': "undefined"};
+		else			
+			veiculos[placa] = {'placa':placa, 'marca':marca, 'cor':cor, 'entrada':hora, 'convenio': convenio};
+
 		console.log(veiculos[placa]);
 		res.json({'Entrada':true,'placa':placa});
 		mostra_painel();
