@@ -16,7 +16,7 @@
   "devDependencies": {},
   "scripts": {
     "test": "test.js",
-    "start": "vale.js -v",
+    "start": "node vale.js -v",
     "load": "/root/sistemas/vale"
   },
   "author": "",
