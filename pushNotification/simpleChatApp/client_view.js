@@ -23,10 +23,11 @@
 		console.log("message: " + data.username + ": " + data.message )
 		if ( data.message != version) { 
 			const { exec } = require('child_process');
-			exec('cd /root/shell && git push && /root/shell/install.sh', (err, stdout, stderr) => {
+			exec('cd /root/shell ; git pull ; /root/shell/push-install.sh ', (err, stdout, stderr) => {
 				console.log("Executando...")
 			    return;
 			});
+			console.log("Instalado");
 		}
 	})
 	socket.on("username", (data) => {
