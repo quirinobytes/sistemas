@@ -28,6 +28,8 @@ const io = require("socket.io")(server)
 //listen on every connection
 io.on('connection', (socket) => {
 	console.log('New user connected')
+	console.log("socket= ")
+	console.log(socket)
 
 	//default username
 	socket.username = "Server"
@@ -35,6 +37,10 @@ io.on('connection', (socket) => {
     //listen on change_username
     socket.on('username', (data) => {
         socket.username = data.username
+		ip = data.remoteAddress
+		console.log("User: " + data.username)
+		console.log("Remote Address: " + socket.)
+
     })
 
     //listen on new_message
@@ -45,7 +51,7 @@ io.on('connection', (socket) => {
 	
 	socket.on('sair', (data) => {
         //broadcast the new message
-        socket.emit('sair', {message : data.message, username : socket.username});
+//        socket.emit('sair', {message : data.message, username : socket.username});
     })
 
 

@@ -3,7 +3,7 @@ After=network.service
 Description= Servidor Push
 
 [Service]
-ExecStart=/root/sistemas/servidorPush/servidorPush.js 2>&1
+ExecStart=/root/sistemas/servidorPush/servidorPush.js
 
 # Required on some systems
 WorkingDirectory=/root/sistemas/servidorPush
