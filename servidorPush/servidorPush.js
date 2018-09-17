@@ -28,7 +28,7 @@ const io = require("socket.io")(server)
 //listen on every connection
 io.on('connection', (socket) => {
 	console.log('New user connected')
-	console.log("Conn.ID: " + socket.client.conn.id + "(" + socket.client.conn.remoteAddress + ")) )
+	console.log("Conn.ID: " + socket.client.conn.id + "(" + socket.client.conn.remoteAddress + ")" )
 
 	//default username
 	socket.username = "Server"
