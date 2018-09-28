@@ -13,11 +13,11 @@ $(function(){
 
 	//Emit message
 	send_message.click(function(){
-		socket.emit('new_message', {message : message.val()})
+		socket.emit('message', {message : message.val()})
 	})
 
 	//Listen on new_message
-	socket.on("new_message", (data) => {
+	socket.on("message", (data) => {
 		feedback.html('');
 		message.val('');
 		chatroom.append("<p class='message'>" + data.username + ": " + data.message + "</p>")
@@ -25,7 +25,7 @@ $(function(){
 
 	//Emit a username
 	send_username.click(function(){
-		socket.emit('change_username', {username : username.val()})
+		socket.emit('username', {username : username.val()})
 	})
 
 	//Emit typing
