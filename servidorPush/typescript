@@ -1,0 +1,26 @@
+Script started on Sáb 06 Out 2018 21:01:07 -03
+alias hp=ssh hp
+alias casa=ssh casa
+alias linux=ssh linux
+alias webmail=ssh webmail
+alias storage=ssh storage
+alias devops=ssh devops
+alias servidorpush=ssh servidorpush
+alias servidorpush.superati.com.br=ssh servidorpush.superati.com.br
+alias mail=ssh mail
+alias esx=ssh esx
+alias dev1=ssh dev1
+alias dev10=ssh dev10
+[40;37;1m - Lista de Tarefas -
+[0;0m
+[0;0m
+
+[31mroot[33m@[32mvaleveiculos [36mservidorPush> [0;0mcp servidorPush.service ;[K/etc/systemd/system
+system/      system.conf  
+[31mroot[33m@[32mvaleveiculos [36mservidorPush> [0;0mcp servidorPush.service /etc/systemd/system/
+[31mroot[33m@[32mvaleveiculos [36mservidorPush> [0;0mctl st[K[K[K[K[K[Ksystect[K[Kmctl str[Kart servidorPush
+[31mroot[33m@[32mvaleveiculos [36mservidorPush> [0;0msystemctl start servidorPush[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[1P servidorPush[1P servidorPush[1P servidorPush[1P servidorPush[1P servidorPushe servidorPushn servidorPusha servidorPushb servidorPushl servidorPushe servidorPush
+Created symlink from /etc/systemd/system/multi-user.target.wants/servidorPush.service to /etc/systemd/system/servidorPush.service.
+[31mroot[33m@[32mvaleveiculos [36mservidorPush> [0;0mexit
+
+Script done on Sáb 06 Out 2018 21:01:58 -03
