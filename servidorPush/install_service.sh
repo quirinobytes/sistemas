@@ -7,7 +7,7 @@
             if [ $? == 0 ]; then
                   echo -en "$green ** $atention RED HAT -$yellow like found $green ** $normal\n\n"
             	systemctl stop servidorPush
-			cp servidorPush.service.Redhat /etc/systemd/system/ -f
+			cp servidorPush.service.Redhat /etc/systemd/system/servidorPush.service -f
 			systemctl daemon-reload
 			systemctl start servidorPush
 			exit 0
@@ -17,7 +17,7 @@
             if [ $? == 0 ]; then
                   echo -en "$green ** $atention DEBIAN -$yellow like found $green ** $normal\n\n"
 			systemctl stop servidorPush
-			cp servidorPush.service.Debian /etc/systemd/system/ -f
+			cp servidorPush.service.Debian /etc/systemd/system/servidorPush.service  -f
 			systemctl daemon-reload
 			systemctl start servidorPush
 			exit 0
