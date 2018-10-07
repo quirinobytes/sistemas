@@ -1,0 +1,23 @@
+[Unit]
+After=network.service
+Description= Servidor Push
+
+[Service]
+ExecStart=/usr/bin/nodejs /root/sistemas/servidorPush/servidorPush.js
+
+# Required on some systems
+WorkingDirectory=/usr/bin
+
+Restart=always
+ # Restart service after 10 seconds if node service crashes
+  RestartSec=60
+   # Output to syslog
+   StandardOutput=syslog
+   StandardError=syslog
+   SyslogIdentifier=nodejs-servidorPush
+User=root
+#Group=wheel
+Environment=NODE_ENV=production PORT=3000 NODE_MODULES=/lib/node_modules
+
+[Install]
+WantedBy=multi-user.target
