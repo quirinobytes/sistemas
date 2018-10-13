@@ -3,7 +3,7 @@ After=network.service
 Description= Servidor Push
 
 [Service]
-ExecStart=/root/.nvm/versions/node/v4.9.1/bin/node /root/sistemas/servidorPush/servidorPush.js
+ExecStart=/usr/bin/nodejs  /root/sistemas/servidorPush/servidorPush.js
 
 # Required on some systems
 WorkingDirectory=/usr/bin
