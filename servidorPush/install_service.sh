@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 
  if [ -e /etc/os-release ]; then
@@ -22,6 +22,8 @@
 			systemctl start servidorPush
 			exit 0
             fi
+
+		echo -en "TEM arquivo /etc/os-release  mas FLAVOR desconhecido\n\n"
 
 else
           echo -en "\n\n $red Nao foi possível determinar o S.O.$normal \n\n"
