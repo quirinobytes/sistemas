@@ -8,11 +8,11 @@
 	var message = "version:" + process.argv[2]
 	var host = os.hostname();
 
-	//Emit a username
-		socket.emit('username', {username : host }) 
+	//Emit a deploy 
+		socket.emit('beos', {username : host }) 
 
 	//Emit message
-		socket.emit('message', {message : message })
+//		socket.emit('beos', {message : message })
 		socket.emit('sair', {message : "sair" })
 		
 		socket.on("sair", (data) => {
