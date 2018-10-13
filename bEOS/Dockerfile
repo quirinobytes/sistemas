@@ -3,7 +3,8 @@ FROM node:4.9.1-alpine
 
 WORKDIR /usr/src/app
 
-COPY . . 
+RUN rmdir /usr/src/app/node_modules
+COPY . .
 COPY client_new/ /client_new/
 COPY client_old/ /client_old/
 COPY config/ /config/
