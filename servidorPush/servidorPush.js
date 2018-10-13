@@ -43,6 +43,11 @@ io.on('connection', (socket) => {
         //broadcast the new message
         io.sockets.emit('message', {message : data.message, username : socket.username});
     })
+
+    socket.on('beos', (data) => {
+        //broadcast the new message
+        io.sockets.emit('beos', {message : data.message, username : socket.username});
+    })
 	
 	socket.on('sair', (data) => {
         //broadcast the new message
