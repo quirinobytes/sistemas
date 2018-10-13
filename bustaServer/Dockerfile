@@ -17,7 +17,7 @@ RUN npm install gulp
 
 RUN echo "167.99.173.26  www.bustabit.com" >> /etc/hosts
 RUN echo "167.99.173.26  localhost" >> /etc/hosts
-EXPOSE 3841
+EXPOSE 3842
 
 CMD ["npm", "start"]
 
