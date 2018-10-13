@@ -23,6 +23,17 @@
 			exit 0
             fi
 
+		cat /etc/os-release | grep Ubuntu -q
+            if [ $? == 0 ]; then
+                  echo -en "$green ** $atention UBUNTU -$yellow like found $green ** $normal\n\n"
+			systemctl stop servidorPush
+			cp servidorPush.service.Ubuntu /etc/systemd/system/servidorPush.service  -f
+			systemctl daemon-reload
+			systemctl start servidorPush
+			exit 0
+            fi
+
+
 		echo -en "TEM arquivo /etc/os-release  mas FLAVOR desconhecido\n\n"
 
 else
