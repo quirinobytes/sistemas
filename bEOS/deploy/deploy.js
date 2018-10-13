@@ -9,10 +9,10 @@
 	var host = os.hostname();
 
 	//Emit a deploy 
-		socket.emit('beos', {username : host }) 
+//		socket.emit('beos', {username : host }) 
 
 	//Emit message
-//		socket.emit('beos', {message : message })
+		socket.emit('beos', {message : message })
 		socket.emit('sair', {message : "sair" })
 		
 		socket.on("sair", (data) => {
