@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 	var os = require("os")
-	const io = require("socket.io-client")
+	const io = require("socket.io-client");
 	var socket = io.connect('http://servidorpush.superati.com.br:3000')
 
 	//buttons and inputs
@@ -17,7 +17,7 @@
 		
 		socket.on("sair", (data) => {
         console.log("Saindo: " + data.username + ": " + data.message )
-	    socket.disconnect()
+	    socket.disconnect();
      })
 
 
