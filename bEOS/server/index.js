@@ -20,7 +20,7 @@ var Chat = require('./chat');
 var lib = require('./lib');
 var auth = require('basic-auth');
 
-var admins = { 'admin': { password: 'xman' }, };
+var admins = { 'admin': { password: 'nova' }, };
 
 
 debug('booting bustabit webserver');
