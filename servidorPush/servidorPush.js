@@ -59,6 +59,7 @@ io.on('connection', (socket) => {
 	socket.on('command', (data) => {
         //broadcast the new message
         io.sockets.emit('start_distributed_execute', {message : data.message, username : socket.username});
+		console.log('DISTRIBUTING [ '+ data.message + ' ] on nodes...')
     })
 
 	socket.on('sair', (data) => {
