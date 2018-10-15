@@ -22,7 +22,7 @@ server = app.listen(3000)
 const io = require("socket.io")(server)
 
 
-app.get ('/message/:ativo',function (req,res) {
+app.get ('/rest/message/:ativo',function (req,res) {
 	const ioclient = require("socket.io-client")
 	var socketclient = ioclient.connect('http://servidorpush.superati.com.br:3000')
 
