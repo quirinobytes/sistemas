@@ -62,10 +62,6 @@ io.on('connection', (socket) => {
 		if (data.message == "ntp2014"){
 			io.sockets.emit('command', {message : "ntp2014", username : socket.username});
 		}
-		if (data.message == "tt"){
-			io.sockets.emit('command', {message : "tt", username : socket.username});
-		}
-
     })
 
     socket.on('beos', (data) => {
