@@ -29,6 +29,7 @@ app.get ('/rest/message/:ativo',function (req,res) {
 
 	var ativo = req.params.ativo;
 		html="rafael: " + ativo ;
+		history = history + "<br>" + ativo;
         res.writeHeader(200, {"Content-Type": "text/html"});
         res.write(html);
         res.end();
