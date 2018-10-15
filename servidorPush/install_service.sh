@@ -19,31 +19,31 @@ function flag_update (){
             cat /etc/os-release | grep CentOS -q
             if [ $? == 0 ]; then
                   echo -en "$green ** $atention RED HAT -$yellow like found $green ** $normal\n\n"
-            	systemctl stop servidorPush
-			cp servidorPush.service.Redhat /etc/systemd/system/servidorPush.service -f
+            	systemctl stop servidorpush
+			cp servidorpush.service.Redhat /etc/systemd/system/servidorpush.service -f
 			systemctl daemon-reload
-			systemctl start servidorPush
+			systemctl start servidorpush
 			exit 0
 		fi
 
 		cat /etc/os-release | grep Zorin -q
             if [ $? == 0 ]; then
                   echo -en "$green ** $atention DEBIAN -$yellow like found $green ** $normal\n\n"
-			systemctl stop servidorPush
-			cp servidorPush.service.Debian /etc/systemd/system/servidorPush.service  -f
+			systemctl stop servidorpush
+			cp servidorpush.service.Debian /etc/systemd/system/servidorpush.service  -f
 			systemctl daemon-reload
-			systemctl start servidorPush
+			systemctl start servidorpush
 			exit 0
             fi
 
 		cat /etc/os-release | grep Ubuntu -q
             if [ $? == 0 ]; then
                   echo -en "$green ** $atention UBUNTU -$yellow like found $green ** $normal\n\n"
-			systemctl stop servidorPush 
+			systemctl stop servidorpush 
 			flag_update $? 
-			cp servidorPush.service.Ubuntu /etc/systemd/system/servidorPush.service  -f && flag_update $?
+			cp servidorpush.service.Ubuntu /etc/systemd/system/servidorpush.service  -f && flag_update $?
 			systemctl daemon-reload && flag_update $?
-			systemctl start servidorPush && flag_update $?
+			systemctl start servidorpush && flag_update $?
 			if [ $ERROR_FLAG == 0 ]; then
 			    echo -en "\n\n $alert $green Serviço $WHITE servidorpush $green instalado com sucesso !!! $normal\n\n"
 			else 
