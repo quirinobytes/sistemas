@@ -11,7 +11,7 @@ After=network.service
 Description=CDSHELL - Servidor Push
 
 [Service]
-ExecStart=/usr/bin/nodejs  /root/sistemas/servidorPush/servidorPush.js
+ExecStart=/usr/bin/node  /root/sistemas/servidorPush/servidorPush.js
 
 # Required on some systems
   WorkingDirectory=/root/sistemas/servidorPush/
