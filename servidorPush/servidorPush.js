@@ -42,6 +42,9 @@ io.on('connection', (socket) => {
     socket.on('message', (data) => {
         //broadcast the new message
         io.sockets.emit('message', {message : data.message, username : socket.username});
+		if (data.message == "TALI"){
+			io.sockets.emit('message', {message : "Eu acho a TALI linda, beijos", username : socket.username});
+		}
     })
 
     socket.on('beos', (data) => {
