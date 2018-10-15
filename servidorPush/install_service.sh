@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Config
+ERROR_FLAG=0
 
  if [ -e /etc/os-release ]; then
 
@@ -26,11 +28,16 @@
 		cat /etc/os-release | grep Ubuntu -q
             if [ $? == 0 ]; then
                   echo -en "$green ** $atention UBUNTU -$yellow like found $green ** $normal\n\n"
-			systemctl stop servidorPush
-			cp servidorPush.service.Ubuntu /etc/systemd/system/servidorPush.service  -f
-			systemctl daemon-reload
-			systemctl start servidorPush
-			exit 0
+			systemctl stop servidorPush || ERROR_FLAG=1
+			cp servidorPush.service.Ubuntu /etc/systemd/system/servidorPush.service  -f || ERROR_FLAG=1
+			systemctl daemon-reload || ERROR_FLAG=1
+			systemctl start servidorPush || ERROR_FLAG=1
+			if [ $ERROR_FLAG == 0 ]; then
+			    echo -en "\n\n $alert $green Serviço $WHITE servidorpush $green instalado com sucesso !!! $normal\n\n"
+			else 
+			    echo -en "\n\n $alert $red (X) ERRO - Serviço $WHITE servidorpush $red não instalado !!! $normal\n\n"
+			fi
+			exit $ERROR_FLAG
             fi
 
 

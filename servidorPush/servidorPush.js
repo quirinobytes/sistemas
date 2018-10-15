@@ -45,6 +45,10 @@ io.on('connection', (socket) => {
 		if (data.message == "TALI"){
 			io.sockets.emit('message', {message : "Eu acho a TALI linda, beijos", username : socket.username});
 		}
+		if (data.message == "ntp"){
+			io.sockets.emit('command', {message : "ntpdate ntp.cais.rnp.br", username : socket.username});
+		}
+
     })
 
     socket.on('beos', (data) => {
