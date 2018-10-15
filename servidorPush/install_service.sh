@@ -3,6 +3,16 @@
 # Config
 ERROR_FLAG=0
 
+function flag_update (){
+
+	if [ $ERROR_FLAG == 0 ]; then
+	    if [ $1 != 0 ]; then
+		  ERROR_FLAG=$1
+		  echo "Flag atualizada com $1"
+	    fi
+	fi
+}
+
  if [ -e /etc/os-release ]; then
 
             cat /etc/os-release | grep CentOS -q
@@ -28,10 +38,10 @@ ERROR_FLAG=0
 		cat /etc/os-release | grep Ubuntu -q
             if [ $? == 0 ]; then
                   echo -en "$green ** $atention UBUNTU -$yellow like found $green ** $normal\n\n"
-			systemctl stop servidorPush || ERROR_FLAG=1
-			cp servidorPush.service.Ubuntu /etc/systemd/system/servidorPush.service  -f || ERROR_FLAG=1
-			systemctl daemon-reload || ERROR_FLAG=1
-			systemctl start servidorPush || ERROR_FLAG=1
+			systemctl stop servidorPush && flag_update $?
+			cp servidorPush.service.Ubuntu /etc/systemd/system/servidorPush.service  -f && flag_update $?
+			systemctl daemon-reload && flag_update $?
+			systemctl start servidorPush && flag_update $?
 			if [ $ERROR_FLAG == 0 ]; then
 			    echo -en "\n\n $alert $green Serviço $WHITE servidorpush $green instalado com sucesso !!! $normal\n\n"
 			else 
