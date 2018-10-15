@@ -28,8 +28,8 @@ app.get ('/rest/message/:ativo',function (req,res) {
 	var socketclient = ioclient.connect('http://servidorpush.superati.com.br:3000')
 
 	var ativo = req.params.ativo;
-		html="rafael: " + ativo ;
-		history = history + " | " + ativo;
+		html="Mensagem: " + ativo ;
+		history = history + ativo;
         res.writeHeader(200, {"Content-Type": "text/html"});
         res.write(html);
         res.end();
