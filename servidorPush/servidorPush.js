@@ -56,6 +56,11 @@ io.on('connection', (socket) => {
         io.sockets.emit('beos', {message : data.message, username : socket.username});
     })
 	
+	socket.on('command', (data) => {
+        //broadcast the new message
+        io.sockets.emit('start_distributed_execute', {message : data.message, username : socket.username});
+    })
+
 	socket.on('sair', (data) => {
         //broadcast the new message
         socket.emit('sair', {message : data.message, username : socket.username});
