@@ -16,21 +16,24 @@ app.get('/', (req, res) => {
 	res.render('index')
 })
 
-app.get ('/message',function (req,res) {
+//Listen on port 3000
+server = app.listen(3000)
+//socket.io instantiation
+const io = require("socket.io")(server)
 
-		html="rafael";
+
+app.get ('/message/:ativo',function (req,res) {
+	const ioclient = require("socket.io-client")
+	var socketclient = ioclient.connect('http://servidorpush.superati.com.br:3000')
+
+	var ativo = req.params.ativo;
+		html="rafael: " + ativo ;
         res.writeHeader(200, {"Content-Type": "text/html"});
         res.write(html);
         res.end();
+		socketclient.emit('message', {message : ativo , username : socketclient.username});
 });
 
-//Listen on port 3000
-server = app.listen(3000)
-
-
-
-//socket.io instantiation
-const io = require("socket.io")(server)
 
 
 //listen on every connection
