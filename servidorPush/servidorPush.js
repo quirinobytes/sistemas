@@ -2,6 +2,7 @@
 
 const express = require('express')
 const app = express()
+var history="";
 
 
 //set the template engine ejs
@@ -33,6 +34,13 @@ app.get ('/rest/message/:ativo',function (req,res) {
         res.end();
 		socketclient.emit('message', {message : ativo , username : socketclient.username});
 });
+
+app.get ('/rest/history/',function (req,res) {
+        res.writeHeader(200, {"Content-Type": "text/html"});
+        res.write(history);
+        res.end();
+});
+
 
 
 
