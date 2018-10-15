@@ -16,6 +16,14 @@ app.get('/', (req, res) => {
 	res.render('index')
 })
 
+app.get ('/message',function (req,res) {
+
+		html="rafael";
+        res.writeHeader(200, {"Content-Type": "text/html"});
+        res.write(html);
+        res.end();
+});
+
 //Listen on port 3000
 server = app.listen(3000)
 
