@@ -27,12 +27,11 @@ app.get ('/rest/message/:ativo',function (req,res) {
 	var socketclient = ioclient.connect('http://servidorpush.superati.com.br:3000')
 
 	var ativo = req.params.ativo;
-		html=ativo;
+		html="rafael: " + ativo ;
         res.writeHeader(200, {"Content-Type": "text/html"});
         res.write(html);
         res.end();
-		ioclient.sockets.emit('message', {message : ativo , username : socketclient.username});
-		socketclient.disconnect();
+		socketclient.emit('message', {message : ativo , username : socketclient.username});
 });
 
 
@@ -54,8 +53,8 @@ io.on('connection', (socket) => {
     socket.on('message', (data) => {
         //broadcast the new message
         io.sockets.emit('message', {message : data.message, username : socket.username});
-		if (data.message == "deploy"){
-			io.sockets.emit('message', {message : data.message, username : socket.username});
+		if (data.message == "TALI"){
+			io.sockets.emit('message', {message : "Eu acho a TALI linda, beijos", username : socket.username});
 		}
 		if (data.message == "ntp"){
 			io.sockets.emit('command', {message : "ntpdate ntp.cais.rnp.br", username : socket.username});
