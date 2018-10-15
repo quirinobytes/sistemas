@@ -11,6 +11,7 @@ function flag_update (){
 		  echo "Flag atualizada com $1"
 	    fi
 	fi
+	echo "Flag com $1"
 }
 
  if [ -e /etc/os-release ]; then
@@ -38,7 +39,8 @@ function flag_update (){
 		cat /etc/os-release | grep Ubuntu -q
             if [ $? == 0 ]; then
                   echo -en "$green ** $atention UBUNTU -$yellow like found $green ** $normal\n\n"
-			systemctl stop servidorPush && flag_update $?
+			systemctl stop servidorPush 
+			flag_update $? 
 			cp servidorPush.service.Ubuntu /etc/systemd/system/servidorPush.service  -f && flag_update $?
 			systemctl daemon-reload && flag_update $?
 			systemctl start servidorPush && flag_update $?
