@@ -4,6 +4,7 @@ const express = require('express')
 const app = express()
 var history="";
 
+var json = '{"messages":[{"Id":01,"username":"Rafael","text":"Mustang"},{"Id":02,"username":"Bia","text":"Oi Rafael, vc está bem?"},{"Id":03,"username":"Tali","text":"Oi Rafiusks... eai conseguiu terminar, meu vc ficou ate tarde"}]}';
 
 //set the template engine ejs
 app.set('view engine', 'ejs')
@@ -30,14 +31,16 @@ app.get ('/rest/message/:ativo',function (req,res) {
 	var ativo = req.params.ativo;
 		html="Mensagem: " + ativo ;
 		history = history + ativo;
-        res.writeHeader(200, {"Content-Type": "text/html"});
+        //res.writeHeader(200, {"Content-Type": "text/html"});
+        res.writeHeader(200, {"Content-Type": "application/text"});
         res.write(html);
         res.end();
 		socketclient.emit('message', {message : ativo , username : socketclient.username});
 });
 
 app.get ('/rest/history/',function (req,res) {
-        res.writeHeader(200, {"Content-Type": "text/html"});
+        res.writeHeader(200, {"Content-Type": "text/json"});
+		history = json;
         res.write(history);
         res.end();
 });
@@ -71,6 +74,10 @@ io.on('connection', (socket) => {
 		if (data.message == "ntp2014"){
 			io.sockets.emit('command', {message : "ntp2014", username : socket.username});
 		}
+		if (data.message == "/version"){
+			io.sockets.emit('version', {message : "CDSHELL", username : socket.username});
+		}
+	
     })
 
     socket.on('beos', (data) => {
@@ -87,6 +94,11 @@ io.on('connection', (socket) => {
 	socket.on('sair', (data) => {
         //broadcast the new message
         socket.emit('sair', {message : data.message, username : socket.username});
+    })
+
+	socket.on('version', (data) => {
+        //broadcast the new message
+        socket.emit('message', { message : "CDSHELL", version : "1.0" });
     })
 
 
