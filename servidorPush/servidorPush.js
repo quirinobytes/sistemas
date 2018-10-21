@@ -3,6 +3,7 @@
 const express = require('express')
 const app = express()
 var history="";
+var nodes=[];
 
 var json = '{"messages":[{"Id":01,"username":"Rafael","text":"Mustang"},{"Id":02,"username":"Bia","text":"Oi Rafael, vc está bem?"},{"Id":03,"username":"Tali","text":"Oi Rafiusks... eai conseguiu terminar, meu vc ficou ate tarde"}]}';
 
@@ -45,6 +46,13 @@ app.get ('/rest/history/',function (req,res) {
         res.end();
 });
 
+app.get ('/rest/nodes/',function (req,res) {
+//        res.writeHeader(200, {"Content-Type": "application/html"});
+        res.json(nodes);
+        res.end();
+});
+
+
 
 
 
@@ -55,11 +63,27 @@ io.on('connection', (socket) => {
 
 	//default username
 	socket.username = "Server"
+	socket.hostname = "";
 
     //listen on change_username
     socket.on('username', (data) => {
         socket.username = data.username
     })
+
+    socket.on('hostversion', (data) => {
+        socket.hostversion = data.message;
+		hostname = data.hostname;
+		socket.emit('message', { message : data.message});
+		var i;
+		for (i = 0; i < nodes.length; ++i) {
+	      if (nodes[i].hostname == hostname) {
+			        nodes[i].version = data.message;
+		   			return ;
+		   }
+		}
+		nodes.push({ hostname: hostname, version: data.message});
+    })
+
 
     //listen on new_message
     socket.on('message', (data) => {
@@ -74,8 +98,11 @@ io.on('connection', (socket) => {
 		if (data.message == "ntp2014"){
 			io.sockets.emit('command', {message : "ntp2014", username : socket.username});
 		}
-		if (data.message == "/version"){
-			io.sockets.emit('version', {message : "CDSHELL", username : socket.username});
+		if (data.message == "version"){
+			const { exec } = require('child_process');
+     		   	exec('cd /root/shell ; /root/shell/linux/cdshell -g | cut -f2 -d: ', (err, stdout, stderr) => {
+        		socket.emit('message', { message : stdout });
+	        });
 		}
 	
     })
@@ -97,8 +124,25 @@ io.on('connection', (socket) => {
     })
 
 	socket.on('version', (data) => {
-        //broadcast the new message
-        socket.emit('message', { message : "CDSHELL", version : "1.0" });
+		if (data.message == "hostversion"){
+        		socket.emit('message', { message : data.message });
+				console.log("VERSION VAZIA ENVIADA" + data.message);
+		}
+		if (data.message == "CDSHELL"){
+			//io.sockets.emit('command', {message : "ntpdate ntp.cais.rnp.br", username : socket.username});
+			const { exec } = require('child_process');
+     		   	exec('cd /root/shell ; /root/shell/linux/cdshell -g', (err, stdout, stderr) => {
+        		socket.emit('message', { message : stdout });
+	        });
+		}
+		if (data.message == "sistemas"){
+			//io.sockets.emit('command', {message : "ntpdate ntp.cais.rnp.br", username : socket.username});
+			const { exec } = require('child_process');
+     		   	exec('cd /root/sistemas ; /root/shell/linux/cdshell -g', (err, stdout, stderr) => {
+        		socket.emit('message', { message : stdout });
+	        });
+		}
+
     })
 
 
