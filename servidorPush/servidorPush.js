@@ -48,6 +48,7 @@ app.get ('/rest/history/',function (req,res) {
 
 app.get ('/rest/nodes/',function (req,res) {
 //        res.writeHeader(200, {"Content-Type": "application/html"});
+console.log(nodes);
         res.json(nodes);
         res.end();
 });
