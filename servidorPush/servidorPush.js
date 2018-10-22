@@ -87,6 +87,37 @@ app.post ('/rest/hostconfig/:hostname/autoupdate/:autoupdate',function (req,res)
     res.end();
 });
 
+app.post ('/rest/hostconfig/:hostname/mainfunction/:mainfunction',function (req,res) {
+	if ( req.params.mainfunction == "undefined"  || req.params.hostname == "undefined" )  {
+		res.json({});
+		res.end();
+		return;
+	}
+
+	for (i = 0; i < nodes.length; ++i) {
+	      if (nodes[i].hostname == req.params.hostname) {
+			        nodes[i].hostconfig.mainfunction = req.params.mainfunction;
+        			res.json({"exitcode":0});
+					res.end();
+					return;
+		   }
+	}
+
+	res.json({"exitcode":1});
+    res.end();
+});
+
+var commands = [{command: "ping 8.8.8.8"},{command: "deploy deploy"}];
+
+app.get ('/rest/commands/',function (req,res) {
+					console.log("Commandos: " + commands);
+        			res.json(commands);
+					res.end();
+					return;
+});
+
+
+
 //listen on every connection
 io.on('connection', (socket) => {
 	console.log('New user connected')
