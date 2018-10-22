@@ -7,7 +7,7 @@ var nodes=[];
 
 var json = '{"messages":[{"Id":01,"username":"Rafael","text":"Mustang"},{"Id":02,"username":"Bia","text":"Oi Rafael, vc está bem?"},{"Id":03,"username":"Tali","text":"Oi Rafiusks... eai conseguiu terminar, meu vc ficou ate tarde"}]}';
 
-var commands = [{command: "ping 8.8.8.8"},{command: "/root/shell/push/deploy.js deploy"},{command:"/root/shell/push/command.js 'wall rafael'"}];
+var commands = [{command: "ping 8.8.8.8 -c 3"},{command: "/root/shell/push/deploy.js deploy"},{command:"/root/shell/push/command.js 'wall rafael'"}];
 
 
 
@@ -122,15 +122,22 @@ app.get ('/rest/commands/',function (req,res) {
 });
 
 app.get ('/rest/commands/execute/:command',function (req,res) {
-		
+
 		var command = req.params.command;
-					
+
 		console.log("Command: " + command);
-		const { exec } = require('child_process');
+		for (i = 0; i < commands.length; ++i) {
+	      if (commands[i].command == req.params.command) {
+				const { exec } = require('child_process');
      		   	exec(command, (err, stdout, stderr) => {
         		res.json(stdout);
 				res.end();
-	    });
+			    });
+			console.log("EXECUTING: [" + req.params.command + "]");
+			return;
+		   }
+		}
+		console.log("ERROR: TENTATIVA DE EXECUCAO DE COMANDO: ["+req.params.command + "]\n COMMANDS["+i+"] = "+commands[i].command );
 });
 
 
