@@ -7,6 +7,11 @@ var nodes=[];
 
 var json = '{"messages":[{"Id":01,"username":"Rafael","text":"Mustang"},{"Id":02,"username":"Bia","text":"Oi Rafael, vc está bem?"},{"Id":03,"username":"Tali","text":"Oi Rafiusks... eai conseguiu terminar, meu vc ficou ate tarde"}]}';
 
+var commands = [{command: "ping 8.8.8.8"},{command: "/root/shell/push/deploy.js deploy"},{command:"/root/shell/push/command.js 'wall rafael'"}];
+
+
+
+
 //set the template engine ejs
 app.set('view engine', 'ejs')
 
@@ -108,7 +113,6 @@ app.post ('/rest/hostconfig/:hostname/mainfunction/:mainfunction',function (req,
     res.end();
 });
 
-var commands = [{command: "ping 8.8.8.8"},{command: "deploy deploy"}];
 
 app.get ('/rest/commands/',function (req,res) {
 					console.log("Commandos: " + commands);
@@ -124,11 +128,9 @@ app.get ('/rest/commands/execute/:command',function (req,res) {
 		console.log("Command: " + command);
 		const { exec } = require('child_process');
      		   	exec(command, (err, stdout, stderr) => {
+        		res.json(stdout);
+				res.end();
 	    });
-
-        res.json(command);
-		res.end();
-		return;
 });
 
 
