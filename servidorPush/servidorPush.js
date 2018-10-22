@@ -52,9 +52,40 @@ app.get ('/rest/nodes/',function (req,res) {
         res.end();
 });
 
+app.get ('/rest/hostconfig/:hostname',function (req,res) {
+		for (i = 0; i < nodes.length; ++i) {
+	      if (nodes[i].hostname == req.params.hostname) {
+			        var hostconfig = nodes[i].hostconfig;
+					console.log("H: " + hostconfig);
+        			res.json(hostconfig);
+					res.end();
+					return;
+		   }
+		}
+					console.log("ACHEINADA("+hostname+")");
+		res.json({});
+        res.end();
+});
 
+app.post ('/rest/hostconfig/:hostname/autoupdate/:autoupdate',function (req,res) {
+	if ( req.params.autoupdate == "undefined"  || req.params.hostname == "undefined" )  {
+		res.json({});
+		res.end();
+		return;
+	}
 
+	for (i = 0; i < nodes.length; ++i) {
+	      if (nodes[i].hostname == req.params.hostname) {
+			        nodes[i].hostconfig.autoupdate = req.params.autoupdate;
+        			res.json({"exitcode":0});
+					res.end();
+					return;
+		   }
+	}
 
+	res.json({"exitcode":1});
+    res.end();
+});
 
 //listen on every connection
 io.on('connection', (socket) => {
@@ -81,7 +112,8 @@ io.on('connection', (socket) => {
 		   			return ;
 		   }
 		}
-		nodes.push({ hostname: hostname, version: data.message});
+		//nodes.push({ hostname: hostname, version: data.message});
+		nodes.push({ hostname: hostname, version: data.message, hostconfig: data.hostconfig});
     })
 
 
