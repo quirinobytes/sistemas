@@ -117,6 +117,21 @@ app.get ('/rest/commands/',function (req,res) {
 					return;
 });
 
+app.get ('/rest/commands/execute/:command',function (req,res) {
+		
+		var command = req.params.command;
+					
+		console.log("Command: " + command);
+		const { exec } = require('child_process');
+     		   	exec(command, (err, stdout, stderr) => {
+	    });
+
+        res.json(command);
+		res.end();
+		return;
+});
+
+
 
 
 //listen on every connection
