@@ -5,11 +5,17 @@ const app = express()
 var history="";
 var nodes=[];
 
-var json = '{"messages":[{"Id":01,"username":"Rafael","text":"Mustang"},{"Id":02,"username":"Bia","text":"Oi Rafael, vc está bem?"},{"Id":03,"username":"Tali","text":"Oi Rafiusks... eai conseguiu terminar, meu vc ficou ate tarde"}]}';
+//var json = '{"messages":[{"Id":01,"username":"Rafael","text":"Mustang"},{"Id":02,"username":"Bia","text":"Oi Rafael, vc está bem?"},{"Id":03,"username":"Tali","text":"Oi Rafiusks... eai conseguiu terminar, meu vc ficou ate tarde"}]}';
+//var chatMessages = [{id:01,"username":"Rafael","text":"Mustang"},{id:02,"username":"Bia","text":"Oi Rafael, vc está bem?"},{id:03,"username":"Tali","text":"Oi Rafiusks... eai conseguiu terminar, meu vc ficou ate tarde"}];
+var chatMessages = [];
+var chatMessageId = 0;
 
-var commands = [{command: "ping 8.8.8.8 -c1"},{command: "/root/shell/push/deploy.js deploy"},{command:"/root/shell/push/command.js 'wall rafael'"},{command:"hostname"}];
+var commands = [{ command: "ping 8.8.8.8 -c1"},{command: "/root/shell/push/deploy.js deploy"},{command:"/root/shell/push/command.js 'wall rafael'"},{command:"hostname"}];
 
-
+//Listen on port 3000
+server = app.listen(3000)
+//socket.io instantiation
+const io = require("socket.io")(server)
 
 
 //set the template engine ejs
@@ -23,12 +29,6 @@ app.use(express.static('public'))
 app.get('/', (req, res) => {
 	res.render('index')
 })
-
-//Listen on port 3000
-server = app.listen(3000)
-//socket.io instantiation
-const io = require("socket.io")(server)
-
 
 app.get ('/rest/message/:ativo',function (req,res) {
 	const ioclient = require("socket.io-client")
@@ -44,16 +44,43 @@ app.get ('/rest/message/:ativo',function (req,res) {
 		socketclient.emit('message', {message : ativo , username : socketclient.username});
 });
 
-app.get ('/rest/history/',function (req,res) {
-        res.writeHeader(200, {"Content-Type": "text/json"});
-		history = json;
-        res.write(history);
+app.get ('/rest/chat/list/',function (req,res) {
+//        res.writeHeader(200, {"Content-Type": "text/json"});
+//        res.write(chatMessages.text);
+		res.json(chatMessages);
         res.end();
 });
 
+app.get ('/rest/chat/add/:username/:messageText',function (req,res) {
+		messageText = req.params.messageText;
+		username = req.params.username;
+		newMessage = {id:chatMessageId,username:username,text:messageText};
+		chatMessageId++;
+		chatMessages.push(newMessage);
+        res.json(chatMessages);
+        res.end();
+});
+app.get ('/rest/chat/del/:messageId',function (req,res) {
+
+		var chatMessages_filter = [];
+
+		for (i = 0; i < chatMessages.length; ++i) {
+	      if (chatMessages[i].id == req.params.messageId) {
+			console.log("DEL CHAT MESSAGE[ " +i+ " ] = " + req.params.messageId + "");
+		   }
+		   else
+			   {
+				   chatMessages_filter.push(chatMessages[i]);
+			   }
+		}
+		chatMessages = chatMessages_filter;
+		res.json(chatMessages);
+		res.end();
+});
+
+
 app.get ('/rest/nodes/',function (req,res) {
-//        res.writeHeader(200, {"Content-Type": "application/html"});
-console.log(nodes);
+		//console.log(nodes);
         res.json(nodes);
         res.end();
 });
@@ -120,6 +147,61 @@ app.get ('/rest/commands/',function (req,res) {
 					res.end();
 					return;
 });
+
+app.get ('/rest/commands/set/:id/:command',function (req,res) {
+
+		var command = req.params.command;
+		var id = req.params.id;
+
+		console.log("Command: " + command);
+	      commands[id].command = req.params.command ;
+			console.log("SET COMMANDS[ " +id + " ] = " + req.params.command + "");
+
+
+		res.json({});
+		res.end();
+});
+
+app.get ('/rest/commands/del/:command',function (req,res) {
+
+		var command = req.params.command;
+		var id = req.params.id;
+		var obj = {command:command};
+		var commands_filter = [];
+
+
+		for (i = 0; i < commands.length; ++i) {
+	      if (commands[i].command == req.params.command) {
+			//delete commands[i];
+			console.log("DEL COMMANDS[ " +id + " ] = " + req.params.command + "");
+		   }
+		   else
+			   {
+				   commands_filter.push(commands[i]);
+			   }
+		}
+		commands = commands_filter;
+		res.json({});
+		res.end();
+});
+
+
+app.get ('/rest/commands/add/:command',function (req,res) {
+
+		var command = req.params.command;
+		var id = req.params.id;
+
+		var obj = {command:command};
+	      //commands[id].command = req.params.command ;
+	      commands.push(obj) ;
+			console.log("ADD COMMANDS[ " +id + " ] = " + req.params.command + "");
+
+
+		res.json({});
+		res.end();
+});
+
+
 
 app.get ('/rest/commands/execute/:command',function (req,res) {
 
