@@ -188,6 +188,7 @@ app.get ('/rest/commands/del/:command',function (req,res) {
 			   }
 		}
 		commands = commands_filter;
+		fs.writeFileSync(commands_json, JSON.stringify(commands));
 		res.json({});
 		res.end();
 });
