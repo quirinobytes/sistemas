@@ -1,5 +1,12 @@
 #!/usr/bin/env node
 
+var fs = require('fs');
+var commands_json = '/root/sistemas/servidorPush/comandos.json';
+var commandsJsonFile = fs.readFileSync(commands_json);
+var commands = JSON.parse(commandsJsonFile);
+//var commands = [{ command: "ping 8.8.8.8 -c1"},{command: "/root/shell/push/deploy.js deploy"},{command:"/root/shell/push/command.js 'wall rafael'"},{command:"hostname"}];
+
+
 const express = require('express')
 const app = express()
 var history="";
@@ -10,7 +17,7 @@ var nodes=[];
 var chatMessages = [];
 var chatMessageId = 0;
 
-var commands = [{ command: "ping 8.8.8.8 -c1"},{command: "/root/shell/push/deploy.js deploy"},{command:"/root/shell/push/command.js 'wall rafael'"},{command:"hostname"}];
+
 
 //Listen on port 3000
 server = app.listen(3000)
@@ -66,7 +73,7 @@ app.get ('/rest/chat/del/:messageId',function (req,res) {
 
 		for (i = 0; i < chatMessages.length; ++i) {
 	      if (chatMessages[i].id == req.params.messageId) {
-			console.log("DEL CHAT MESSAGE[ " +i+ " ] = " + req.params.messageId + "");
+			console.log("DELETED CHAT MESSAGE[ " +i+ " ] = " + chatMessages[i].text + "");
 		   }
 		   else
 			   {
@@ -196,7 +203,7 @@ app.get ('/rest/commands/add/:command',function (req,res) {
 	      commands.push(obj) ;
 			console.log("ADD COMMANDS[ " +id + " ] = " + req.params.command + "");
 
-
+		fs.writeFileSync(commands_json, JSON.stringify(commands));
 		res.json({});
 		res.end();
 });
