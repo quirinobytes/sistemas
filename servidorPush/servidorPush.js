@@ -365,3 +365,6 @@ io.on('connection', (socket) => {
 
 
 })
+
+  const { exec } = require('child_process');
+  exec("cd /root/shell/push ; ./version.js ", (err, stdout, stderr) => {});
