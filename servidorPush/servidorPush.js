@@ -242,7 +242,8 @@ app.get ('/rest/hostexec/:hostname/:command',function (req,res) {
 	      if (commands[i].command == req.params.command) {
 				const { exec } = require('child_process');
      		   	exec("/root/shell/push/hostexec.js " + hostname + " '" + command + "'", (err, stdout, stderr) => {
-        		res.write(stdout);
+				if (stdout) res.write(stdout);
+				else res.write(stderr);
 				res.end();
 			    });
 			return;
