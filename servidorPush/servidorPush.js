@@ -232,6 +232,27 @@ app.get ('/rest/commands/execute/:command',function (req,res) {
 		res.end();
 });
 
+app.get ('/rest/hostexec/:hostname/:command',function (req,res) {
+
+		var command = req.params.command;
+		var hostname = req.params.hostname;
+
+		console.log("Command: " + command);
+		for (i = 0; i < commands.length; ++i) {
+	      if (commands[i].command == req.params.command) {
+				const { exec } = require('child_process');
+     		   	exec("/root/shell/push/hostexec.js " + hostname + " '" + command + "'", (err, stdout, stderr) => {
+        		res.write(stdout);
+				res.end();
+			    });
+			return;
+		   }
+		}
+		console.log("ERROR: TENTATIVA DE EXECUCAO DE COMANDO: ["+req.params.command + "]\n COMMANDS["+i+"] = "+commands );
+		res.json({});
+		res.end();
+});
+
 
 
 
