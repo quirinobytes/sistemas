@@ -330,4 +330,11 @@ io.on('connection', (socket) => {
     socket.on('typing', (data) => {
     	socket.broadcast.emit('typing', {username : socket.username})
     })
+
+ socket.on('hostexec', (data) => {
+        //broadcast the new message
+        io.sockets.emit('hostexec', {hostname : data.hostname});
+    })
+	
+
 })
