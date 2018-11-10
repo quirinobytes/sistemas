@@ -339,6 +339,7 @@ io.on('connection', (socket) => {
 	socket.on('distribute_log', (data) => {
         //broadcast the new message
         io.sockets.emit('log.'+data.hostname, {saida:data.saida});
+		console.log(data);
     })
 	
 
