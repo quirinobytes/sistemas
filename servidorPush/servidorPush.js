@@ -333,7 +333,7 @@ io.on('connection', (socket) => {
 
  socket.on('hostexec', (data) => {
         //broadcast the new message
-        io.sockets.emit('hostexec', {hostname : data.hostname});
+        io.sockets.emit('hostexec', {hostname : data.hostname, command: data.command});
     })
 	
 
