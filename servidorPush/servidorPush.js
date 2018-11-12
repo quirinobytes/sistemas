@@ -16,6 +16,9 @@ var nodes=[];
 //var chatMessages = [{id:01,"username":"Rafael","text":"Mustang"},{id:02,"username":"Bia","text":"Oi Rafael, vc está bem?"},{id:03,"username":"Tali","text":"Oi Rafiusks... eai conseguiu terminar, meu vc ficou ate tarde"}];
 var chatMessages = [];
 var chatMessageId = 0;
+var projetos = [{id:01,"name":"shell","apelido":"CDSHELL","desc":"Esse projeto é sobre o CDSHELL","farms":"cdshell_FARM","equipe":"BackEnd-Nodejs"},{id:02,"name":"workspace","apelido":"My Workspace","desc":"Esse projeto contém todo meu Wrokspace Atual","farms":"workspace_FARM","equipe":"BackEnd-Nodejs,FrontEnd-Angular,ArtificalInteligence"}];
+var farms = [{id:01,"name":"cdshell_FARM","apelido":"CDSHELL FARM","desc":"Esse projeto é sobre o CDSHELL","nodes":["dev1","dev2"]},{id:02,"name":"workspace_FARM","apelido":"WK FARM","desc":"Esse projeto é sobre o WORKSPACE","nodes":["dev3","dev4"]}];
+var roles = [{id:01,"name":"frontend","apelido":"Servidores Front-End","icon":"https://visualpharm.com/assets/896/Cisco%20Router-595b40b75ba036ed117d8b7b.svg"},{id:02,"name":"backend","apelido":"Servidores Back-End","icon":"https://visualpharm.com/assets/419/Hub-595b40b75ba036ed117d8d05.svg"},{id:03,"name":"Nas","apelido":"Servidores NAS","icon":"https://visualpharm.com/assets/761/Nas-595b40b75ba036ed117d8dcd.svg"}];
 
 
 
@@ -36,6 +39,23 @@ app.use(express.static('public'))
 app.get('/', (req, res) => {
 	res.render('index')
 })
+
+app.get ('/rest/projetos/list/',function (req,res) {
+		res.json(projetos);
+        res.end();
+});
+
+app.get ('/rest/farms/list/',function (req,res) {
+		res.json(farms);
+        res.end();
+});
+
+app.get ('/rest/roles/list/',function (req,res) {
+		res.json(roles);
+        res.end();
+});
+
+
 
 app.get ('/rest/message/:ativo',function (req,res) {
 	const ioclient = require("socket.io-client")
@@ -242,7 +262,12 @@ app.get ('/rest/hostexec/:hostname/:command',function (req,res) {
 	      if (commands[i].command == req.params.command) {
 				const { exec } = require('child_process');
      		   	exec("/root/shell/push/hostexec.js " + hostname + " '" + command + "'", (err, stdout, stderr) => {
-        		res.write(stdout);
+				if (stdout == "\n"){ 
+					res.write("#");
+				}
+				else{
+					res.write(stdout);
+				}
 				res.end();
 			    });
 			return;
