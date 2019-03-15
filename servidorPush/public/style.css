@@ -60,7 +60,7 @@ section#chatroom {
     background-color: rgb(200, 200, 230);
     padding: 10px;
     display: block;
-
+    text-align: left;
 }
 
 section#titulo {
@@ -122,9 +122,9 @@ p#message {
 }
 
 .message:nth-child(even) {
-    background-color: #81DAF5;
+    background-color: rgb(180, 214, 224);
 }
 
 .message:nth-child(odd) {
-    background-color: #81BEF7;
+    background-color: rgb(210, 226, 241);
 }
