@@ -6,6 +6,10 @@ var commandsJsonFile = fs.readFileSync(commands_json);
 var commands = JSON.parse(commandsJsonFile);
 //var commands = [{ command: "ping 8.8.8.8 -c1"},{command: "/root/shell/push/deploy.js deploy"},{command:"/root/shell/push/command.js 'wall rafael'"},{command:"hostname"}];
 
+// Formidable para upload de arquivos
+var formidable = require('formidable');
+// Leyout do ejs
+var expressLayouts = require('express-ejs-layouts')
 
 const express = require('express')
 const app = express()
@@ -31,6 +35,8 @@ const io = require("socket.io")(server)
 //set the template engine ejs
 app.set('view engine', 'ejs')
 
+app.use(expressLayouts) 
+
 //middlewares
 app.use(express.static('public'))
 
@@ -39,6 +45,37 @@ app.use(express.static('public'))
 app.get('/', (req, res) => {
 	res.render('index')
 })
+
+app.get('/upload', (req, res) => {
+	
+	path = "./fileupload/";
+	fs.readdir(path, function(err, items) {
+    console.log(items);
+
+    for (var i=0; i<items.length; i++) {
+        console.log(items[i]);
+    }
+
+	res.render('upload')
+});
+
+})
+
+app.post('/fileupload', (req, res) => {
+var form = new formidable.IncomingForm();
+
+ form.parse(req, function (err, fields, files) {
+	var oldpath = files.filetoupload.path;
+	var newpath = './fileupload/' + files.filetoupload.name;
+	fs.rename(oldpath, newpath, function (err) {
+
+ 	if (err) throw err;
+    	res.write('File uploaded and moved!');
+    	res.end();
+ 	});
+ });
+})
+
 
 app.get ('/rest/projetos/list/',function (req,res) {
 		res.json(projetos);
@@ -329,14 +366,14 @@ io.on('connection', (socket) => {
         		socket.emit('message', { message : stdout });
 	        });
 		}
-	
+
     })
 
     socket.on('beos', (data) => {
         //broadcast the new message
         io.sockets.emit('beos', {message : data.message, username : socket.username});
     })
-	
+
 	socket.on('command', (data) => {
         //broadcast the new message
         io.sockets.emit('distributed', {message : data.message, username : socket.username});
@@ -376,19 +413,16 @@ io.on('connection', (socket) => {
     	socket.broadcast.emit('typing', {username : socket.username})
     })
 
- socket.on('hostexec', (data) => {
+ 	socket.on('hostexec', (data) => {
         //broadcast the new message
         io.sockets.emit('hostexec', {hostname : data.hostname, command: data.command});
     })
-	
+
 	socket.on('distribute_log', (data) => {
         //broadcast the new message
         io.sockets.emit('log.'+data.hostname, {saida:data.saida});
 		console.log(data);
     })
-	
-
-
 })
 
   const { exec } = require('child_process');
