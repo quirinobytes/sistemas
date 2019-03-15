@@ -8,6 +8,7 @@ var commands = JSON.parse(commandsJsonFile);
 
 // Formidable para upload de arquivos
 var formidable = require('formidable');
+
 // Leyout do ejs
 var expressLayouts = require('express-ejs-layouts')
 
@@ -35,30 +36,23 @@ const io = require("socket.io")(server)
 //set the template engine ejs
 app.set('view engine', 'ejs')
 
-app.use(expressLayouts) 
+//usando o layout do EJS
+app.use(expressLayouts)
 
 //middlewares
 app.use(express.static('public'))
 
-
+ 
 //routes
 app.get('/', (req, res) => {
 	res.render('index')
 })
 
 app.get('/upload', (req, res) => {
-	
+
 	path = "./fileupload/";
-	fs.readdir(path, function(err, items) {
-    console.log(items);
-
-    for (var i=0; i<items.length; i++) {
-        console.log(items[i]);
-    }
-
-	res.render('upload')
-});
-
+	//abre o diretorio path e renderiza para o ejs renderizar o arquivo upload.ejc com a var items
+	fs.readdir(path, (err, files) => res.render('upload', { items: files }  ));
 })
 
 app.post('/fileupload', (req, res) => {
@@ -70,16 +64,35 @@ var form = new formidable.IncomingForm();
 	fs.rename(oldpath, newpath, function (err) {
 
  	if (err) throw err;
-    	res.write('File uploaded and moved!');
+		//res.write('File uploaded and moved!');
+		res.redirect('./upload')
     	res.end();
  	});
  });
 })
 
+app.get('/deletefile/:filename', (req,res) => {
+
+		const filename = req.params.filename
+		const path = "./fileupload/"
+		
+		try {
+			fs.unlinkSync(path+filename)
+			console.log("Arquivo apagado="+filename)
+		} catch(err) {
+			console.error(err)
+		}
+	console.log("Arquivo apagado "+req.params.filename)
+	res.redirect('./../upload')
+})
 
 app.get ('/rest/projetos/list/',function (req,res) {
 		res.json(projetos);
         res.end();
+});
+
+app.get ('/contact',function (req,res) {
+	res.render('contact')
 });
 
 app.get ('/rest/farms/list/',function (req,res) {
@@ -97,7 +110,7 @@ app.get ('/rest/roles/list/',function (req,res) {
 app.get ('/rest/message/:ativo',function (req,res) {
 	const ioclient = require("socket.io-client")
 	var socketclient = ioclient.connect('http://servidorpush.superati.com.br:3000')
-
+	fileupload
 	var ativo = req.params.ativo;
 		html="Mensagem: " + ativo ;
 		history = history + ativo;

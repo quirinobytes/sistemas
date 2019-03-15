@@ -1,7 +1,7 @@
 
 $(function(){
    	//make connection
-	var socket = io.connect('http://167.99.173.26:3000/')
+	var socket = io.connect('http://servidorpush.superati.com.br:3000/')
 
 	//buttons and inputs
 	var message = $("#message")

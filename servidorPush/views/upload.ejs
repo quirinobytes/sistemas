@@ -9,29 +9,43 @@
   </head>
 
   <body>
-    <header>
-      <h1>Cdshell - Chat Upload</h1>
-    </header>
-
+      <section id="titulo">
+        <header>
+          <h3>upload.js</h3>
+        </header>
+      </section>
     <section>
-    <div id="change_username">
-		<input id="username" type="text" />
-		<button id="send_username" type="button">Definir nome</button>
-    </div>
+      <div id="change_username">
+        <input id="username" type="text" />
+        <button id="send_username" type="button">define filename</button>
+      </div>
     </section>
 
     <section id="chatroom">
-      <section id="feedback"></section>
+        <section id="filebox">
+          <h4> fileupload/ </h4>
+          <hr>
+          <table><th>arquivos</th>
+              <% for (item of items) {%>
+                <tr><td>
+                <a href='./deletefile/<%= item %>'>
+                  X
+                </a>
+                &nbsp; - &nbsp;<%= item %> &nbsp;
+              </td></tr>
+              <% } %>
+            </table>
+        </section>
     </section>
 
     <section id="input_zone">
-	<form action="fileupload" method="post" enctype="multipart/form-data">
-	<input type="file" name="filetoupload">
-	<input type="submit">
-	</form>
+      <form action="fileupload" method="post" enctype="multipart/form-data">
+        <input type="file" name="filetoupload">
+        <input type="submit">
+      </form>
     </section>
 
-    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-    <script src="chat.js"></script>
+      <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+      <script src="chat.js"></script>
   </body>
 </html>

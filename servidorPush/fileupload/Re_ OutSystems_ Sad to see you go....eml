@@ -1,0 +1,303 @@
+Delivered-To: quirinobytes@gmail.com
+Received: by 2002:a17:90a:b00d:0:0:0:0 with SMTP id x13-v6csp3562999pjq;
+        Tue, 19 Feb 2019 06:34:32 -0800 (PST)
+X-Google-Smtp-Source: AHgI3IbuwRsT5b0F8KffLUAuzCnFiBKcR8TzpkNKlYBcuAsNajv41GvKle+DtDHauLzNqAt9T9LW
+X-Received: by 2002:a65:620c:: with SMTP id d12mr27928726pgv.328.1550586872375;
+        Tue, 19 Feb 2019 06:34:32 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1550586872; cv=none;
+        d=google.com; s=arc-20160816;
+        b=MDVFPgDhsppb4YMftTFtFbV5SZN3OirrAklIDkWX6z+BgAmDkk0CS/TtRbgIaYT+E3
+         sTGsa82CQ11cn1eAJNq78Qcs3qm7BuA83V25Hfz51u87/TXs7V4/jCAHm/VoVS6hhXyo
+         jFwSUedU5027EUluKk5PdfuAVAJjqxDVmZNAu3/XLRmd2gOg8YIIzl0fCNizXcZxH//d
+         2022KR0nKHlq5HfQAFdUy9V2nTbuZIWsHqUqHLE/yK348BKAp/ZTetC0nGJxSn/gglyY
+         6xY2uZVnA9AsVsbU1nlIkqfLkEbJKRdAqstQp4f6ZJBf9LEk1cSkElRvI+kJx94XDlei
+         5WaQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=references:message-id:from:subject:date:reply-to:mime-version:to
+         :dkim-signature;
+        bh=euQlMaE19pheyQ7QtTO8xE4t6R4WMqHw/dBqlQKjKNQ=;
+        b=KEC3t1EyxV8jTPtST4nhPspNsngvIvubF4fZejEx0HBlqfBEeldc6jXd/W/+MmP7xn
+         Kg305WBhTe6cZlprFlEoccjnFZ8EAG6Bqc+Ola99FIW2xEkxT9AstG+7jFtnWoDFSp0N
+         9XuQvfinCKcvXCtKl6qSZCCYbrM5OFHXlXg+BS+I4IaFd6Hy20DJAwWQgNP6WjGe3FgN
+         rwxNVKUhk+m3qRwJHfTkbPITVmyAXCXaCOu/XgkoUE/lp1c8lrKWQ35Ja1C7NxMSLiPl
+         m9tbYUbagU/7TCVBQ0+o7QTZLimhp9M7nQCR005f5bFWb1zQUt4HLRXLXSeuWKstNOnR
+         uanA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@outsystems-4920766cc512.intercom-mail.com header.s=intercom header.b="LsvDoqh/";
+       spf=pass (google.com: domain of bounces+20888199775@rp.outsystems-4920766cc512.intercom-mail.com designates 54.245.181.12 as permitted sender) smtp.mailfrom=bounces+20888199775@rp.outsystems-4920766cc512.intercom-mail.com;
+       dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=intercom-mail.com
+Return-Path: <bounces+20888199775@rp.outsystems-4920766cc512.intercom-mail.com>
+Received: from mta1b15.spe.intercom-mail.com (mta1b15.spe.intercom-mail.com. [54.245.181.12])
+        by mx.google.com with ESMTPS id d65si15261464pgc.213.2019.02.19.06.34.31
+        for <quirinobytes@gmail.com>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 19 Feb 2019 06:34:32 -0800 (PST)
+Received-SPF: pass (google.com: domain of bounces+20888199775@rp.outsystems-4920766cc512.intercom-mail.com designates 54.245.181.12 as permitted sender) client-ip=54.245.181.12;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@outsystems-4920766cc512.intercom-mail.com header.s=intercom header.b="LsvDoqh/";
+       spf=pass (google.com: domain of bounces+20888199775@rp.outsystems-4920766cc512.intercom-mail.com designates 54.245.181.12 as permitted sender) smtp.mailfrom=bounces+20888199775@rp.outsystems-4920766cc512.intercom-mail.com;
+       dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=intercom-mail.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=outsystems-4920766cc512.intercom-mail.com; s=intercom;
+	t=1550586871; i=@outsystems-4920766cc512.intercom-mail.com;
+	bh=euQlMaE19pheyQ7QtTO8xE4t6R4WMqHw/dBqlQKjKNQ=;
+	h=To:Content-Type:Date:Subject:From:Message-ID;
+	b=LsvDoqh/Jy9vSvvyCf23LAqSHCrC8+hyUylzO4oxidhipRa6M51g7v+i2DL1FNain
+	 XcdHaJCMMSuLWH0chkg4P9jsW04bGCnIbRFf3N9H4nkUHQP5Ml2ATvptDYOgWtQ4OS
+	 9D4ORks+2NDA9tV6CdXgFFTieE3yvWPxYvZ7EsTw=
+X-MSFBL: iWHGVLVDn9e2+7EBd7yiReqajnNGDwVMPHxc4YdO6nw=|eyJtZXNzYWdlX2lkIjo
+	iMDAyM2Y3MTM2YzVjNzkzZWQ3MWEiLCJjdXN0b21lcl9pZCI6IjEiLCJyIjoicXV
+	pcmlub2J5dGVzQGdtYWlsLmNvbSIsInN1YmFjY291bnRfaWQiOiIxNDgzIiwidGV
+	uYW50X2lkIjoiaW50ZXJjb20ifQ==
+To: quirinobytes@gmail.com
+Content-Type: multipart/alternative; boundary="_----FoWfhgP0uZx5w4a4fdY2kg===_7C/A1-15993-7F31C6C5"
+MIME-Version: 1.0
+Reply-To: Rafael from OutSystems <rafael.alves.ramos@outsystems-4920766cc512.intercom-mail.com>
+X-Mailgun-Variables: {"app_id":"jbmss1vm","conversation_id":"20888199775","intercom_message_id":317660748,"user_id":"5c0f29527ca646437b3d6d33"}
+Date: Tue, 19 Feb 2019 14:34:31 +0000
+Subject: Re: Re: OutSystems: Sad to see you go...
+X-Intercom-Comment-Id: 2679082994
+X-Intercom-App-Id: jbmss1vm
+X-Intercom-Bin: proven_users
+From: "Rafael from OutSystems" <rafael.alves.ramos@outsystems-4920766cc512.intercom-mail.com>
+Message-ID: <1d719122-5dfcf319-1550586871-20888199775@outsystems-4920766cc512.intercom-mail.com>
+X-Mailgun-Track-Clicks: no
+X-Mailgun-Track-Opens: no
+X-Auto-Response-Suppress: OOF, AutoReply
+References: <7df369470a1e4f4fff35bcc77ba49af4fde0616f@intercom>
+X-Mailgun-Tag: user-admin_reply
+
+--_----FoWfhgP0uZx5w4a4fdY2kg===_7C/A1-15993-7F31C6C5
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+Hello Rafael, my name is Rafael as well :) This is indeed and unfortunate s=
+ituation and I totally understand your frustration. Please let me help you =
+with the backup. I am not sure how long ago was the last time you developed=
+ in this App you are looking to retrieve, but if you create a Support Ticke=
+t via our Support Portal, you can request this directly to the team. The su=
+pport team is actually the one suited for this request as they have the nec=
+essary tools to provide you the backup. Would you mind requesting this with=
+ the ticket=3F Kind regards, Rafael=0A=0A> On Tue, Feb 19, 2019 at 08:44 AM=
+, &quot;Rafael Castro&quot; &lt;quirinobytes@gmail.com&gt; wrote: =0A>=0A> =
+I lost my main application, the app was called App. And I cant recover it y=
+et.... it was very very bad for me. I lost very time, trying to understand =
+and develop it, and you delete it because its free platform... Ghrrrrr Em s=
+eg, 18 de fev de 2019 =C3=A0s 07:55, &lt;developers@outsystems.com&gt; escr=
+eveu: Hi Rafael, As we previously mentioned, we need to recycle unused pers=
+onal environments to maintain a high-quality, free offering for our communi=
+ty. We have therefore recently reclaimed your environment. At any point in =
+the future you can reclaim your personal environment! We=E2=80=99re sad to =
+see you go. Could you, simply by replying to this email, tell us about your=
+ experience so that we can improve=3F The OutSystems Team www.outsystems.co=
+m | @outsystems You received this email because someone registered in the O=
+utSystems site using this email address. -- Rafael Castro - www.superati.co=
+m.br=0A>
+--_----FoWfhgP0uZx5w4a4fdY2kg===_7C/A1-15993-7F31C6C5
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html; charset="UTF-8"
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/htm=
+l4/strict.dtd">=0A<html>=0A<head>=0A<meta content=3D"text/html; charset=3Du=
+tf-8" http-equiv=3D"Content-Type">=0A<meta name=3D"viewport" content=3D"wid=
+th=3Ddevice-width">=0A<meta name=3D"format-detection" content=3D"telephone=
+=3Dno">=0A<!-- Resets -->=0A=0A<style type=3D"text/css" data-premailer=3D"i=
+gnore">=0A  #outlook a{=0A    padding: 0;=0A  }=0A  body{=0A    -webkit-tex=
+t-size-adjust: none;=0A    -ms-text-size-adjust: none;=0A    font-weight: 4=
+00;=0A  }=0A  .ReadMsgBody{=0A    width: 100%;=0A  }=0A  .ExternalClass{=0A=
+    width: 100%;=0A  }=0A  img {=0A    border: 0;=0A    max-width: 100%;=0A=
+    height: auto;=0A    outline: none;=0A    display: inline-block;=0A    m=
+argin: 0;=0A    padding: 0;=0A    text-decoration: none;=0A    line-height:=
+ 100%;=0A  }=0A  #backgroundTable{=0A    height: 100% !important;=0A    mar=
+gin: 0;=0A    padding: 0;=0A    width: 100% !important;=0A  }=0A</style>=0A=
+<!-- Main styles -->=0A=0A<style type=3D"text/css">=0A  /**=0A   * Generic=
+=0A   */=0A=0A  .main {=0A    font-family: Helvetica, Arial, sans-serif;=0A=
+    letter-spacing: 0;=0A    width: 100%;=0A  }=0A=0A  table {=0A    border=
+-spacing: 0;=0A    border-collapse: separate;=0A    table-layout: fixed;=0A=
+  }=0A=0A  td {=0A    padding: 0;=0A    font-family: Helvetica, Arial, sans=
+-serif;=0A  }=0A=0A  a {=0A    border: none;=0A    outline: none !important=
+;=0A  }=0A=0A=0A  /**=0A   * Content=0A   */=0A=0A  .content-td {=0A    col=
+or: #222;=0A    line-height: 20px;=0A  }=0A=0A  .content-td .article-card,=
+=0A  .content-td .intercom-interblocks-link-content-container {=0A    max-w=
+idth: 500px;=0A    border: 1px solid #e0e0e0;=0A    border-radius: 2px;=0A =
+   padding: 0;=0A  }=0A=0A  .content-td .article-card .intercom-interblocks=
+-link-content-container {=0A    border: none;=0A  }=0A=0A  .ratings,=0A  .c=
+ontent-td .messenger-card {=0A    border-collapse: separate;=0A    border-s=
+pacing: 0;=0A    table-layout: fixed;=0A    border-radius: 5px;=0A    borde=
+r: 1px solid #dadfe3;=0A  }=0A=0A  .content-td .messenger-card table {=0A  =
+  border: none;=0A  }=0A=0A  .events {=0A    background-color: #F5F5F5;=0A =
+   border-collapse: separate;=0A    border-spacing: 10px;=0A    table-layou=
+t: fixed;=0A    border-radius: 5px;=0A    border: 1px solid #E5E5E5;=0A    =
+padding: 0px 15px 0px 15px;=0A  }=0A=0A  .content-td .ratings td,=0A  .cont=
+ent-td .messenger-card td {=0A    border: 0;=0A    padding: 0;=0A  }=0A=0A =
+ .content-td .messenger-card td {=0A    text-align: center;=0A  }=0A=0A  .c=
+ontent-td .messenger-card td p {=0A    font-size: 14px;=0A    color: #6e7a8=
+9;=0A    text-align: center;=0A  }=0A=0A  .content-td .ratings table {=0A  =
+  margin-bottom: 0;=0A  }=0A=0A  .content-td .ratings table img {=0A    mar=
+gin: 0;=0A  }=0A=0A  .rating-link {=0A    max-width: 27px;=0A    min-height=
+: 27px;=0A  }=0A=0A  .content-td > :first-child {=0A    margin-top: 0;=0A  =
+  padding-top: 0;=0A  }=0A=0A  .content-td h1 {=0A    font-size: 1.3em;=0A =
+   font-weight: bold;=0A    line-height: 25px;=0A    margin-top: 20px;=0A  =
+  margin-bottom: 5px;=0A  }=0A=0A  .content-td h1 + h2 {=0A    margin-top: =
+0 !important;=0A  }=0A=0A  .content-td h2 + h1 {=0A    margin-top: 0 !impor=
+tant;=0A  }=0A=0A  .content-td h2 {=0A    font-size: 1.1em;=0A    font-weig=
+ht: bold;=0A    margin: 20px 0 5px;=0A  }=0A=0A  .content-td h3 ,=0A  .cont=
+ent-td h4 ,=0A  .content-td h5 {=0A    font-size: 13px;=0A    font-weight: =
+bold;=0A    margin-bottom: 5px;=0A  }=0A=0A  .content-td p {=0A    margin: =
+0 0 15px 0;=0A  }=0A=0A  .content-td p img,=0A  .content-td h1 img,=0A  .co=
+ntent-td h2 img,=0A  .content-td li img,=0A  .content-td .intercom-h2b-butt=
+on img {=0A    margin: 0;=0A    padding: 0;=0A  }=0A=0A  .content-td a {=0A=
+    color: #1251ba;=0A    text-decoration: underline;=0A  }=0A=0A  .content=
+-td .messenger-card .link {=0A    margin-bottom: 25px;=0A  }=0A=0A  .conten=
+t-td strong {=0A    color: #606060;=0A  }=0A=0A  .content-td ol,=0A  .conte=
+nt-td ul {=0A    margin: 0 0 20px 40px;=0A    padding: 0;=0A    list-style:=
+ disc;=0A  }=0A=0A  .content-td ol {=0A    list-style: decimal;=0A  }=0A=0A=
+  .content-td ol li,=0A  .content-td ul li {=0A    margin: 5px 0;=0A  }=0A=
+=0A  .content-td blockquote {=0A    padding: 10px 0;=0A    margin: 10px 0;=
+=0A    font-style: italic;=0A  }=0A=0A  .content-td blockquote a {=0A    co=
+lor: #8C8C8C;=0A  }=0A=0A  .content-td img {=0A    max-width: 100%;=0A    m=
+argin: 15px 0 15px;=0A  }=0A=0A  .content-td .intercom-container {=0A    ma=
+rgin-bottom: 16px;=0A  }=0A=0A  .content-td hr {=0A    border: none;=0A    =
+border-top: 1px solid #DDD;=0A    border-bottom: 0;=0A    margin: 20px 0;=
+=0A  }=0A=0A  .content-td table th {=0A    font-weight: bold;=0A    backgro=
+und: #F6F6F6;=0A  }=0A=0A  .content-td table td,=0A  .content-td table th {=
+=0A    padding: 7px 10px;=0A    border: 1px solid #DADADA;=0A    text-align=
+: left;=0A    vertical-align: top;=0A  }=0A=0A  .content-td table {=0A    m=
+argin-bottom: 20px;=0A    border-collapse: collapse;=0A    border-spacing: =
+0;=0A  }=0A=0A  .content-td table.intercom-container.intercom-align-center =
+{=0A    margin-left: auto;=0A    margin-right: auto;=0A  }=0A=0A  .content-=
+td table.intercom-container td {=0A    border: none;=0A    padding: 0;=0A  =
+  margin: 0;=0A  }=0A=0A  /**=0A   * Admin profile=0A   */=0A  .admin_profi=
+le table {=0A    margin: 0;=0A  }=0A  .admin_profile table td {=0A    paddi=
+ng: 0;=0A  }=0A  .admin_profile table,=0A  .admin_profile table td,=0A  .ad=
+min_profile table th {=0A    border: none;=0A  }=0A  .admin_profile .avatar=
+ {=0A    -ms-interpolation-mode: bicubic;=0A    -webkit-background-clip: pa=
+dding-box;=0A    -webkit-border-radius: 20px;=0A    background-clip: paddin=
+g-box;=0A    border-radius: 20px;=0A    display: inline-block;=0A    height=
+: 40px;=0A    max-width: 100%;=0A    outline: none;=0A    text-decoration: =
+none;=0A    width: 40px;=0A  }=0A  .admin_profile .icon_container {=0A    d=
+isplay: inline-block;=0A    vertical-align: middle;=0A  }=0A  .admin_profil=
+e .icon {=0A    margin: 0;=0A  }=0A  .admin_profile .name {=0A    color: #0=
+00;=0A  }=0A  .admin_profile .signature_border {=0A    margin: 0;=0A    lin=
+e-height: 0;=0A    margin-bottom: 3px;=0A  }=0A=0A  /**=0A   * Footer=0A   =
+*/=0A   .smiley {=0A     padding: 4px;=0A   }=0A   .feedback_item:first-chi=
+ld .smiley {=0A     padding-left: 0;=0A   }=0A  .divider {=0A    border: no=
+ne;=0A    height: 1px;=0A    color: #f0f0f0;=0A    background-color: #f0f0f=
+0;=0A    margin: 0;=0A  }=0A  .feedback-text {=0A    margin-bottom: 0.3em;=
+=0A    margin-top: 0;=0A  }=0A  .deemphasized_text {=0A    color: #8c8c8c;=
+=0A  }=0A  .sent_to_text {=0A    font-weight: bold;=0A  }=0A  .dark_text {=
+=0A    color: #222;=0A  }=0A  .light_text {=0A    color: #999;=0A  }=0A  .a=
+lign_middle {=0A    vertical-align: middle !important;=0A  }=0A  .history {=
+=0A    color: #500050;=0A  }=0A  .history_content {=0A    border-left: 1px =
+#ccc solid;=0A  }=0A  .history .history_content {=0A    font-style: normal;=
+=0A    padding-top: 1px;=0A  }=0A  .history .history_content > *:last-child=
+ {=0A    margin-bottom: 0;=0A  }=0A  .powered_by_link {=0A    color: #8c8c8=
+c;=0A    font-weight: bold;=0A    text-decoration: none;=0A  }=0A</style>=
+=0A=0A<!-- Outlook.com -->=0A<style type=3D"text/css" data-premailer=3D"ign=
+ore">=0A  .content-td blockquote + * {=0A    margin-top: 10px !important;=
+=0A  }=0A=0A  .ExternalClass .content-td h1 {=0A    padding: 15px 0 5px 0 !=
+important;=0A  }=0A=0A  .ExternalClass .content-td h2 {=0A    padding: 0 0 =
+5px 0 !important;=0A  }=0A=0A  .ExternalClass .content-td p {=0A    padding=
+: 10px 0 !important;=0A  }=0A=0A  .ExternalClass .content-td hr + * {=0A   =
+ padding-top: 20px !important;=0A  }=0A=0A  .ExternalClass .content-td .int=
+ercom-container {=0A    padding: 5px 0 !important;=0A  }=0A=0A  .ExternalCl=
+ass .content-td ol ,=0A  .ExternalClass .content-td ul {=0A    padding: 0 0=
+ 20px 40px !important;=0A    margin: 0 !important;=0A  }=0A=0A  img {=0A   =
+ max-width: 600px !important;=0A  }=0A  @media (max-width: 600px) {=0A    i=
+mg {=0A      max-width: 100% !important;=0A    }=0A  }=0A</style>=0A=0A=0A<=
+!-- Outlook fix -->=0A=0A<!--[if gte mso 9]>=0A    <style type=3D"text/css"=
+>=0A      table {=0A        border-collapse: collapse !important;=0A      }=
+=0A      td {=0A        border-collapse: collapse !important;=0A      }=0A =
+   </style>=0A<![endif]-->=0A=0A</head>=0A=0A<body id=3D"admin_reply" style=
+=3D"background-color: white" bgcolor=3D"white">=0A=0A  <table cellspacing=
+=3D"0" border=3D"0" cellpadding=3D"0" align=3D"center" bgcolor=3D"transpare=
+nt" class=3D"main" style=3D"border-collapse: separate; border-spacing: 0; f=
+ont-family: Helvetica, Arial, sans-serif; letter-spacing: 0; table-layout: =
+fixed; width: 100%">=0A    <tr>=0A      <td class=3D"content-td" style=3D"c=
+olor: #222; font-family: Helvetica, Arial, sans-serif; line-height: 20px; p=
+adding: 0">=0A        =0A          <div style=3D"margin-top: 0; padding-top=
+: 0"><p style=3D"margin: 0 0 15px">Hello Rafael, my name is Rafael as well =
+:)<br><br>This is indeed and unfortunate situation and I totally understand=
+ your frustration. Please let me help you with the backup.<br><br>I am not =
+sure how long ago was the last time you developed in this App you are looki=
+ng to retrieve, but if you create <a href=3D"https://www.outsystems.com/sup=
+portportal/support/" target=3D"_blank" style=3D"border: none; color: #1251b=
+a; outline: none !important; text-decoration: underline">a Support Ticket v=
+ia our Support Portal</a>, you can request this directly to the team. The s=
+upport team is actually the one suited for this request as they have the ne=
+cessary tools to provide you the backup.<br><br>Would you mind requesting t=
+his with the ticket=3F<br><br>Kind regards,<br>Rafael</p></div>=0A      </t=
+d>=0A    </tr>=0A      <tr>=0A        <td style=3D"font-family: Helvetica, =
+Arial, sans-serif; padding: 0">=0A          <div class=3D"admin_profile">=
+=0A  <table cellspacing=3D"0" border=3D"0" cellpadding=3D"0" bgcolor=3D"tra=
+nsparent" style=3D"border: none; border-collapse: separate; border-spacing:=
+ 0; margin: 0; table-layout: fixed">=0A    <tr height=3D"20"></tr>=0A    <t=
+r>=0A      <td style=3D"border: none; font-family: Helvetica, Arial, sans-s=
+erif; padding: 0">=0A        <p class=3D"signature_border light_text" style=
+=3D"color: #999; line-height: 0; margin: 0 0 3px">--</p>=0A      </td>=0A  =
+  </tr>=0A    <tr height=3D"15"></tr>=0A    <tr>=0A        <td class=3D"ali=
+gn_middle" valign=3D"middle" width=3D"50" align=3D"left" style=3D"border: n=
+one; font-family: Helvetica, Arial, sans-serif; padding: 0; vertical-align:=
+ middle !important">=0A          <img class=3D"avatar" width=3D"32" height=
+=3D"32" alt=3D"Rafael" src=3D"https://outsystems-4920766cc512.intercom-mail=
+.com/avatars/2072154/square_128/41720-0-4-1527070756.jpg=3F1527070756" sty=
+le=3D"-ms-interpolation-mode: bicubic; -webkit-background-clip: padding-box=
+; -webkit-border-radius: 20px; background-clip: padding-box; border-radius:=
+ 20px; display: inline-block; height: 40px; max-width: 100%; outline: none;=
+ text-decoration: none; width: 40px">=0A        </td>=0A      <td class=3D"=
+align_middle" valign=3D"middle" align=3D"left" style=3D"border: none; font-=
+family: Helvetica, Arial, sans-serif; padding: 0; vertical-align: middle !i=
+mportant">=0A        <strong class=3D"name" style=3D"color: #000">Rafael</s=
+trong> <span class=3D"dark_text" style=3D"color: #222">from OutSystems</spa=
+n>=0A      </td>=0A    </tr>=0A  </table>=0A</div>=0A=0A        </td>=0A   =
+   </tr>=0A      <tr height=3D"35"></tr>=0A=0A    <tr>=0A      <td class=3D=
+"content-td" style=3D"color: #222; font-family: Helvetica, Arial, sans-seri=
+f; line-height: 20px; padding: 0">=0A        <div class=3D"history" style=
+=3D"color: #500050; margin-top: 0; padding-top: 0">=0A            <div clas=
+s=3D"history_reply">=0A              On Tue, Feb 19, 2019 at 08:44 AM, "Raf=
+ael Castro" &lt;quirinobytes@gmail.com&gt; wrote: <br>=0A              <blo=
+ckquote class=3D"history_content" style=3D"border-left-color: #ccc; border-=
+left-style: solid; border-left-width: 1px; font-style: normal; margin: 0 0 =
+0 .8ex; padding: 1px 0 10px 1ex">=0A                  <div style=3D"margin-=
+bottom: 0">=0A<p style=3D"margin: 0 0 15px">I lost my main application, the=
+ app was called App.</p>=0A<p style=3D"margin: 0 0 15px"><br></p>=0A<p styl=
+e=3D"margin: 0 0 15px">And I cant recover it yet.... it was very very bad f=
+or me.</p>=0A<p style=3D"margin: 0 0 15px"><br></p>=0A<p style=3D"margin: 0=
+ 0 15px"><br></p>=0A<p style=3D"margin: 0 0 15px">I lost very time, trying =
+to understand and develop it, and you delete it because its free platform..=
+. Ghrrrrr</p>=0A<p style=3D"margin: 0 0 15px"><br></p>=0A<p style=3D"margi=
+n: 0 0 15px"><br></p>=0A<p style=3D"margin: 0 0 15px"><br></p>=0A<p style=
+=3D"margin: 0 0 15px"><br></p>=0A<br><p style=3D"margin: 0 0 15px">Em seg, =
+18 de fev de 2019 =C3=A0s 07:55, &lt;<a href=3D"mailto:developers@outsystem=
+s.com" target=3D"_blank" style=3D"border: none; color: #8C8C8C; outline: no=
+ne !important; text-decoration: underline">developers@outsystems.com</a>&gt=
+; escreveu:<br> </p> Hi Rafael, As we previously mentioned, we need to recy=
+cle unused personal environments to maintain a high-quality, free offering =
+for our community. We have therefore recently reclaimed your environment. A=
+t any point in the future you can <a href=3D"https://www.outsystems.com/hom=
+e/" target=3D"_blank" style=3D"border: none; color: #8C8C8C; outline: none =
+!important; text-decoration: underline">reclaim your personal environment</=
+a>! <p style=3D"margin: 0 0 15px"> We=E2=80=99re sad to see you go. Could y=
+ou, simply by replying to this email, tell us about your experience so that=
+ we can improve=3F </p> <p style=3D"margin: 0 0 15px"> The OutSystems Team =
+<br> <a href=3D"https://www.outsystems.com/" target=3D"_blank" style=3D"bor=
+der: none; color: #8C8C8C; outline: none !important; text-decoration: under=
+line">www.outsystems.com</a> | <a href=3D"https://twitter.com/OutSystems" t=
+arget=3D"_blank" style=3D"border: none; color: #8C8C8C; outline: none !impo=
+rtant; text-decoration: underline">@outsystems</a> </p>=0A<p style=3D"margi=
+n: 0 0 15px"> You received this email because someone registered in the Out=
+Systems site using this email address. </p> <br><p style=3D"margin: 0 0 15p=
+x"><br></p>-- <br><p style=3D"margin: 0 0 15px">Rafael Castro - <a href=3D"=
+http://www.superati.com.br" target=3D"_blank" style=3D"border: none; color:=
+ #8C8C8C; outline: none !important; text-decoration: underline">www.superat=
+i.com.br</a> </p>=0A</div>=0A              </blockquote>=0A            </di=
+v>=0A              =0A            </div>=0A        =0A      </td>=0A    </t=
+r>=0A  </table>=0A<img src=3D"https://outsystems-4920766cc512.intercom-mail=
+.com/via/o=3Fh=3D4bb7aea3fb519e7239220c7ca02bb6b1894b4926-20888199775:2679=
+082994" width=3D"1" height=3D"1" style=3D"display: block;" alt=3D"intercom"=
+>=0A=0D=0A<img border=3D"0" width=3D"1" height=3D"1" alt=3D"" src=3D"https:=
+//outsystems-4920766cc512.intercom-mail.com/q/SnaKGFV7F14jOq_3ef0T5Q~~/AAAA=
+AQA~/RgReTpj3PlcIaW50ZXJjb21CCgAj9xNsXHk-1xpSFnF1aXJpbm9ieXRlc0BnbWFpbC5jb2=
+1YBAAABcs~">=0D=0A</body>=0A</html>
+--_----FoWfhgP0uZx5w4a4fdY2kg===_7C/A1-15993-7F31C6C5--
+
