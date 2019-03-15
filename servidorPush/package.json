@@ -18,9 +18,11 @@
   },
   "homepage": "https://github.com/ngrt/simpleChatApp#readme",
   "dependencies": {
-    "ejs": "^2.5.7",
-    "express": "^4.16.2",
+    "body-parser": "^1.18.3",
+    "ejs": "^2.6.1",
+    "express": "^4.16.4",
     "express-ejs-layouts": "^2.5.0",
+    "faker": "^4.1.0",
     "formidable": "^1.2.1",
     "socket.io": "^2.0.4"
   }
