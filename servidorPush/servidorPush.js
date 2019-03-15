@@ -347,15 +347,18 @@ io.on('connection', (socket) => {
     socket.on('hostversion', (data) => {
         socket.hostversion = data.message;
 		hostname = data.hostname;
+		hostconfig = data.hostconfig;
 		socket.emit('message', { message : data.message});
 		var i;
 		for (i = 0; i < nodes.length; ++i) {
+			//procurando a posicao certa para fazer a atualicao.
 	      if (nodes[i].hostname == hostname) {
 			        nodes[i].version = data.message;
+					nodes[i].hostconfig = data.hostconfig;
+					//fez a atualizacao sai fora, senao lá em baixo vai criar um novo denovo.
 		   			return ;
 		   }
 		}
-		//nodes.push({ hostname: hostname, version: data.message});
 		nodes.push({ hostname: hostname, version: data.message, hostconfig: data.hostconfig});
     })
 
