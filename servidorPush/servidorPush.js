@@ -348,7 +348,7 @@ io.on('connection', (socket) => {
         socket.hostversion = data.message
 		hostname = data.hostname
 		hostconfig = data.hostconfig
-		console.log("############## "+hostconfig)
+		console.log(" FUNCAO PRINCIPAL DESSE SERVIDOR(mainfunction) ...  \"hostconfig\":"+JSON.stringify(hostconfig))
 		socket.emit('message', { message : data.message})
 		var i
 		for (i = 0; i < nodes.length; ++i) {
