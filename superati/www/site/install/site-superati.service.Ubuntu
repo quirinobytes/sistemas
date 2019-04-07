@@ -1,0 +1,35 @@
+
+############################
+#
+#  CDSHELL - Servidor Push - Systemd Service - UBUNTU
+#
+##############################
+
+
+[Unit]
+After=network.service
+Description=CDSHELL - Servidor Push
+
+[Service]
+ExecStart=/usr/bin/node  /root/sistemas/superati/www/site/app.js
+
+# Required on some systems
+  WorkingDirectory=/root/sistemas/superati/www/site/
+
+
+# Restart service after 10 seconds if node service crashes
+ RestartSec=60
+ Restart=always
+
+# Output to syslog
+ StandardOutput=syslog
+ StandardError=syslog
+ SyslogIdentifier=site-superati
+
+#Environment
+ User=root
+ Environment=NODE_ENV=production PORT=3000 NODE_MODULES=/lib/node_modules
+
+[Install]
+
+WantedBy=multi-user.target

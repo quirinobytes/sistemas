@@ -154,6 +154,12 @@ blockquote {
 	text-align:center;
 	width:100%;
 }
+.heading_underline {
+	height: 2px;
+	border-radius: 5px;
+	background-color:  rgb(22, 136, 136);
+	width:98%;
+}
 
 .heading h3{
 	text-transform:uppercase;
@@ -334,7 +340,6 @@ section#intro  {
   color: rgb(22, 136, 136);
 	line-height: 1.8em;
 	font-size: 35px;
-	font-weight: bold;
 }
 /* ==== general main content style ==== */
 #maincontent.section {

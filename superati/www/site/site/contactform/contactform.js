@@ -75,24 +75,24 @@ jQuery(document).ready(function($) {
         switch (rule) {
           case 'required':
             if (i.val() === '') {
-              ferror = ierror = true;
+              ferror = ierror = true
             }
             break;
 
           case 'minlen':
             if (i.val().length < parseInt(exp)) {
-              ferror = ierror = true;
+              ferror = ierror = true
             }
-            break;
+            break
         }
         i.next('.validation').html((ierror ? (i.attr('data-msg') != undefined ? i.attr('data-msg') : 'wrong Input') : '')).show('blind');
       }
-    });
+    })
     if (ferror) return false;
-    else var str = $(this).serialize();
-    var action = $(this).attr('action');
+    else var str = $(this).serialize()
+    var action = $(this).attr('action')
     if( ! action ) {
-      action = 'contactform/contactform.php';
+      action = '/contactform'
     }
     $.ajax({
       type: "POST",
