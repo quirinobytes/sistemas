@@ -9,9 +9,46 @@
   </head>
 
   <body>
-    <header>
-      <h1>Cdshell - Chat Deploy</h1>
-    </header>
+
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/pt_BR/sdk.js#xfbml=1&version=v3.2&appId=1142602759151596&autoLogAppEvents=1"></script>
+
+<!-- <script>
+FB.getLoginStatus(function(response) {
+    console.log(response);
+    console.log("Nao esta autenticado");
+});
+console.log("chque login finalizado");
+</script>  -->
+
+
+<div id="fb-root"></div>
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '396146767609044',
+      cookie     : true,
+      xfbml      : true,
+      version    : 'v2.5'
+    });
+      
+    FB.AppEvents.logPageView();   
+      
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "https://connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+   </script>
+<div class="fb-login-button" data-size="large" data-button-type="continue_with" data-auto-logout-link="false" data-use-continue-as="false"></div>
+      <section id="titulo">
+          <header>
+            <h3>Chat</h3>
+          </header>
+        </section>
 
     <section>
     <div id="change_username">

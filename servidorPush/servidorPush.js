@@ -6,6 +6,11 @@ var commandsJsonFile = fs.readFileSync(commands_json);
 var commands = JSON.parse(commandsJsonFile);
 //var commands = [{ command: "ping 8.8.8.8 -c1"},{command: "/root/shell/push/deploy.js deploy"},{command:"/root/shell/push/command.js 'wall rafael'"},{command:"hostname"}];
 
+// Formidable para upload de arquivos
+var formidable = require('formidable');
+
+// Leyout do ejs
+var expressLayouts = require('express-ejs-layouts')
 
 const express = require('express')
 const app = express()
@@ -31,18 +36,63 @@ const io = require("socket.io")(server)
 //set the template engine ejs
 app.set('view engine', 'ejs')
 
+//usando o layout do EJS
+app.use(expressLayouts)
+
 //middlewares
 app.use(express.static('public'))
 
-
+ 
 //routes
 app.get('/', (req, res) => {
 	res.render('index')
 })
 
+app.get('/upload', (req, res) => {
+
+	path = "./fileupload/";
+	//abre o diretorio path e renderiza para o ejs renderizar o arquivo upload.ejc com a var items
+	fs.readdir(path, (err, files) => res.render('upload', { items: files }  ));
+})
+
+app.post('/fileupload', (req, res) => {
+var form = new formidable.IncomingForm();
+
+ form.parse(req, function (err, fields, files) {
+	var oldpath = files.filetoupload.path;
+	var newpath = './fileupload/' + files.filetoupload.name;
+	fs.rename(oldpath, newpath, function (err) {
+
+ 	if (err) throw err;
+		//res.write('File uploaded and moved!');
+		res.redirect('./upload')
+    	res.end();
+ 	});
+ });
+})
+
+app.get('/deletefile/:filename', (req,res) => {
+
+		const filename = req.params.filename
+		const path = "./fileupload/"
+		
+		try {
+			fs.unlinkSync(path+filename)
+			console.log("Arquivo apagado="+filename)
+		} catch(err) {
+			console.error(err)
+		}
+	console.log("Arquivo apagado "+req.params.filename)
+	res.redirect('./../upload')
+})
+
 app.get ('/rest/projetos/list/',function (req,res) {
 		res.json(projetos);
         res.end();
+});
+
+app.get ('/contact',function (req,res) {
+	res.render('contact')
 });
 
 app.get ('/rest/farms/list/',function (req,res) {
@@ -60,7 +110,7 @@ app.get ('/rest/roles/list/',function (req,res) {
 app.get ('/rest/message/:ativo',function (req,res) {
 	const ioclient = require("socket.io-client")
 	var socketclient = ioclient.connect('http://servidorpush.superati.com.br:3000')
-
+	fileupload
 	var ativo = req.params.ativo;
 		html="Mensagem: " + ativo ;
 		history = history + ativo;
@@ -295,17 +345,21 @@ io.on('connection', (socket) => {
     })
 
     socket.on('hostversion', (data) => {
-        socket.hostversion = data.message;
-		hostname = data.hostname;
-		socket.emit('message', { message : data.message});
-		var i;
+        socket.hostversion = data.message
+		hostname = data.hostname
+		hostconfig = data.hostconfig
+		console.log(" FUNCAO PRINCIPAL DESSE SERVIDOR(mainfunction) ...  \"hostconfig\":"+JSON.stringify(hostconfig))
+		socket.emit('message', { message : data.message})
+		var i
 		for (i = 0; i < nodes.length; ++i) {
+			//procurando a posicao certa para fazer a atualicao.
 	      if (nodes[i].hostname == hostname) {
-			        nodes[i].version = data.message;
-		   			return ;
+			        nodes[i].version = data.message
+					nodes[i].hostconfig = data.hostconfig
+					//fez a atualizacao sai fora, senao lá em baixo vai criar um novo denovo.
+		   			return 
 		   }
 		}
-		//nodes.push({ hostname: hostname, version: data.message});
 		nodes.push({ hostname: hostname, version: data.message, hostconfig: data.hostconfig});
     })
 
@@ -329,14 +383,14 @@ io.on('connection', (socket) => {
         		socket.emit('message', { message : stdout });
 	        });
 		}
-	
+
     })
 
     socket.on('beos', (data) => {
         //broadcast the new message
         io.sockets.emit('beos', {message : data.message, username : socket.username});
     })
-	
+
 	socket.on('command', (data) => {
         //broadcast the new message
         io.sockets.emit('distributed', {message : data.message, username : socket.username});
@@ -376,19 +430,16 @@ io.on('connection', (socket) => {
     	socket.broadcast.emit('typing', {username : socket.username})
     })
 
- socket.on('hostexec', (data) => {
+ 	socket.on('hostexec', (data) => {
         //broadcast the new message
         io.sockets.emit('hostexec', {hostname : data.hostname, command: data.command});
     })
-	
+
 	socket.on('distribute_log', (data) => {
         //broadcast the new message
         io.sockets.emit('log.'+data.hostname, {saida:data.saida});
 		console.log(data);
     })
-	
-
-
 })
 
   const { exec } = require('child_process');

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" const="text/html;charset=UTF-8" />
+    <link href="http://fonts.googleapis.com/css?family=Comfortaa" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="style.css" >
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+    <title>Servidor - Push Notification </title>
+  </head>
+
+  <body>
+      <section id="titulo">
+        <header>
+          <h3>upload.js</h3>
+        </header>
+      </section>
+    <section>
+      <div id="change_username">
+        <input id="username" type="text" />
+        <button id="send_username" type="button">define filename</button>
+      </div>
+    </section>
+
+    <section id="chatroom">
+        <section id="filebox">
+          <h4> fileupload/ </h4>
+          <hr>
+          <table><th>arquivos</th>
+              <% for (item of items) {%>
+                <tr><td>
+                <a href='./deletefile/<%= item %>'>
+                  X
+                </a>
+                &nbsp; - &nbsp;<%= item %> &nbsp;
+              </td></tr>
+              <% } %>
+            </table>
+        </section>
+    </section>
+
+    <section id="input_zone">
+      <form action="fileupload" method="post" enctype="multipart/form-data">
+        <input type="file" name="filetoupload">
+        <input type="submit">
+      </form>
+    </section>
+
+      <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+      <script src="chat.js"></script>
+  </body>
+</html>
