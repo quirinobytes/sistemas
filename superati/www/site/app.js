@@ -26,7 +26,7 @@ app.post('/contactform', function (req, res) {
   const filename = 'messages.json'
 
   fs.exists(filename, function(exists) {
-    saved = fs.appendFileSync(filename, content , 'utf8', function () {
+    saved = fs.appendFileSync(filename, content + ',' , 'utf8', function () {
       
     })
     res.send('OK')
