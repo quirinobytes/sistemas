@@ -45,9 +45,9 @@ function flag_update (){
 			systemctl daemon-reload
 			systemctl start vale
 			if [ $ERROR_FLAG == 0 ]; then
-			    echo -en "\n\n $alert $green Serviço $WHITE servidorpush $green instalado com sucesso !!! $normal\n\n"
+			    echo -en "\n\n $alert $green Serviço $WHITE site-vale $green instalado com sucesso !!! $normal\n\n"
 			else 
-			    echo -en "\n\n $alert $red (X) ERRO - Serviço $WHITE servidorpush $red não instalado !!! $normal\n\n"
+			    echo -en "\n\n $alert $red (X) ERRO - Serviço $WHITE site-vale $red não instalado !!! $normal\n\n"
 			fi
 			exit $ERROR_FLAG
             fi

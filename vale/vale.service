@@ -4,7 +4,7 @@ Description= Vale Site
 #Requires=After=mysql.service       # Requires the mysql service to run first
 
 [Service]
-ExecStart=/usr/local/bin/node /home/vagrant/sistemas/vale/vale.js
+ExecStart=/usr/bin/node /home/vagrant/sistemas/vale/vale.js
 #ExecStart=/root/workspace/bolsa-systems/blueMoney/backEnd/bolsa.js 2>&1
 
 # Required on some systems
