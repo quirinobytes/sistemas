@@ -1,0 +1,12 @@
+[2J
+[0;0f
+[34m===================================================[39m
+[34m|[39m[33m#[39m[34m|[39m	[32m[39m[33mVale[39m[31m ® [39m[37m Estacionamento [39m[36m - Versão 1.0[39m  [34m|[39m[33m#[39m[34m|[39m
+[34m===================================================
+
+[39m
+° Horário de inicio: [90mSun Apr 28 2019 00:34:18 GMT-0300 (-03)[39m[90m............. [39m[32mOK
+[39m
+(node:15494) DeprecationWarning: `open()` is deprecated in mongoose >= 4.11.0, use `openUri()` instead, or set the `useMongoClient` option if using `connect()` or `createConnection()`. See http://mongoosejs.com/docs/4.x/docs/connections.html#use-mongo-client
+° Conectado a: [33mmongodb://localhost/API[39m[90m......................................... [39m[32mOK 
+[39m

@@ -1,0 +1,21 @@
+[Unit]
+After=network.service
+Description= CDSHELLD - Client Service
+
+[Service]
+ExecStart=/usr/bin/node cdshelld.js $(cdshell -V) >> /tmp/cdshell.log
+WorkingDirectory=/root/shell/push
+Restart=always
+#Restart=on-failure
+RestartSec=500ms
+StartLimitInterval=15s
+StartLimitBurst=1
+
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=cdshelld
+User=root
+Environment=NODE_ENV=production PORT=3000 NODE_MODULES=/lib/node_modules
+
+[Install]
+WantedBy=multi-user.target

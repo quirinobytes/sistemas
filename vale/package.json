@@ -11,7 +11,7 @@
     "mongoose": "^4.6.3",
     "react": "16.4.0",
     "request": "^2.76.0",
-	"crawler-js": "^2.0.1"
+    "crawler-js": "^2.0.1"
   },
   "devDependencies": {},
   "scripts": {
