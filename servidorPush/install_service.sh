@@ -51,6 +51,17 @@ function flag_update (){
 			fi
 			exit $ERROR_FLAG
             fi
+            
+            cat /etc/os-release | grep opensuse -qi
+            if [ $? == 0 ]; then
+                  echo -en "$green ** $atention OpenSuSE -$yellow like found $green ** $normal\n\n"
+			systemctl stop servidorpush
+			cp servidorpush.service.Opensuse /etc/systemd/system/servidorpush.service  -f
+			systemctl daemon-reload
+			systemctl start servidorpush
+			exit 0
+            fi
+
 
 
 		echo -en "TEM arquivo /etc/os-release  mas FLAVOR desconhecido\n\n"
