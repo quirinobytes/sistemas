@@ -62,6 +62,17 @@ function flag_update (){
 			exit 0
             fi
 
+            cat /etc/os-release | grep Redhat -qi
+            if [ $? == 0 ]; then
+                  echo -en "$green ** $atention Redhat -$yellow like found $green ** $normal\n\n"
+			systemctl stop servidorpush
+			cp servidorpush.service.Redhat /etc/systemd/system/servidorpush.service  -f
+			systemctl daemon-reload
+			systemctl start servidorpush
+			exit 0
+            fi
+
+
 
 
 		echo -en "TEM arquivo /etc/os-release  mas FLAVOR desconhecido\n\n"
