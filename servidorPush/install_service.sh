@@ -65,11 +65,17 @@ function flag_update (){
             cat /etc/os-release | grep Redhat -qi
             if [ $? == 0 ]; then
                   echo -en "$green ** $atention Redhat -$yellow like found $green ** $normal\n\n"
-			systemctl stop servidorpush
+			systemctl stop servidorpush || echo -en "$yellow Maybe the first install, try reinstall\n\n"
 			cp servidorpush.service.Redhat /etc/systemd/system/servidorpush.service  -f
 			systemctl daemon-reload
 			systemctl start servidorpush
-			exit 0
+                  if [ $ERROR_FLAG == 0 ]; then
+			    echo -en "\n\n $alert $green Serviço $WHITE servidorpush $green instalado com sucesso !!! $normal\n\n"
+			else 
+			    echo -en "\n\n $alert $red (X) ERRO - Serviço $WHITE servidorpush $red não instalado !!! $normal\n\n"
+			fi
+			exit $ERROR_FLAG
+
             fi
 
 
