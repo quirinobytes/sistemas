@@ -71,6 +71,21 @@ var form = new formidable.IncomingForm();
  });
 })
 
+app.post('/repo/:name', (req, res) => {
+	const reponame = req.params.name
+  console.log("reponame:"+reponame)
+  command = '/bin/bash -c "/root/git/devops-tools/commons/create-repo.sh ' + reponame +'"'
+  console.log( 'criando repositorio ["/root/git/devops-tools/commons/create-repo.sh ' + reponame + '"]')
+  const { exec } = require('child_process');
+          exec(command, (err, stdout, stderr) => {
+          console.log(stdout)
+          res.json(stdout);
+          res.end();
+  });
+
+})
+
+
 app.get('/deletefile/:filename', (req,res) => {
 
 		const filename = req.params.filename
