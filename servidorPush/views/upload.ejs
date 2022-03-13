@@ -5,13 +5,13 @@
     <link href="http://fonts.googleapis.com/css?family=Comfortaa" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="style.css" >
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
-    <title>Servidor - Push Notification </title>
+    <title>Servidor Push - Chatops </title>
   </head>
 
   <body>
       <section id="titulo">
         <header>
-          <h3>upload.js</h3>
+          <h3> Upload Files</h3>
         </header>
       </section>
     <section>
@@ -23,18 +23,17 @@
 
     <section id="chatroom">
         <section id="filebox">
-          <h4> fileupload/ </h4>
+          <h4> ls servidorPush/fileupload/* </h4>
           <hr>
           <table><th>arquivos</th>
               <% for (item of items) {%>
-                <tr><td>
-                <a href='./deletefile/<%= item %>'>
-                  X
-                </a>
-                &nbsp; - &nbsp;<%= item %> &nbsp;
-              </td></tr>
+                <tr>
+                  <td>
+                   <a href='./deletefile/<%= item %>'> X </a> &nbsp; - &nbsp;<%= item %> &nbsp;
+                  </td>
+                </tr>
               <% } %>
-            </table>
+          </table>
         </section>
     </section>
 
