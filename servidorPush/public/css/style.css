@@ -55,7 +55,6 @@ div#chatroom {
 
 section#chatroom {
     border: 5px ;
-    height: 75%;
     width: 50%;
     background-color: rgb(200, 200, 230);
     padding: 10px;
@@ -65,7 +64,6 @@ section#chatroom {
 
 section#titulo {
     border: 2px ;
-    height: 15%;
     width: 50%;
     background-color: rgb(11, 11, 109);
     padding: 10px;

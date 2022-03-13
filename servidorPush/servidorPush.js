@@ -42,7 +42,7 @@ app.use(expressLayouts)
 //middlewares
 app.use(express.static('public'))
 
- 
+
 //routes
 app.get('/', (req, res) => {
 	res.render('index')
@@ -50,7 +50,7 @@ app.get('/', (req, res) => {
 
 app.get('/upload', (req, res) => {
 
-	path = "./fileupload/";
+	path = "./upload/";
 	//abre o diretorio path e renderiza para o ejs renderizar o arquivo upload.ejc com a var items
 	fs.readdir(path, (err, files) => res.render('upload', { items: files }  ));
 })
