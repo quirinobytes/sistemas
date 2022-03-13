@@ -25,11 +25,11 @@
         <section id="filebox">
           <h4> ls servidorPush/fileupload/* </h4>
           <hr>
-          <table><th>arquivos</th>
+          <table><th>Del &nbsp;&nbsp; | &nbsp; Filename</th>
               <% for (item of items) {%>
                 <tr>
                   <td>
-                   <a href='./deletefile/<%= item %>'> X </a> &nbsp; - &nbsp;<%= item %> &nbsp;
+                   <a href='./deletefile/<%= item %>'>[ X ]</a> &nbsp; | &nbsp; <%= item %> &nbsp;
                   </td>
                 </tr>
               <% } %>
