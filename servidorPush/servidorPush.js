@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 var fs = require('fs');
-var commands_json = '/root/sistemas/servidorPush/comandos.json';
+var commands_json = './comandos.json';
 var commandsJsonFile = fs.readFileSync(commands_json);
 var commands = JSON.parse(commandsJsonFile);
 //var commands = [{ command: "ping 8.8.8.8 -c1"},{command: "/root/shell/push/deploy.js deploy"},{command:"/root/shell/push/command.js 'wall rafael'"},{command:"hostname"}];
