@@ -21,50 +21,48 @@ console.log("chque login finalizado");
 </script>  -->
 
 
-<div id="fb-root"></div>
 <script>
-  window.fbAsyncInit = function() {
-    FB.init({
-      appId      : '396146767609044',
-      cookie     : true,
-      xfbml      : true,
-      version    : 'v2.5'
-    });
-      
-    FB.AppEvents.logPageView();   
-      
-  };
 
-  (function(d, s, id){
-     var js, fjs = d.getElementsByTagName(s)[0];
-     if (d.getElementById(id)) {return;}
-     js = d.createElement(s); js.id = id;
-     js.src = "https://connect.facebook.net/en_US/sdk.js";
-     fjs.parentNode.insertBefore(js, fjs);
-   }(document, 'script', 'facebook-jssdk'));
-   </script>
-<div class="fb-login-button" data-size="large" data-button-type="continue_with" data-auto-logout-link="false" data-use-continue-as="false"></div>
-      <section id="titulo">
-          <header>
-            <h3>Chat</h3>
-          </header>
-        </section>
+        alert('peguei');
 
-    <section>
+    function checkForEnterKey(){
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            document.getElementById("send_message").click();
+        }
+    }
+
+
+    function buttonClickEvent()
+    {
+        alert('The button has been clicked!');
+    }
+
+
+</script>
+
+
+   <section id="titulo">
+      <header>
+        <h3> Chat </h3>
+      </header>
+   </section>
+
+   <section>
     <div id="change_username">
 		<input id="username" type="text" />
 		<button id="send_username" type="button">Definir nome</button>
     </div>
-    </section>
+   </section>
 
-    <section id="chatroom">
+   <section id="chatroom">
       <section id="feedback"></section>
-    </section>
+   </section>
 
-    <section id="input_zone"> 
-      <input id="message" class="vertical-align" type="text" />
-      <button id="send_message" class="vertical-align" type="button">Enviar</button>
-    </section>
+   <section id="input_zone">
+      <input name='message' id="message" class="vertical-align" type="text" tabindex="0" autofocus="autofocus" onkeyup="checkForEnterKey(this.value)" />
+      <button id="send_message" class="vertical-align" tabindex="0" role="button" type="submit" value="submit" >Enviar</button>
+   </section>
 
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
     <script src="chat.js"></script>
