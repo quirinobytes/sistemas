@@ -2,7 +2,7 @@
 
 	var os = require("os")
 	const io = require("socket.io-client")
-	var socket = io.connect('http://servidorpush:3000')
+	var socket = io.connect('http://servidorpush.superati.com.br:3000')
 
 	//buttons and inputs
 	var message = "version:" + process.argv[2]
