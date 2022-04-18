@@ -49,6 +49,11 @@ div#box {
    align-content: center;
 }
 
+div.container {
+   overflow: auto;
+   max-height: 130%;
+}
+
 div#chatroom {
     align-content: center;
 }
