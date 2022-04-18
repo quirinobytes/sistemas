@@ -395,6 +395,9 @@ io.on('connection', (socket) => {
 		if (data.message == "version"){
 			const { exec } = require('child_process');
      		   	exec('cd /root/shell ; /root/shell/linux/cdshell -g | cut -f2 -d: ', (err, stdout, stderr) => {
+
+              socket.emit('username', {username : hostname})
+
         		socket.emit('message', { message : stdout });
 	        });
 		}
