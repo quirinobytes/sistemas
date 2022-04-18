@@ -351,8 +351,8 @@ io.on('connection', (socket) => {
 	console.log("Conn.ID: " + socket.client.conn.id + "(" + socket.client.conn.remoteAddress + ")" )
 
 	//default username
-	socket.username = "Server"
-	socket.hostname = "";
+	socket.username = "Chatops"
+	socket.hostname = "toca das baratas";
 
     //listen on change_username
     socket.on('username', (data) => {
@@ -372,70 +372,75 @@ io.on('connection', (socket) => {
 			        nodes[i].version = data.message
 					nodes[i].hostconfig = data.hostconfig
 					//fez a atualizacao sai fora, senao lá em baixo vai criar um novo denovo.
-		   			return 
+		   			return
 		   }
 		}
 		nodes.push({ hostname: hostname, version: data.message, hostconfig: data.hostconfig});
     })
 
 
-    //listen on new_message
+    //quando chegar [message], verifica se é igual a uma dessas data.message e responde no [message]
     socket.on('message', (data) => {
-        //broadcast the new message
-        io.sockets.emit('message', {message : data.message, username : socket.username});
-		if (data.message == "devops"){
-			io.sockets.emit('message', {message : "devops" , username : socket.username});
-		}
-		if (data.message == "help"){
-			io.sockets.emit('message', {message : "Olá boa tarde, tente umas das opções<br> * deploy -> inicia um novo deploy <br> version -> exibe a versao do servidor", username : "Bot"});
-		}
-		if (data.message == "ntp2014"){
-			io.sockets.emit('command', {message : "ntp2014", username : socket.username});
-		}
-		if (data.message == "version"){
-			const { exec } = require('child_process');
-     		   	exec('cd /root/shell ; /root/shell/linux/cdshell -g | cut -f2 -d: ', (err, stdout, stderr) => {
-        		socket.emit('message', { message : stdout });
-	        });
-		}
 
-    })
+      //broadcast the new message
+      io.sockets.emit('message', {message : data.message, username : socket.username});
 
-    socket.on('beos', (data) => {
+		  if (data.message == "devops"){
+			  io.sockets.emit('message', {message : "devops" , username : socket.username});
+		  }
+	  	if (data.message == "help"){
+   			io.sockets.emit('message', {message : "Olá boa tarde, "+
+                                             "tente umas das opções<br> "+
+                                             "* deploy -> inicia um novo deploy <br>"+
+                                             "* version -> exibe a versao do servidor <br>"+
+                                             "* date -> executa o comando data ", username : "Bot@" + hostname});
+		                             }
+		  if (data.message == "ntp"){
+			  io.sockets.emit('command', {message : "ntp ntp.cais.rnp.br", username : socket.username});
+      }
+		  if (data.message == "version"){
+			   const { exec } = require('child_process');
+     		 exec('cd /root/shell ; /root/shell/linux/cdshell -V ', (err, stdout, stderr) => {
+           socket.emit('message', { message : "Minha versão instalada: [ " + stdout + "]", username : "Bot@" + hostname  });
+	       });
+		  }
+     })
+
+     socket.on('beos', (data) => {
         //broadcast the new message
         io.sockets.emit('beos', {message : data.message, username : socket.username});
-    })
+     })
 
-	socket.on('command', (data) => {
+	   socket.on('command', (data) => {
         //broadcast the new message
         io.sockets.emit('distributed', {message : data.message, username : socket.username});
-		console.log('DISTRIBUTING [ '+ data.message + ' ] on nodes...')
-    })
+		 console.log('DISTRIBUTING [ '+ data.message + ' ] on nodes...')
+     })
 
-	socket.on('sair', (data) => {
+	   socket.on('sair', (data) => {
         //broadcast the new message
         socket.emit('sair', {message : data.message, username : socket.username});
-    })
+     })
 
-	socket.on('version', (data) => {
-		if (data.message == "hostversion"){
-        		socket.emit('message', { message : data.message });
-				console.log("VERSION VAZIA ENVIADA" + data.message);
-		}
-		if (data.message == "CDSHELL"){
-			//io.sockets.emit('command', {message : "ntpdate ntp.cais.rnp.br", username : socket.username});
-			const { exec } = require('child_process');
-     		   	exec('cd /root/shell ; /root/shell/linux/cdshell -g', (err, stdout, stderr) => {
+	   socket.on('version', (data) => {
+		   if (data.message == "hostversion"){
+         socket.emit('message', { message : data.message });
+			   console.log("VERSION VAZIA ENVIADA" + data.message);
+		   }
+		   if (data.message == "CDSHELL"){
+			 //io.sockets.emit('command', {message : "ntpdate ntp.cais.rnp.br", username : socket.username});
+			   const { exec } = require('child_process');
+     		 exec('cd /root/shell ; /root/shell/linux/cdshell -g', (err, stdout, stderr) => {
         		socket.emit('message', { message : stdout });
-	        });
-		}
-		if (data.message == "sistemas"){
-			//io.sockets.emit('command', {message : "ntpdate ntp.cais.rnp.br", username : socket.username});
-			const { exec } = require('child_process');
-     		   	exec('cd /root/sistemas ; /root/shell/linux/cdshell -g', (err, stdout, stderr) => {
+	       });
+		   }
+		   if (data.message == "sistemas"){
+			 //io.sockets.emit('command', {message : "ntpdate ntp.cais.rnp.br", username : socket.username});
+			   const { exec } = require('child_process');
+     		 exec('cd /root/sistemas ; /root/shell/linux/cdshell -g', (err, stdout, stderr) => {
         		socket.emit('message', { message : stdout });
-	        });
-		}
+	       });
+		   }
 
     })
 
