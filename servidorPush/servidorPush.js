@@ -386,8 +386,8 @@ io.on('connection', (socket) => {
 		if (data.message == "devops"){
 			io.sockets.emit('message', {message : "devops" , username : socket.username});
 		}
-		if (data.message == "ntp"){
-			io.sockets.emit('command', {message : "ntpdate ntp.cais.rnp.br", username : socket.username});
+		if (data.message == "help"){
+			io.sockets.emit('message', {message : "Olá boa tarde, tente umas das opções<br> * deploy -> inicia um novo deploy <br> version -> exibe a versao do servidor", username : "Bot"});
 		}
 		if (data.message == "ntp2014"){
 			io.sockets.emit('command', {message : "ntp2014", username : socket.username});
