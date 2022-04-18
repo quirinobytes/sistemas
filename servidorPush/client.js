@@ -9,12 +9,12 @@
 	var host = os.hostname();
 
 	//Emit a username
-		socket.emit('username', {username : host }) 
+		socket.emit('username', {username : host })
 
 	//Emit message
 		socket.emit('message', {message : message })
 		socket.emit('sair', {message : "sair" })
-		
+
 		socket.on("sair", (data) => {
         console.log("Saindo: " + data.username + ": " + data.message )
 	    socket.disconnect()
