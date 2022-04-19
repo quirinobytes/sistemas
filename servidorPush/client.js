@@ -2,7 +2,7 @@
 
 	var os = require("os")
 	const io = require("socket.io-client")
-	var socket = io.connect('http://antidrone.com.br:3000')
+	var socket = io.connect('https://servidorpush.antidrone.com.br')
 
 	//buttons and inputs
 	var message = "version:" + process.argv[2]

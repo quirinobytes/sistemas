@@ -1,7 +1,7 @@
 
 $(function(){
    	//make connection
-	var socket = io.connect('http://antidrone.com.br:3000/')
+	var socket = io.connect('https://www.antidrone.com.br/')
 
 	//buttons and inputs
 	var message = $("#message")

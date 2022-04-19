@@ -124,7 +124,7 @@ app.get ('/rest/roles/list/',function (req,res) {
 
 app.get ('/rest/message/:ativo',function (req,res) {
 	const ioclient = require("socket.io-client")
-	var socketclient = ioclient.connect('http://antidrone.com.br:3000')
+	var socketclient = ioclient.connect('https://www.antidrone.com.br')
 	fileupload
 	var ativo = req.params.ativo;
 		html="Mensagem: " + ativo ;
