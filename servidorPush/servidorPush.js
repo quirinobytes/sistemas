@@ -42,12 +42,18 @@ app.use(expressLayouts)
 //middlewares
 app.use(express.static('public'))
 
- 
-//routes
+
+//route /
 app.get('/', (req, res) => {
 	res.render('index')
 })
 
+//route /contact
+app.get ('/contact',function (req,res) {
+	res.render('contact')
+});
+
+//route /upload
 app.get('/upload', (req, res) => {
 
 	path = "./fileupload/";
@@ -101,28 +107,25 @@ app.get('/deletefile/:filename', (req,res) => {
 	res.redirect('./../upload')
 })
 
-app.get ('/rest/projetos/list/',function (req,res) {
+app.get ('/api/projetos/list/',function (req,res) {
 		res.json(projetos);
         res.end();
 });
 
-app.get ('/contact',function (req,res) {
-	res.render('contact')
-});
-
-app.get ('/rest/farms/list/',function (req,res) {
+app.get ('/api/farms/list/',function (req,res) {
 		res.json(farms);
         res.end();
 });
 
-app.get ('/rest/roles/list/',function (req,res) {
+app.get ('/api/roles/list/',function (req,res) {
 		res.json(roles);
         res.end();
 });
 
 
 
-app.get ('/rest/message/:ativo',function (req,res) {
+
+app.get ('/api/message/:ativo',function (req,res) {
 	const ioclient = require("socket.io-client")
 	var socketclient = ioclient.connect('https://www.antidrone.com.br')
 	fileupload
