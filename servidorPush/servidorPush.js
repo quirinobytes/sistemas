@@ -25,7 +25,27 @@ var projetos = [{id:01,"name":"shell","apelido":"CDSHELL","desc":"Esse projeto �
 var farms = [{id:01,"name":"cdshell_FARM","apelido":"CDSHELL FARM","desc":"Esse projeto é sobre o CDSHELL","nodes":["dev1","dev2"]},{id:02,"name":"workspace_FARM","apelido":"WK FARM","desc":"Esse projeto é sobre o WORKSPACE","nodes":["dev3","dev4"]}];
 var roles = [{id:01,"name":"frontend","apelido":"Servidores Front-End","icon":"https://visualpharm.com/assets/896/Cisco%20Router-595b40b75ba036ed117d8b7b.svg"},{id:02,"name":"backend","apelido":"Servidores Back-End","icon":"https://visualpharm.com/assets/419/Hub-595b40b75ba036ed117d8d05.svg"},{id:03,"name":"Nas","apelido":"Servidores NAS","icon":"https://visualpharm.com/assets/761/Nas-595b40b75ba036ed117d8dcd.svg"}];
 
+function getUsername(req){
+	// check for basic auth header
+    //if (!req.headers.authorization || req.headers.authorization.indexOf('Basic ') === -1) {
+    //    return res.status(401).json({ message: 'Missing Authorization Header' });
+    //}
 
+    // verify auth credentials
+	//username = '';
+    const base64Credentials =  req.headers.authorization.split(' ')[1];
+    const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
+    let [user, password] = credentials.split(':');
+	//console.log("username:"+username)
+	return user;
+}
+
+function chat_add_message({username,message}){
+	newMessage = {id:chatMessageId,username:username,message:message};
+	chatMessageId++;
+	chatMessages.push(newMessage);
+	return chatMessages;
+}
 
 //Listen on port 3000
 server = app.listen(3000)
@@ -40,12 +60,14 @@ app.set('view engine', 'ejs')
 app.use(expressLayouts)
 
 //middlewares
+app.use(express.static('images'))
+
 app.use(express.static('public'))
 
 
 //route /
 app.get('/', (req, res) => {
-	res.render('index')
+	res.render('index',{usuario: getUsername(req) })
 })
 
 //route /contact
@@ -77,7 +99,10 @@ var form = new formidable.IncomingForm();
  });
 })
 
-app.post('/repo/:name', (req, res) => {
+
+/////////////////////
+//VERIFICAR ESSA ROTA
+app.post('/api/repo/:name', (req, res) => {
 	const reponame = req.params.name
   console.log("reponame:"+reponame)
   command = '/bin/bash -c "/root/git/devops-tools/commons/create-repo.sh ' + reponame +'"'
@@ -92,6 +117,7 @@ app.post('/repo/:name', (req, res) => {
 })
 
 
+// ROTA PARA APAGAR UM ARQUIVO
 app.get('/deletefile/:filename', (req,res) => {
 
 		const filename = req.params.filename
@@ -107,28 +133,29 @@ app.get('/deletefile/:filename', (req,res) => {
 	res.redirect('./../upload')
 })
 
-app.get ('/api/projetos/list/',function (req,res) {
+//############
+// REST API //
+//############
+
+app.get ('/rest/projetos/list/',function (req,res) {
 		res.json(projetos);
         res.end();
 });
 
-app.get ('/api/farms/list/',function (req,res) {
+app.get ('/rest/farms/list/',function (req,res) {
 		res.json(farms);
         res.end();
 });
 
-app.get ('/api/roles/list/',function (req,res) {
+app.get ('/rest/roles/list/',function (req,res) {
 		res.json(roles);
         res.end();
 });
 
-
-
-
-app.get ('/api/message/:ativo',function (req,res) {
+app.get ('/rest/message/:ativo',function (req,res) {
 	const ioclient = require("socket.io-client")
-	var socketclient = ioclient.connect('https://www.antidrone.com.br')
-	fileupload
+	var socketclient = ioclient.connect('http://servidorpush.antidrone.com.br:3000')
+	//fileupload
 	var ativo = req.params.ativo;
 		html="Mensagem: " + ativo ;
 		history = history + ativo;
@@ -147,14 +174,12 @@ app.get ('/rest/chat/list/',function (req,res) {
 });
 
 app.get ('/rest/chat/add/:username/:messageText',function (req,res) {
-		messageText = req.params.messageText;
-		username = req.params.username;
-		newMessage = {id:chatMessageId,username:username,text:messageText};
-		chatMessageId++;
-		chatMessages.push(newMessage);
-        res.json(chatMessages);
+	 	messageText = req.params.messageText;
+		//chat_add_message(messageText);
+  		res.json(chatMessages);
         res.end();
 });
+
 app.get ('/rest/chat/del/:messageId',function (req,res) {
 
 		var chatMessages_filter = [];
@@ -346,6 +371,18 @@ app.get ('/rest/hostexec/:hostname/:command',function (req,res) {
 });
 
 
+/*#########################################
+###########################################
+##
+## 		WEB SOCKET
+##
+###########################################
+#########################################*/
+
+
+
+
+
 
 
 //listen on every connection
@@ -384,12 +421,22 @@ io.on('connection', (socket) => {
 
     //quando chegar [message], verifica se é igual a uma dessas data.message e responde no [message]
     socket.on('message', (data) => {
+	  
+	  hostname = data.hostname
 
       //broadcast the new message
       io.sockets.emit('message', {message : data.message, username : socket.username});
 
-		  if (data.message == "devops"){
-			  io.sockets.emit('message', {message : "devops" , username : socket.username});
+	  chat_add_message({username : socket.username, message : data.message});
+
+	  //dependendo do texto enviado na mensagem, responder com determinadas ações:
+		  if (data.message == "getnodes"){
+			const { exec } = require('child_process');
+			exec('cd /root/shell ; /root/shell/linux/Getnodes.sh ', (err, stdout, stderr) => {
+		    socket.emit('message', { message : "getnodes: [ " + stdout + "]", username : "Bot@" + hostname  });
+		    });
+            io.sockets.emit('message', {message : "devops" , username : socket.username});
+
 		  }
 	  	if (data.message == "help"){
    			io.sockets.emit('message', {message : "Olá boa tarde, "+
@@ -404,7 +451,7 @@ io.on('connection', (socket) => {
 		  if (data.message == "version"){
 			   const { exec } = require('child_process');
      		 exec('cd /root/shell ; /root/shell/linux/cdshell -V ', (err, stdout, stderr) => {
-           socket.emit('message', { message : "Minha versão instalada: [ " + stdout + "]", username : "Bot@" + hostname  });
+           socket.emit('message', { message : "Minha versão instalada: [ " + stdout + "]", username : "Bot@" + socket.username  });
 	       });
 		  }
      })
@@ -439,7 +486,7 @@ io.on('connection', (socket) => {
 		   }
 		   if (data.message == "sistemas"){
 			 //io.sockets.emit('command', {message : "ntpdate ntp.cais.rnp.br", username : socket.username});
-			   const { exec } = require('child_process');
+			   const { exec } = require('child_process')
      		 exec('cd /root/sistemas ; /root/shell/linux/cdshell -g', (err, stdout, stderr) => {
         		socket.emit('message', { message : stdout });
 	       });
@@ -465,5 +512,6 @@ io.on('connection', (socket) => {
     })
 })
 
+  // Faz uma chamada na inicialização da  sistemas/servidorPush/ <- ./version para anunciar a versão pro Getnodes.sh
   const { exec } = require('child_process');
   exec("cd /root/shell/push ; ./version.js ", (err, stdout, stderr) => {});

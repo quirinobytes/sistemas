@@ -75,7 +75,6 @@ section#titulo {
     display: block;
     color: white;
     font-size: 12px;
-
 }
 
 section#input_zone {
@@ -105,7 +104,6 @@ input#message {
     height: 100%;
     font-family: 'Comfortaa', sans-serif;
 /*    font-size: 1vh; */
-
 }
 
 button#send_message {

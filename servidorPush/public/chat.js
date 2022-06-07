@@ -1,7 +1,7 @@
 
 $(function(){
    	//make connection
-	var socket = io.connect('http://servidorpush.antidrone.com.br:3000/', { secure: true, reconnect: true, rejectUnauthorized : false })
+	var socket = io.connect('http://servidorpush.ddns.net:3000/', { secure: true, reconnect: true, rejectUnauthorized : false })
 
 	//buttons and inputs
 	var message = $("#message")
@@ -10,20 +10,53 @@ $(function(){
 	var send_username = $("#send_username")
 	var chatroom = $("#chatroom")
 	var feedback = $("#feedback")
+	var loggeduser = $("#loggeduser")
+	var container = $("#container")
+
+
+	$( document ).ready(function() {
+	socket.emit('username', {username : loggeduser.text()});
+
+	$.ajax({
+        url: "./rest/chat/list"
+    }).then(function(data) {
+		console.log(data);
+		data.forEach(item => chatroom.append("<p class='message'><b>" + item.username + "</b>: " + item.message + "</p>") );
+		
+		
+    });
+
+	//Appending HTML5 Audio Tag in HTML Body
+	$('').appendTo('body');
+
+	})
+
+
 
 	//Emit message
 	send_message.click(function(){
 		socket.emit('message', {message : message.val()})
-	})
 
-	//Listen on new_message
-	socket.on("message", (data) => {
-		feedback.html('');
+		//limpar o inputbox do message, depois que enviar mensagem
 		message.val('');
-		chatroom.append("<p class='message'><b>" + data.username + "</b>: " + data.message + "</p>")
 	})
 
-	//Emit a username
+	//Wait on new_message
+	socket.on("message", (data) => {
+		//limpar o campo que indica que um usuário está digitando: User is typing a message...
+		feedback.html('');
+		chatroom.append("<p class='message'><b>" + data.username + "</b>: " + data.message + "</p>")
+		//container.animate({ scrollTop: $(document).height() }, 1000)
+
+		//fazer o scroll down a cada mensagem nova.
+		container.animate({"scrollTop": $('#chatroom')[0].scrollHeight}, "slow")
+		
+		//play sound when new message arrives.
+		$('#chatAudio')[0].play();
+		
+	})
+
+	//Emit a username when click on send_username button.
 	send_username.click(function(){
 		socket.emit('username', {username : username.val()})
 	})
