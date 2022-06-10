@@ -33,6 +33,7 @@ function getUsername(req){
 
     // verify auth credentials
 	//username = '';
+	if (!req.headers.authorization)  return null
     const base64Credentials =  req.headers.authorization.split(' ')[1];
     const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
     let [user, password] = credentials.split(':');
@@ -67,7 +68,9 @@ app.use(express.static('public'))
 
 //route /
 app.get('/', (req, res) => {
-	res.render('index',{usuario: getUsername(req) })
+	nome = getUsername(req)
+	if (nome == '') {nome = "anonymous"}
+	res.render('index',{usuario:nome })
 })
 
 //route /contact
@@ -122,7 +125,7 @@ app.get('/deletefile/:filename', (req,res) => {
 
 		const filename = req.params.filename
 		const path = "./fileupload/"
-		
+
 		try {
 			fs.unlinkSync(path+filename)
 			console.log("Arquivo apagado="+filename)
@@ -355,7 +358,7 @@ app.get ('/rest/hostexec/:hostname/:command',function (req,res) {
 	      if (commands[i].command == req.params.command) {
 				const { exec } = require('child_process');
      		   	exec("/root/shell/push/hostexec.js " + hostname + " '" + command + "'", (err, stdout, stderr) => {
-				if (stdout == "\n"){ 
+				if (stdout == "\n"){
 					res.write("#");
 				}
 				else{
@@ -387,7 +390,7 @@ app.get ('/rest/hostexec/:hostname/:command',function (req,res) {
 
 //listen on every connection
 io.on('connection', (socket) => {
-	console.log('New user connected')
+	console.log('_______________________________\nNew user connected (' + socket.username +")" )
 	console.log("Conn.ID: " + socket.client.conn.id + "(" + socket.client.conn.remoteAddress + ")" )
 
 	//default username
@@ -396,8 +399,17 @@ io.on('connection', (socket) => {
 
     //listen on change_username
     socket.on('username', (data) => {
-        socket.username = data.username
+		socket.username = data.username
+		console.log('## USER (' + socket.username +") CONNECTED --> " )
     })
+
+	socket.on("disconnect", (reason) => {
+		console.log("## USER (" +socket.username +") DISCONNECTED <-- ");
+		console.log("Conn.ID: " + socket.client.conn.id + "(" + socket.client.conn.remoteAddress + ")" )
+		
+		console.log("Reason: "+reason);
+		console.log("Closing connection:\n_______________________________");
+	});
 
     socket.on('hostversion', (data) => {
         socket.hostversion = data.message
@@ -421,7 +433,7 @@ io.on('connection', (socket) => {
 
     //quando chegar [message], verifica se é igual a uma dessas data.message e responde no [message]
     socket.on('message', (data) => {
-	  
+
 	  hostname = data.hostname
 
       //broadcast the new message

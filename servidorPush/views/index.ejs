@@ -27,51 +27,18 @@
 
 <body>
    <section id="titulo">
-      <header>
-        
-               <a class="nav-auth-img-container dropdown-toggle" uib-dropdown-toggle="" aria-haspopup="true" aria-expanded="false">
-              <img class="nav-auth-img" ng-src="user-icon.png" src="user-icon.png">
-              &nbsp;
-              <span class="greeting visible-md-inline visible-lg-inline ng-binding">Hello  <div id=loggeduser><%= usuario %> </div></span>
-              <span class="caret"></span>
-          </a>
-          <!-- ngIf: !no_auth --><ul class="dropdown-menu animated fadeInDownShort go ng-scope" ng-if="!no_auth" uib-dropdown-menu="" role="menu" aria-labelledby="simple-btn-keyboard-nav">
-
-              <li role="menuitem">
-                  <a data-ui-sref="users.show({id:user().id})" href="#!/users/1">
-                      <i class="mdi mdi-account-outline"></i>
-                      Profile
-                  </a>
-              </li>
-              <!-- ngIf: user().admin --><li role="menuitem" ng-if="user().admin" class="ng-scope">
-                  <a data-ui-sref="users" href="#!/users">
-                      <i class="mdi mdi-account-multiple"></i>
-                      Users
-                  </a>
-              </li><!-- end ngIf: user().admin -->
-              <li role="menuitem">
-                  <!-- ngIf: user().admin --><a data-ui-sref="settings" ng-if="user().admin" class="ng-scope" href="#!/settings">
-                      <i class="mdi mdi-settings"></i>
-                      Settings
-                  </a><!-- end ngIf: user().admin -->
-              </li>
-              <li class="divider"></li>
-              <li role="menuitem">
-                  <a data-ng-click="logout()">
-                      <i class="mdi mdi-logout-variant"></i>
-                      Logout
-                  </a>
-              </li>
-          </ul><!-- end ngIf: !no_auth -->
-
-      </li>
+      <header class="nav-auth-img-container">
+              <a class="nav-auth-img-container">
+              <img class="nav-auth-img" ng-src="user-icon.png" src="<%=usuario%>-user-icon.png">
+              <div class="nav-auth-img-container" id=loggeduser><%= usuario %></div>
+              </a>
       </header>
    </section>
 
    <section>
     <div id="change_username">
 		<input id="username" type="text" />
-		<button id="send_username" type="button">Definir nome</button>
+		<button id="send_username" type="button">Apelido</button>
     </div>
    </section>
 
