@@ -1,7 +1,8 @@
 
 $(function(){
-   	//make connection
-	var socket = io.connect('http://servidorpush.ddns.net:3000/', { secure: true, reconnect: true, rejectUnauthorized : false })
+   	//make connection direct on web server using relative hosts 
+	  //var socket = io.connect('http://servidorpush.ddns.net:3000/', { secure: true, reconnect: true, rejectUnauthorized : false })
+	var socket = io.connect('/', { secure: true, reconnect: true, rejectUnauthorized : false })
 
 	//buttons and inputs
 	var message = $("#message")
@@ -15,15 +16,14 @@ $(function(){
 
 
 	$( document ).ready(function() {
-	socket.emit('username', {username : loggeduser.text()});
 
-	$.ajax({
-        url: "./rest/chat/list"
-    }).then(function(data) {
-		console.log(data);
-		data.forEach(item => chatroom.append("<p class='message'><b>" + item.username + "</b>: " + item.message + "</p>") );
-		
-		
+		socket.emit('username', {username : loggeduser.text()});
+
+		$.ajax({
+			url: "./rest/chat/list"
+		}).then(function(data) {
+			console.log(data);
+			data.forEach(item => chatroom.append("<p class='message'><b>" + item.username + "</b>: " + item.message + "</p>") );	
     });
 
 	//Appending HTML5 Audio Tag in HTML Body
@@ -50,9 +50,13 @@ $(function(){
 
 		//fazer o scroll down a cada mensagem nova.
 		container.animate({"scrollTop": $('#chatroom')[0].scrollHeight}, "slow")
+		$('body').animate({"scrollTop": $('#chatroom')[0].scrollHeight}, "slow")
 		
-		//play sound when new message arrives.
-		$('#chatAudio')[0].play();
+		//play sound when new message arrives but not in my chat.
+		if (data.username != loggeduser.text()){
+			console.log(data.username + " | " + loggeduser.text())
+		    $('#chatAudio')[0].play();
+		}
 		
 	})
 
