@@ -18,14 +18,17 @@
   },
   "homepage": "https://github.com/ngrt/simpleChatApp#readme",
   "dependencies": {
+    "ansi-to-html": "^0.7.2",
     "body-parser": "^1.18.3",
     "ejs": "^2.6.1",
     "express": "^4.16.4",
     "express-ejs-layouts": "^2.5.0",
+    "express-prom-bundle": "^6.5.0",
     "faker": "^4.1.0",
     "formidable": "^1.2.1",
     "nodemon": "^2.0.16",
     "passport-facebook": "^3.0.0",
+    "prom-client": "^14.1.0",
     "socket.io": "^2.0.4"
   }
 }

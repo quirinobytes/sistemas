@@ -6,7 +6,7 @@
   <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="style.css">
 </head>
-<body>
+
   <header>
      <nav class="navbar navbar-inverse">
       <ul class="nav navbar-nav">
@@ -14,21 +14,20 @@
         <li><a href="/upload"> Upload </a></li>
         <li><a href="/contact"> Contact </a></li>
         <li><a href="/getnodes"> Getnodes </a></li>
+        <li><a href="/tarefas"> Tarefas </a></li>
       </ul>
      </nav>
   </header>
 
    <main>
      <div id="container" class="container">
-
-      <%- body %>
-
+      <body>
+        <%- body %>
+      </body>
      </div>
    </main>
 
   <footer>
     Minha estrutura de layout está no arquivo layout.ejs, que injeta o body que está no index.ejs dentro da div=container
   </footer>
-
-</body>
 </html>

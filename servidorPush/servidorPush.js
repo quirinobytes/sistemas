@@ -1,6 +1,11 @@
 #!/usr/bin/env node
 
+const promBundle = require("express-prom-bundle");
 var fs = require('fs');
+var Convert = require('ansi-to-html');
+var convert = new Convert();
+
+
 var commands_json = './comandos.json';
 var commandsJsonFile = fs.readFileSync(commands_json);
 var commands = JSON.parse(commandsJsonFile);
@@ -12,8 +17,28 @@ var formidable = require('formidable');
 // Leyout do ejs
 var expressLayouts = require('express-ejs-layouts')
 
+
 const express = require('express')
 const app = express()
+
+// Add the options to the prometheus middleware most option are for http_request_duration_seconds histogram metric
+const metricsMiddleware = promBundle({
+    includeMethod: true, 
+    includePath: true, 
+    includeStatusCode: true, 
+    includeUp: true,
+    customLabels: {
+		project_name: 'servidorpush',
+		project_type: 'cdshelld_server'
+	},
+    promClient: {
+        collectDefaultMetrics: {
+        }
+      }
+});
+
+
+
 var history="";
 var nodes=[];
 
@@ -64,6 +89,9 @@ app.use(expressLayouts)
 app.use(express.static('images'))
 
 app.use(express.static('public'))
+
+// create /metrics and add the prometheus middleware to all routes
+app.use(metricsMiddleware)
 
 
 //route /
@@ -178,7 +206,7 @@ app.get ('/rest/chat/list/',function (req,res) {
 
 app.get ('/rest/chat/add/:username/:messageText',function (req,res) {
 	 	messageText = req.params.messageText;
-		//chat_add_message(messageText);
+		chat_add_message(messageText);
   		res.json(chatMessages);
         res.end();
 });
@@ -445,6 +473,7 @@ io.on('connection', (socket) => {
 		  if (data.message == "getnodes"){
 			const { exec } = require('child_process');
 			exec('cd /root/shell ; /root/shell/linux/Getnodes.sh ', (err, stdout, stderr) => {
+        stdout = convert.toHtml(stdout)
 		    socket.emit('message', { message : "getnodes: [ " + stdout + "]", username : "Bot@" + hostname  });
 		    });
             io.sockets.emit('message', {message : "devops" , username : socket.username});
