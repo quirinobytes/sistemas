@@ -1,11 +1,38 @@
 #!/usr/bin/env node
 
-const promBundle = require("express-prom-bundle");
-var fs = require('fs');
+//prometheus / sockket.io
+const prometheus = require ('socket.io-prometheus-metrics');
+
+
+//prometheus metrics
+const apiMetrics = require('prometheus-api-metrics');
+// const HttpMetricsCollector = require('prometheus-api-metrics').HttpMetricsCollector;
+// const collector = new HttpMetricsCollector();
+
+
+//const promBundle = require("express-prom-bundle");
+const Prometheus = require('prom-client');
+const messagesTotal = new Prometheus.Counter({
+	name: 'messages_total',
+	help: 'Total number of user\'s messages',
+	labelNames: ['add_user_message']
+  });
+
+
+
+
+
 var Convert = require('ansi-to-html');
-var convert = new Convert();
+//opcoes para o convert criar nova linha tmb
+var convert = new Convert({
+    fg: '#FFF',
+    bg: '#000',
+    newline: true,
+    escapeXML: false,
+    stream: false
+});
 
-
+var fs = require('fs');
 var commands_json = './comandos.json';
 var commandsJsonFile = fs.readFileSync(commands_json);
 var commands = JSON.parse(commandsJsonFile);
@@ -15,27 +42,27 @@ var commands = JSON.parse(commandsJsonFile);
 var formidable = require('formidable');
 
 // Leyout do ejs
-var expressLayouts = require('express-ejs-layouts')
+var expressLayouts = require('express-ejs-layouts');
 
 
-const express = require('express')
-const app = express()
+const express = require('express');
+const app = express();
 
 // Add the options to the prometheus middleware most option are for http_request_duration_seconds histogram metric
-const metricsMiddleware = promBundle({
-    includeMethod: true, 
-    includePath: true, 
-    includeStatusCode: true, 
-    includeUp: true,
-    customLabels: {
-		project_name: 'servidorpush',
-		project_type: 'cdshelld_server'
-	},
-    promClient: {
-        collectDefaultMetrics: {
-        }
-      }
-});
+// const metricsMiddleware = promBundle({
+//     includeMethod: true, 
+//     includePath: true, 
+//     includeStatusCode: true, 
+//     includeUp: true,
+//     customLabels: {
+// 		project_name: 'servidorpush',
+// 		project_type: 'cdshelld_server'
+// 	},
+//     promClient: {
+//         collectDefaultMetrics: {
+//         }
+//       }
+// });
 
 
 
@@ -50,13 +77,9 @@ var projetos = [{id:01,"name":"shell","apelido":"CDSHELL","desc":"Esse projeto �
 var farms = [{id:01,"name":"cdshell_FARM","apelido":"CDSHELL FARM","desc":"Esse projeto é sobre o CDSHELL","nodes":["dev1","dev2"]},{id:02,"name":"workspace_FARM","apelido":"WK FARM","desc":"Esse projeto é sobre o WORKSPACE","nodes":["dev3","dev4"]}];
 var roles = [{id:01,"name":"frontend","apelido":"Servidores Front-End","icon":"https://visualpharm.com/assets/896/Cisco%20Router-595b40b75ba036ed117d8b7b.svg"},{id:02,"name":"backend","apelido":"Servidores Back-End","icon":"https://visualpharm.com/assets/419/Hub-595b40b75ba036ed117d8d05.svg"},{id:03,"name":"Nas","apelido":"Servidores NAS","icon":"https://visualpharm.com/assets/761/Nas-595b40b75ba036ed117d8dcd.svg"}];
 
-function getUsername(req){
-	// check for basic auth header
-    //if (!req.headers.authorization || req.headers.authorization.indexOf('Basic ') === -1) {
-    //    return res.status(401).json({ message: 'Missing Authorization Header' });
-    //}
-
-    // verify auth credentials
+// function that check for basic auth header and return the username base64 decoded.
+function getUsernameFromHeadersAuthorization(req){
+	// verify auth credentials <- Aqui eu pego as credenciais para uso no kong
 	//username = '';
 	if (!req.headers.authorization)  return null
     const base64Credentials =  req.headers.authorization.split(' ')[1];
@@ -70,33 +93,62 @@ function chat_add_message({username,message}){
 	newMessage = {id:chatMessageId,username:username,message:message};
 	chatMessageId++;
 	chatMessages.push(newMessage);
+	
+	//incrementando o contador do metrics do prometheus
+	messagesTotal.inc({
+		add_user_message: username
+	  })
 	return chatMessages;
 }
 
 //Listen on port 3000
 server = app.listen(3000)
+
 //socket.io instantiation
 const io = require("socket.io")(server)
 
 
+
 //set the template engine ejs
 app.set('view engine', 'ejs')
-
 //usando o layout do EJS
 app.use(expressLayouts)
-
 //middlewares
 app.use(express.static('images'))
-
 app.use(express.static('public'))
 
 // create /metrics and add the prometheus middleware to all routes
-app.use(metricsMiddleware)
+//app.use(metricsMiddleware)
 
+//collect HTTP Api metrics/duration
+//app.use(apiMetrics())
+app.use(apiMetrics({
+	additionalLabels: ['user', 'ip'],
+	extractAdditionalLabelValuesFn: (req, res) => {
+		const headers = req.headers.authorization;
+		
+//		console.log("#METRICS " +req.host +" | " + req.headers.authorization);
+//		console.log(req);
+		
+//		console.log(authorization);
+		if (req.headers){
+			let username = getUsernameFromHeadersAuthorization(req)
+			return {
+				user: username,
+				ip: req['host']
+			}
+		}
+		else
+		return {
+			user: '',
+			ip: req['host']
+		  }
+	}
+  }))
 
 //route /
 app.get('/', (req, res) => {
-	nome = getUsername(req)
+	nome = getUsernameFromHeadersAuthorization(req)
 	if (nome == '') {nome = "anonymous"}
 	res.render('index',{usuario:nome })
 })
@@ -115,6 +167,8 @@ app.get('/upload', (req, res) => {
 })
 
 app.post('/fileupload', (req, res) => {
+	
+
 var form = new formidable.IncomingForm();
 
  form.parse(req, function (err, fields, files) {
@@ -123,11 +177,15 @@ var form = new formidable.IncomingForm();
 	fs.rename(oldpath, newpath, function (err) {
 
  	if (err) throw err;
+		//prometheus metrics
+		collector.collect(err || res);
+
 		//res.write('File uploaded and moved!');
 		res.redirect('./upload')
     	res.end();
  	});
  });
+
 })
 
 
@@ -150,6 +208,7 @@ app.post('/api/repo/:name', (req, res) => {
 
 // ROTA PARA APAGAR UM ARQUIVO
 app.get('/deletefile/:filename', (req,res) => {
+	
 
 		const filename = req.params.filename
 		const path = "./fileupload/"
@@ -157,7 +216,10 @@ app.get('/deletefile/:filename', (req,res) => {
 		try {
 			fs.unlinkSync(path+filename)
 			console.log("Arquivo apagado="+filename)
+			collector.collect(res);
 		} catch(err) {
+			//prometheus metrics
+			collector.collect(err);
 			console.error(err)
 		}
 	console.log("Arquivo apagado "+req.params.filename)
@@ -205,8 +267,7 @@ app.get ('/rest/chat/list/',function (req,res) {
 });
 
 app.get ('/rest/chat/add/:username/:messageText',function (req,res) {
-	 	messageText = req.params.messageText;
-		chat_add_message(messageText);
+		chat_add_message({username:req.params.username, message:req.params.messageText});
   		res.json(chatMessages);
         res.end();
 });
@@ -462,6 +523,9 @@ io.on('connection', (socket) => {
     //quando chegar [message], verifica se é igual a uma dessas data.message e responde no [message]
     socket.on('message', (data) => {
 
+		messagesTotal.inc({
+			add_user_message: data.username
+		  }) 
 	  hostname = data.hostname
 
       //broadcast the new message
@@ -552,6 +616,16 @@ io.on('connection', (socket) => {
 		console.log(data);
     })
 })
+
+
+//promtheus with socket.io metrics 
+//prometheus.metrics(io);
+const ioMetrics = prometheus.metrics(io, {
+	collectDefaultMetrics: true,
+	checkForNewNamespaces: false
+});
+//const metrics = ioMetrics.register.metrics();
+
 
   // Faz uma chamada na inicialização da  sistemas/servidorPush/ <- ./version para anunciar a versão pro Getnodes.sh
   const { exec } = require('child_process');
