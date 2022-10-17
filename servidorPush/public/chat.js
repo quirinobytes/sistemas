@@ -23,8 +23,13 @@ $(function(){
 			url: "./rest/chat/list"
 		}).then(function(data) {
 			console.log(data);
-			data.forEach(item => chatroom.append("<p class='message'><b>" + item.username + "</b>: " + item.message + "</p>") );	
-    });
+
+			data.forEach(item => { 
+                      var dt = new Date(item.time);
+                      const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
+                      chatroom.append( "<p class='message'><font color='gray'>  " + hora + "</font> <b>[" + item.username + "]</b> " + item.message + "</p>") 
+                   });
+   });
 
 	//Appending HTML5 Audio Tag in HTML Body
 	$('').appendTo('body');
