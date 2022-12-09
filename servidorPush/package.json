@@ -21,7 +21,7 @@
     "ansi-to-html": "^0.7.2",
     "body-parser": "^1.18.3",
     "ejs": "^2.6.1",
-    "express": "^4.16.4",
+    "express": "^4.17.3",
     "express-ejs-layouts": "^2.5.0",
     "express-prom-bundle": "^6.5.0",
     "faker": "^4.1.0",
