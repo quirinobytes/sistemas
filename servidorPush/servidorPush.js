@@ -23,7 +23,7 @@ const messagesTotal = new Prometheus.Counter({
 
 
 var Convert = require('ansi-to-html');
-//opcoes para o convert criar nova linha tmb
+//opcoes para o convert ANSI COLOR to HTML criar nova linha tmb
 var convert = new Convert({
     fg: '#FFF',
     bg: '#000',
@@ -85,20 +85,25 @@ function getUsernameFromHeadersAuthorization(req){
     const base64Credentials =  req.headers.authorization.split(' ')[1];
     const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
     let [user, password] = credentials.split(':');
-	//console.log("username:"+username)
+	//console.log(" # _log: getUsernameFromHeadersAuthorization()\n username:"+user+ "\n #")
 	return user;
 }
 
 function chat_add_message({username,message}){
-	newMessage = {id:chatMessageId,username:username,message:message};
+  dateTime = new Date();
+	newMessage = {id:chatMessageId,username:username,message:message,time:dateTime};
 	chatMessageId++;
 	chatMessages.push(newMessage);
-	
+
+
+	if (username!==undefined) {
 	//incrementando o contador do metrics do prometheus
 	messagesTotal.inc({
 		add_user_message: username
 	  })
+	}
 	return chatMessages;
+
 }
 
 //Listen on port 3000
@@ -135,13 +140,13 @@ app.use(apiMetrics({
 			let username = getUsernameFromHeadersAuthorization(req)
 			return {
 				user: username,
-				ip: req['host']
+				ip: req['hostname']
 			}
 		}
 		else
 		return {
-			user: '',
-			ip: req['host']
+			user: 'root',
+			ip: req['hostname']
 		  }
 	}
   }))
@@ -155,7 +160,15 @@ app.get('/', (req, res) => {
 
 //route /contact
 app.get ('/contact',function (req,res) {
-	res.render('contact')
+	nome = getUsernameFromHeadersAuthorization(req)
+	if (nome == '') {nome = "anonymous"}
+	res.render('contact',{usuario:nome })
+});
+
+app.get ('/rest/loadChatWith/*/*',function (req,res) {
+	nome = getUsernameFromHeadersAuthorization(req)
+	if (nome == '') {nome = "anonymous"}
+	res.send(chatMessages);
 });
 
 //route /upload
@@ -479,8 +492,8 @@ app.get ('/rest/hostexec/:hostname/:command',function (req,res) {
 
 //listen on every connection
 io.on('connection', (socket) => {
-	console.log('_______________________________\nNew user connected (' + socket.username +")" )
-	console.log("Conn.ID: " + socket.client.conn.id + "(" + socket.client.conn.remoteAddress + ")" )
+	console.log('--> \n  #########################\n  # New user: ' + socket.username + ' ' )
+	console.log("  # Conn.ID: " + socket.client.conn.id + "(" + socket.client.conn.remoteAddress + ") \n  ########################\n" )
 
 	//default username
 	socket.username = "Chatops"
@@ -489,15 +502,15 @@ io.on('connection', (socket) => {
     //listen on change_username
     socket.on('username', (data) => {
 		socket.username = data.username
-		console.log('## USER (' + socket.username +") CONNECTED --> " )
+		console.log(' ## New USER (' + socket.username +") CONNECTED on Websocket channel: username" )
     })
 
 	socket.on("disconnect", (reason) => {
-		console.log("## USER (" +socket.username +") DISCONNECTED <-- ");
-		console.log("Conn.ID: " + socket.client.conn.id + "(" + socket.client.conn.remoteAddress + ")" )
-		
-		console.log("Reason: "+reason);
-		console.log("Closing connection:\n_______________________________");
+		console.log("  ####################");
+		console.log("  # Closing Websocket | Reason: "+reason);
+		console.log("  # USER (" +socket.username +") ");
+		console.log("  # Conn.ID: " + socket.client.conn.id + "(" + socket.client.conn.remoteAddress + ")" )
+		console.log("<-- Socket Disconnect  ");
 	});
 
     socket.on('hostversion', (data) => {
@@ -550,6 +563,13 @@ io.on('connection', (socket) => {
                                              "* version -> exibe a versao do servidor <br>"+
                                              "* date -> executa o comando data ", username : "Bot@" + hostname});
 		                             }
+       if (data.message == "sol"){
+   			io.sockets.emit('message', {message : "<font color='yellow'> fada SOL </font>  Mais <b>pura</b> fonte de energia, luz e <font color='red'> AMOR </font> da minha vida <br> <h1> <font color='green'> d:) </font> <font color='purple'> :-) </font> </h1>", username : "Seu_Principe@" + hostname});
+       }
+	   if (data.message == "rafa"){
+		io.sockets.emit('message', {message : "<font color='green'> princeso </font>  Mais <b>pura</b> fonte de energia, luz e <font color='red'> AMOR </font> da minha vida <br> <h1> <font color='green'> d:) </font> <font color='grey'> <3 </font> </h1>", username : "Seu_Principe@" + hostname});
+}
+
 		  if (data.message == "ntp"){
 			  io.sockets.emit('command', {message : "ntp ntp.cais.rnp.br", username : socket.username});
       }

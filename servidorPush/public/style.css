@@ -19,6 +19,7 @@ body {
     margin: 3%;
     height: 100%;
     text-align: center;
+    background-color: black;
 }
 
 header {
@@ -50,7 +51,7 @@ div#change_username, section#input_zone {
 }
 
 div#change_username { 
-    height: 10%;
+   
     width: 50%;
 
     background-color: rgb(158, 156, 179);
@@ -69,8 +70,22 @@ div.container {
    /*max-height: 130%;*/
 }
 
-div#chatroom {
+
+
+div#messageTo {
+
+    vertical-align: bottom;
     align-content: center;
+   
+}
+#messageTo:nth-child(even) {
+    background-color: rgb(180, 214, 224);
+    color: blueviolet;
+}
+
+#messageTo:nth-child(odd) {
+    background-color: rgb(210, 226, 241);
+    color: blue;
 }
 
 section#chatroom {
@@ -79,6 +94,14 @@ section#chatroom {
     background-color: rgb(200, 200, 230);
     padding: 10px;
     display: block;
+    text-align: left;
+
+}
+section#contactRoom {
+    background-color: rgb(200, 200, 230);
+    width: 50%;
+    align-content: center;
+    display: flex;
     text-align: left;
 }
 
@@ -90,6 +113,7 @@ section#titulo {
     display: block;
     color: white;
     font-size: 12px;
+   
 }
 
 section#input_zone {

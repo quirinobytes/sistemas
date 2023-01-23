@@ -1,3 +1,34 @@
+function loadChatWith(username) {
+
+	var usr = $("#change_username");
+	var messageTo = $("#messageTo");
+	
+	
+	//Limpa o board do chat
+	console.log ("empty board")
+	messageTo.empty();
+
+	contato.innerHTML = username;
+
+
+	//mostrar nome do loggedUser
+	//console.log(usr[0].innerText);
+	myname = usr[0].innerText ;
+	$.ajax({
+			url: "./rest/loadChatWith/"+myname+"/"+username
+	}).then(function(data) {
+	
+		//mostrar as mensagens de retorno
+		//console.log(data);
+
+		data.forEach(item => { 
+			  var dt = new Date(item.time);
+			  const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
+			  messageTo.append( "<p class='message'><font color='gray'>  " + hora + "</font> <b>[" + item.username + "]</b> " + item.message + "</p>") 
+		});
+    });
+	
+} 
 
 $(function(){
    	//make connection direct on web server using relative hosts 
@@ -14,8 +45,10 @@ $(function(){
 	var loggeduser = $("#loggeduser")
 	var container = $("#container")
 
+	
 
 	$( document ).ready(function() {
+		
 
 		socket.emit('username', {username : loggeduser.text()});
 
@@ -29,14 +62,35 @@ $(function(){
                       const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
                       chatroom.append( "<p class='message'><font color='gray'>  " + hora + "</font> <b>[" + item.username + "]</b> " + item.message + "</p>") 
                    });
-   });
+   		});
+
+
+		// Aqui estou pegando a lista dos usuários do konga
+		$.ajax({
+			url: "./consumers"
+		}).then(function(obj_consumers) {
+			
+			usuarios_kong = obj_consumers.data;
+			//console.log(usuarios_kong);
+			
+			usuarios_kong.forEach(item => { 
+                      
+                      //contactTo.append( "<p class='message'>[" + item.username + "]</p>");
+					  //contactTo.append( '<div>' + item.username + '</div>');
+					  contactList.innerHTML += "<div id='contacts' onclick='loadChatWith(this.innerHTML);'>" + item.username + "</div>";
+
+                   });
+
+   		});
+
+
 
 	//Appending HTML5 Audio Tag in HTML Body
 	$('').appendTo('body');
 
 	})
 
-
+	
 
 	//Emit message
 	send_message.click(function(){
@@ -50,7 +104,12 @@ $(function(){
 	socket.on("message", (data) => {
 		//limpar o campo que indica que um usuário está digitando: User is typing a message...
 		feedback.html('');
-		chatroom.append("<p class='message'><b>" + data.username + "</b>: " + data.message + "</p>")
+    console.log(data);
+    var dt = new Date(data.time);
+    const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
+    chatroom.append( "<p class='message'><font color='gray'>  " + hora + "</font> <b>[" + data.username + "]</b> " + data.message + "</p>") 
+/////////////		chatroom.append("<p class='message'><b>" + data.username + "</b>: " + data.message + "</p>")
+
 		//container.animate({ scrollTop: $(document).height() }, 1000)
 
 		//fazer o scroll down a cada mensagem nova.
