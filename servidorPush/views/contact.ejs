@@ -5,36 +5,50 @@
     <link href="http://fonts.googleapis.com/css?family=Comfortaa" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="style.css" >
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
-    <title>Servidor - Push Notification </title>
+    <title>Fri Chat </title>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="chat_contact.js"></script>
+    <script>
+       function checkForEnterKey(){
+
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                document.getElementById("send_message").click();
+                //console.log(document.getElementById("message"));
+            }
+        }
+    </script>
   </head>
 
   <body>
       <section id="titulo">
-          <header>
-            <h3>Contact To:  <div id='contato'> </div></h3>
+          <header id="headerChatContact"> 
+            <div style="display: flex;">
+              <div id="divChatContactUsersInChat">
+              <img class="nav-auth-img" src="<%=usuario%>-user-icon.png">
+              <div id="myname"> <%= usuario %></div>
+            </div>
+            &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <div style="align:right">
+              <img id="imgContactTo" class="nav-auth-img" src="">
+              <div id='divContato'> </div>
+            </div>
+          </div>
           </header>
+
       </section>
     <section>
-        <div id="change_username">
-          <%= usuario %>
-        </div>
+      
     </section>
     <section id="contactRoom">
-        <div id="contactList">
-
-            
-
-        </div>
-        <div id="messageTo">
-
-        </div>
+        <div id="contactList"></div>
+        <section id="divMessageTo"></section>
     </section>
     <section id="input_zone">
-
-        input zone
-
-    </section>
-    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-    <script src="chat.js"></script>
+      <input name="message" id="message" class="vertical-align" type="text" tabindex="0" autofocus="autofocus" onkeyup="checkForEnterKey(this.value)">
+      <button id="send_message" class="vertical-align" tabindex="0" role="button" type="submit" value="submit">Enviar</button>
+   </section>
+    
   </body>
 </html>

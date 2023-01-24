@@ -23,6 +23,8 @@
         }
 
     </script>
+    <input type="hidden" id="send_message_to_contact"> 
+    <input type="hidden" id="contactList"> 
 </head>
 
 <body>
@@ -30,20 +32,20 @@
       <header class="nav-auth-img-container">
               <a class="nav-auth-img-container">
               <img class="nav-auth-img" ng-src="user-icon.png" src="<%=usuario%>-user-icon.png">
-              <div class="nav-auth-img-container" id=loggeduser><%= usuario %></div>
+                        <div class="nav-auth-img-container" id=loggeduser><%= usuario %></div>
               </a>
       </header>
    </section>
 
    <section>
-    <div id="change_username">
+    <div id="myname">
 		<input id="username" type="text" />
 		<button id="send_username" type="button">Apelido</button>
     </div>
    </section>
 
    <section id="chatroom">
-      <section id="feedback"></section>
+      
    </section>
 
    <section id="input_zone">

@@ -191,7 +191,7 @@ var form = new formidable.IncomingForm();
 
  	if (err) throw err;
 		//prometheus metrics
-		collector.collect(err || res);
+		//collector.collect(err || res);
 
 		//res.write('File uploaded and moved!');
 		res.redirect('./upload')
@@ -229,10 +229,10 @@ app.get('/deletefile/:filename', (req,res) => {
 		try {
 			fs.unlinkSync(path+filename)
 			console.log("Arquivo apagado="+filename)
-			collector.collect(res);
+			//collector.collect(res);
 		} catch(err) {
 			//prometheus metrics
-			collector.collect(err);
+			//collector.collect(err);
 			console.error(err)
 		}
 	console.log("Arquivo apagado "+req.params.filename)
@@ -579,6 +579,12 @@ io.on('connection', (socket) => {
            socket.emit('message', { message : "Minha versão instalada: [ " + stdout + "]", username : "Bot@" + socket.username  });
 	       });
 		  }
+     })
+
+	 socket.on('contactTo', (data) => {
+        //broadcast the new message
+		//console.log(data);
+        io.sockets.emit('contactTo', data);
      })
 
      socket.on('beos', (data) => {

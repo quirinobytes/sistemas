@@ -1,3 +1,10 @@
+/* # serve para pegar qualquer elemento com o id
+   . serve para pegar os elementos com o class
+   pode usar div.id{} ou somente .id{} direto que já 
+   abrange pra tudo, nao so div.
+   */
+
+
 @mixin vertical-align {
   position: relative;
   top: 50%;
@@ -22,8 +29,9 @@ body {
     background-color: black;
 }
 
-header {
-    text-align: center;
+#divChatContactUsersInChat {
+    text-align: left;
+    display: block;
 }
 
 h1 {
@@ -31,38 +39,45 @@ h1 {
     margin: 0px;
 }
 
+#divChatContactTitulo{
+ text-align: left;
+}
+
 div#change_username, section#input_zone {
     border: 2px outset rgb(74, 123, 179);
     text-align: right;
 }
 
+#divContato {
+}
+
 .nav-auth-img{
-    height: 60px;
     width: 60px;
+    height: 60px;
     border-radius: 50%;
     border: 1px solid #1abb9c;
     padding: 2px;
 }
 .nav-auth-img-container{
-    text-align: right;
     align-content: left;
     padding: 0px;
     color: 'white'
 }
 
-div#change_username { 
-   
-    width: 50%;
+#contacts{
+    background-color: rgb(112, 134, 176);
+    font-size: large;
+}
 
-    background-color: rgb(158, 156, 179);
-   align-content: left;
+div#myname { 
+    text-align: center;
 }
 div#box {
     height: 10%;
     width: 10%;
     display: inline-block;
     background-color: rgb(158, 156, 179);
-   align-content: center;
+    align-content: center;
 }
 
 div.container {
@@ -70,9 +85,7 @@ div.container {
    /*max-height: 130%;*/
 }
 
-
-
-div#messageTo {
+#divMessageTo {
 
     vertical-align: bottom;
     align-content: center;
@@ -88,7 +101,7 @@ div#messageTo {
     color: blue;
 }
 
-section#chatroom {
+section#chatroom{
     border: 5px ;
     width: 50%;
     background-color: rgb(200, 200, 230);

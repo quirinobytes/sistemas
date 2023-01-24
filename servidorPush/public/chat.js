@@ -1,34 +1,35 @@
-function loadChatWith(username) {
 
-	var usr = $("#change_username");
-	var messageTo = $("#messageTo");
+// function loadChatWith(username) {
+
+// 	var usr = $("#change_username");
+// 	var messageTo = $("#messageTo");
 	
 	
-	//Limpa o board do chat
-	console.log ("empty board")
-	messageTo.empty();
+// 	//Limpa o board do chat
+// 	console.log ("empty board")
+// 	messageTo.empty();
 
-	contato.innerHTML = username;
+// 	contato.innerHTML = username;
 
 
-	//mostrar nome do loggedUser
-	//console.log(usr[0].innerText);
-	myname = usr[0].innerText ;
-	$.ajax({
-			url: "./rest/loadChatWith/"+myname+"/"+username
-	}).then(function(data) {
+// 	//mostrar nome do loggedUser
+// 	//console.log(usr[0].innerText);
+// 	myname = usr[0].innerText ;
+// 	$.ajax({
+// 			url: "./rest/loadChatWith/"+myname+"/"+username
+// 	}).then(function(data) {
 	
-		//mostrar as mensagens de retorno
-		//console.log(data);
+// 		//mostrar as mensagens de retorno
+// 		//console.log(data);
 
-		data.forEach(item => { 
-			  var dt = new Date(item.time);
-			  const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
-			  messageTo.append( "<p class='message'><font color='gray'>  " + hora + "</font> <b>[" + item.username + "]</b> " + item.message + "</p>") 
-		});
-    });
+// 		data.forEach(item => { 
+// 			  var dt = new Date(item.time);
+// 			  const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
+// 			  messageTo.append( "<p class='message'><font color='gray'>  " + hora + "</font> <b>[" + item.username + "]</b> " + item.message + "</p>") 
+// 		});
+//     });
 	
-} 
+// } 
 
 $(function(){
    	//make connection direct on web server using relative hosts 
@@ -100,6 +101,15 @@ $(function(){
 		message.val('');
 	})
 
+	// send_message_to_contact.click(function(){
+	// 	alert("oi")
+	// 	console.log("ahhaahh");
+	// 	socket.emit('message_to_contact', {message : message.val(),toContact:contactName});
+
+	// 	//limpar o inputbox do message, depois que enviar mensagem
+	// 	message.empty();
+	// })
+
 	//Wait on new_message
 	socket.on("message", (data) => {
 		//limpar o campo que indica que um usuário está digitando: User is typing a message...
@@ -138,6 +148,7 @@ $(function(){
 	socket.on('typing', (data) => {
 		feedback.html("<p><i>" + data.username + " is typing a message..." + "</i></p>")
 	})
+		
 });
 
 
