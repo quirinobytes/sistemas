@@ -180,7 +180,7 @@ section#titulo {
     color: white;
     font-size: 12px;
     text-align: right;
-   
+    align-content: space-between;
 }
 
 section# {
