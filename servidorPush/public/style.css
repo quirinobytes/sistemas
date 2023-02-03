@@ -29,9 +29,27 @@ body {
     background-color: black;
 }
 
-#divChatContactUsersInChat {
+#contactList{
+    display: grid;
+    position:relative;
+}
+#contactLine{
+    display: inline-grid;
+}
+
+.logged_user {
+    background: #78de45;
+    border-radius: 50%;
+    box-sizing: border-box;
+    position: absolute;
+    border: 1.5px solid rgb(255, 255, 255);
+    height: 10px;
+    margin: 15px 0px 0px -5px;
+    width: 10px;
+    justify-content: flex-end;
     text-align: left;
-    display: block;
+    left: 10px;
+
 }
 
 h1 {
@@ -39,6 +57,10 @@ h1 {
     margin: 0px;
 }
 
+#divChatContactUsersInChat {
+    text-align: left;
+    display: block;
+}
 #divChatContactTitulo{
  text-align: left;
 }
@@ -48,9 +70,6 @@ div#change_username, section#input_zone {
     text-align: right;
 }
 
-#divContato {
-}
-
 .nav-auth-img{
     width: 60px;
     height: 60px;
@@ -58,19 +77,43 @@ div#change_username, section#input_zone {
     border: 1px solid #1abb9c;
     padding: 2px;
 }
+
 .nav-auth-img-container{
     align-content: left;
     padding: 0px;
     color: 'white'
 }
 
+.temMensagemNaoLida{
+    color: red;
+    font-weight: bold;
+}
+
 #contacts{
-    background-color: rgb(112, 134, 176);
+    justify-content: flex-end;
+    flex-direction: row;
+    display: flex;
+}
+
+#contactLine:nth-child(even){
+    background-color: rgb(101, 153, 248);
     font-size: large;
+    padding: 10px;
+    /* display: block; */
+    text-align: left;
+}
+
+#contactLine:nth-child(odd){
+    background-color: rgb(158, 188, 243);
+    font-size: large;
+    padding: 10px;
+    /* display: block; */
+    text-align: left;
 }
 
 div#myname { 
     text-align: center;
+    width: 50%;
 }
 div#box {
     height: 10%;
@@ -86,11 +129,10 @@ div.container {
 }
 
 #divMessageTo {
-
     vertical-align: bottom;
     align-content: center;
-   
 }
+
 #messageTo:nth-child(even) {
     background-color: rgb(180, 214, 224);
     color: blueviolet;
@@ -118,10 +160,33 @@ section#contactRoom {
     text-align: left;
 }
 
+section#apelido {
+    border: 2px ;
+    width: 50%;
+    background-color: rgb(16, 16, 80);
+    padding: 10px;
+    display: flex;
+    font-size: 12px;
+    color: black;
+    text-align: right;
+    flex-direction: row-reverse;
+}
 section#titulo {
     border: 2px ;
     width: 50%;
     background-color: rgb(11, 11, 109);
+    padding: 10px;
+    display: block;
+    color: white;
+    font-size: 12px;
+    text-align: right;
+   
+}
+
+section# {
+    border: 2px ;
+    width: 50%;
+    background-color: rgb(12, 30, 224);
     padding: 10px;
     display: block;
     color: white;

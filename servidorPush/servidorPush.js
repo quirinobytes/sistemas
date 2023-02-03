@@ -41,7 +41,7 @@ var commands = JSON.parse(commandsJsonFile);
 // Formidable para upload de arquivos
 var formidable = require('formidable');
 
-// Leyout do ejs
+// Layout do ejs
 var expressLayouts = require('express-ejs-layouts');
 
 
@@ -76,6 +76,8 @@ var chatMessageId = 0;
 var projetos = [{id:01,"name":"shell","apelido":"CDSHELL","desc":"Esse projeto é sobre o CDSHELL","farms":"cdshell_FARM","equipe":"BackEnd-Nodejs"},{id:02,"name":"workspace","apelido":"My Workspace","desc":"Esse projeto contém todo meu Wrokspace Atual","farms":"workspace_FARM","equipe":"BackEnd-Nodejs,FrontEnd-Angular,ArtificalInteligence"}];
 var farms = [{id:01,"name":"cdshell_FARM","apelido":"CDSHELL FARM","desc":"Esse projeto é sobre o CDSHELL","nodes":["dev1","dev2"]},{id:02,"name":"workspace_FARM","apelido":"WK FARM","desc":"Esse projeto é sobre o WORKSPACE","nodes":["dev3","dev4"]}];
 var roles = [{id:01,"name":"frontend","apelido":"Servidores Front-End","icon":"https://visualpharm.com/assets/896/Cisco%20Router-595b40b75ba036ed117d8b7b.svg"},{id:02,"name":"backend","apelido":"Servidores Back-End","icon":"https://visualpharm.com/assets/419/Hub-595b40b75ba036ed117d8d05.svg"},{id:03,"name":"Nas","apelido":"Servidores NAS","icon":"https://visualpharm.com/assets/761/Nas-595b40b75ba036ed117d8dcd.svg"}];
+var logged_users = [];
+
 
 // function that check for basic auth header and return the username base64 decoded.
 function getUsernameFromHeadersAuthorization(req){
@@ -105,6 +107,53 @@ function chat_add_message({username,message}){
 	return chatMessages;
 
 }
+
+
+
+
+
+
+
+
+
+function findValueByPrefix(object, prefix) {
+	for (var property in object) {
+	  if (object.hasOwnProperty(property) && 
+		 property.toString().startsWith(prefix)) {
+		 return object[property];
+	  }
+	}
+  }
+// var chatToArray = [][];
+
+var chatObj = {admin: {bahia:[[{from:"admin",to:"bahia",message:"blablabla"}]]}, bahia:{admin:[]}};
+
+function addMessageContactToPerson(de,para,mensagem){
+
+	let toPerson = [{para,mensagem}];
+	//chatToArray[from][to] = [];
+	destino = findValueByPrefix(chatObj,de);
+	destino2 = findValueByPrefix(chatObj,para);
+	console.log("destino2: ");
+	console.log(para);
+	//console.log(destino2);
+
+	remetente = findValueByPrefix(destino,para);
+	remetente2 = findValueByPrefix(destino2,de);
+	console.log("remetente: ");
+	console.log(remetente);
+	console.log("remetente2: ");
+	console.log(remetente2);
+	remetente.push([{from:de,to:para,message:mensagem}])
+	remetente2.push([{from:de,to:para,message:mensagem}])
+	
+	console.log(chatObj);
+}
+
+
+
+
+
 
 //Listen on port 3000
 server = app.listen(3000)
@@ -164,11 +213,20 @@ app.get ('/contact',function (req,res) {
 	if (nome == '') {nome = "anonymous"}
 	res.render('contact',{usuario:nome })
 });
-
-app.get ('/rest/loadChatWith/*/*',function (req,res) {
+//route /logged_users
+app.get ('/logged_users',function (req,res) {
+	console.log(logged_users);
+	res.json(logged_users);
+});
+app.get ('/rest/loadChatWith/:from/:to',function (req,res) {
+	const from = req.params.from;
 	nome = getUsernameFromHeadersAuthorization(req)
 	if (nome == '') {nome = "anonymous"}
-	res.send(chatMessages);
+
+	console.log("MONSTRADINHO o /rest/loadChatWith");
+	obj = findValueByPrefix(chatObj,from)
+	console.log(obj);
+	res.send(obj);
 });
 
 //route /upload
@@ -496,21 +554,58 @@ io.on('connection', (socket) => {
 	console.log("  # Conn.ID: " + socket.client.conn.id + "(" + socket.client.conn.remoteAddress + ") \n  ########################\n" )
 
 	//default username
-	socket.username = "Chatops"
+	//socket.username = "Chatops"
 	socket.hostname = "toca das baratas";
+	
 
     //listen on change_username
     socket.on('username', (data) => {
 		socket.username = data.username
 		console.log(' ## New USER (' + socket.username +") CONNECTED on Websocket channel: username" )
+		username = data.username;
+		//if (!logged_users.includes(username))
+			logged_users.push(username);	
+		
+		//console.log("chamando a socket.on('username');");	
+		//console.log(logged_users);
+		io.sockets.emit('newlogin', { message : data.message})
     })
-
+ 
 	socket.on("disconnect", (reason) => {
 		console.log("  ####################");
 		console.log("  # Closing Websocket | Reason: "+reason);
 		console.log("  # USER (" +socket.username +") ");
 		console.log("  # Conn.ID: " + socket.client.conn.id + "(" + socket.client.conn.remoteAddress + ")" )
 		console.log("<-- Socket Disconnect  ");
+
+		
+		
+		console.log("### POP: "+ socket.username);
+		if (socket.username != undefined ){
+			// logged_users = logged_users.filter(item => item !== socket.username)
+
+			//remove somente a primeira ocorrencia do usuário que fechou a tela de login, se houver outras, que permacecam no array.
+			const idx = logged_users.indexOf(socket.username);
+			logged_users.splice(idx, idx !== -1 ? 1 : 0);
+		
+			//manda chamar a newlogin que atualizara todos que ainda estão lá.
+			io.sockets.emit('newlogin', { username : socket.username})
+		}
+		// var clients_in_the_room = io.sockets.adapter.rooms['contactTo'];
+		// for (var clientId in clients_in_the_room ) {
+		//   console.log('client: %s', clientId); // Seeing is believing
+		//   var client_socket = io.sockets.connected[clientId]; // Do whatever you want with this
+		// }
+
+		// io.sockets().forEach(function(s) {
+		// // 	// ...
+		// // 	// for example, s.emit('event', { ... });
+		//  	console.log("### SOCKET: s ### ");
+		//  	console.log(s);
+
+		//  });
+		
+		io.sockets.emit('newlogin', { username : socket.username})
 	});
 
     socket.on('hostversion', (data) => {
@@ -547,15 +642,15 @@ io.on('connection', (socket) => {
 	  chat_add_message({username : socket.username, message : data.message});
 
 	  //dependendo do texto enviado na mensagem, responder com determinadas ações:
-		  if (data.message == "getnodes"){
+		if (data.message == "getnodes"){
 			const { exec } = require('child_process');
 			exec('cd /root/shell ; /root/shell/linux/Getnodes.sh ', (err, stdout, stderr) => {
-        stdout = convert.toHtml(stdout)
+        	stdout = convert.toHtml(stdout)
 		    socket.emit('message', { message : "getnodes: [ " + stdout + "]", username : "Bot@" + hostname  });
 		    });
             io.sockets.emit('message', {message : "devops" , username : socket.username});
 
-		  }
+		}
 	  	if (data.message == "help"){
    			io.sockets.emit('message', {message : "Olá boa tarde, "+
                                              "tente umas das opções<br> "+
@@ -563,20 +658,13 @@ io.on('connection', (socket) => {
                                              "* version -> exibe a versao do servidor <br>"+
                                              "* date -> executa o comando data ", username : "Bot@" + hostname});
 		                             }
-       if (data.message == "sol"){
-   			io.sockets.emit('message', {message : "<font color='yellow'> fada SOL </font>  Mais <b>pura</b> fonte de energia, luz e <font color='red'> AMOR </font> da minha vida <br> <h1> <font color='green'> d:) </font> <font color='purple'> :-) </font> </h1>", username : "Seu_Principe@" + hostname});
-       }
-	   if (data.message == "rafa"){
-		io.sockets.emit('message', {message : "<font color='green'> princeso </font>  Mais <b>pura</b> fonte de energia, luz e <font color='red'> AMOR </font> da minha vida <br> <h1> <font color='green'> d:) </font> <font color='grey'> <3 </font> </h1>", username : "Seu_Principe@" + hostname});
-}
-
-		  if (data.message == "ntp"){
+        if (data.message == "ntp"){
 			  io.sockets.emit('command', {message : "ntp ntp.cais.rnp.br", username : socket.username});
-      }
+      	}
 		  if (data.message == "version"){
-			   const { exec } = require('child_process');
-     		 exec('cd /root/shell ; /root/shell/linux/cdshell -V ', (err, stdout, stderr) => {
-           socket.emit('message', { message : "Minha versão instalada: [ " + stdout + "]", username : "Bot@" + socket.username  });
+			const { exec } = require('child_process');
+     		exec('cd /root/shell ; /root/shell/linux/cdshell -V', (err, stdout, stderr) => {
+             socket.emit('message', { message : "Minha versão instalada: [ " + stdout + "]", username : "Bot@" + socket.username  });
 	       });
 		  }
      })
@@ -585,6 +673,9 @@ io.on('connection', (socket) => {
         //broadcast the new message
 		//console.log(data);
         io.sockets.emit('contactTo', data);
+
+		if ((data.from != undefined) && (data.toContact != undefined) )
+		addMessageContactToPerson(data.from, data.toContact, data.message);
      })
 
      socket.on('beos', (data) => {
@@ -641,6 +732,11 @@ io.on('connection', (socket) => {
         io.sockets.emit('log.'+data.hostname, {saida:data.saida});
 		console.log(data);
     })
+	socket.on("newlogin",(username) => {
+		io.sockets.emit('newlogin', username);
+		//console.log(data);
+
+	})
 })
 
 

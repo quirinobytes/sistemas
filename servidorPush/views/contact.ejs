@@ -26,7 +26,7 @@
             <div style="display: flex;">
               <div id="divChatContactUsersInChat">
               <img class="nav-auth-img" src="<%=usuario%>-user-icon.png">
-              <div id="myname"> <%= usuario %></div>
+              <div id="myname"><%=usuario %></div>
             </div>
             &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -38,12 +38,14 @@
           </header>
 
       </section>
-    <section>
-      
-    </section>
+
     <section id="contactRoom">
-        <div id="contactList"></div>
-        <section id="divMessageTo"></section>
+        <div id="contactList">
+
+        </div>
+        <section id="divMessageTo">
+
+        </section>
     </section>
     <section id="input_zone">
       <input name="message" id="message" class="vertical-align" type="text" tabindex="0" autofocus="autofocus" onkeyup="checkForEnterKey(this.value)">
