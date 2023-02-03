@@ -19,7 +19,7 @@ function loadChatWith(username) {
 	
 
 	//Limpa o board do chat
-	console.log ("aqui foi chamado a loadChatWith(username) -> emptying messages in the Privado");
+	console.log ("aqui foi chamado a loadChatWith("+username+") -> emptying messages in the Privado");
 	messageTo.empty();
 
 	divContato.innerHTML = username;
@@ -33,38 +33,28 @@ function loadChatWith(username) {
 	}).then(function(data) {
 	
 		//mostrar as mensagens de retorno
-		console.log("MOSTRANDINHO o RETORNO DO HISTORICO")
+		//console.log("MOSTRANDO o RETORNO DO HISTORICO")
 		//console.log(data);
-		ret = findValueByPrefix(data,username)
-		console.log(ret);
+		//ret = findValueByPrefix(data,username)
+		//console.log(ret);
 
-		ret.forEach(item => { 
+		data.forEach(item => { 
 			console.log("ITEM:");
+			console.log()
 			de = item[0].from;
 			para = item[0].to;
 			mensagem = item[0].message;
-			  var dt = new Date(item.time);
+			  var dt = new Date(item[0].time);
 			  const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
 			  messageTo.append("<p class='message'><font color='gray'>  " + hora + "</font> <b>[" + de + "]</b> " + mensagem + "</p>") 
 		});
     });
 } 
 
-function findValueByPrefix(object, prefix) {
-	for (var property in object) {
-	  if (object.hasOwnProperty(property) && 
-		 property.toString().startsWith(prefix)) {
-		 return object[property];
-	  }
-	}
-  }
 
 function removeClassTemMensagemNaoLida(username){
-
 	$("#contacts:contains("+username+")").removeClass("temMensagemNaoLida");
-
 }
-
 function usuarioLogado(nome){
 	$("#"+nome+"_logged_user").addClass("logged_user");
 }
@@ -153,11 +143,14 @@ $(function(){
 	
 	//Emit message
 	send_message.click(function(){
+		var dt = new Date();
+        const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
+
 		var logged_usr = myname[0].innerText
 		console.log("send_message.click("+message.val()+")");
 		console.log("from:")
 		console.log(logged_usr);
-		socket.emit("contactTo", {message : message.val(),from:logged_usr,toContact:divContato.innerText})
+		socket.emit("contactTo", {message : message.val(),from:logged_usr,toContact:divContato.innerText,time:hora})
 
 		//limpar o inputbox do message, depois que enviar mensagem
 		message.val('');
@@ -197,8 +190,8 @@ $(function(){
 		friendUsername=divContato.innerText;
 		var usr = $("#myname");
 		loggedUser = usr[0].innerText ;
-		console.log("data=");
-		console.log(data);
+		console.log("data.time");
+		console.log(data.time);
 		
 
 	
@@ -207,7 +200,8 @@ $(function(){
 			
 			//divMessageTo.append(data.message);
 			
-            divMessageTo.append("[" + data.from +"]" + data.message + "</br> ")
+            //divMessageTo.append(data.time +": [" + data.from +"] " + data.message + "</br> ")
+			divMessageTo.append("<p class='message'><font color='gray'>  " + data.time + "</font> <b>[" + data.from + "]</b> " + data.message + "</p>");
 		}
 		else{
 			if (data.toContact == loggedUser && data.from != divContato.innerText){
@@ -233,7 +227,8 @@ $(function(){
 		}
 		//colocar as mensagens da pessoa para mim, no board.
 		if (data.from == divContato.innerText){
-			divMessageTo.append("["+ data.from +"]" + data.message + "</br> ")
+			//divMessageTo.append(data.time + ": [" + data.from +"] " + data.message + "</br> ")
+			divMessageTo.append("<p class='message'><font color='gray'>  " + data.time + "</font> <b>[" + data.from + "]</b> " + data.message + "</p>");
 		}
 				
 		

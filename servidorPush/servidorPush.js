@@ -126,28 +126,34 @@ function findValueByPrefix(object, prefix) {
   }
 // var chatToArray = [][];
 
-var chatObj = {admin: {bahia:[[{from:"admin",to:"bahia",message:"blablabla"}]]}, bahia:{admin:[]}};
+var chatObj = {admin: {bahia:[[{from:"admin",to:"bahia",message:"blablabla", time: '2023-02-03T04:53:54.043Z'}]]}, bahia:{admin:[]}, admin: {rafael:[[{}]]}, rafael: {admin:[[{}]]}   };
+
+var chatObj2 = {admin_bahia:[[{from:"admin",to:"bahia",message:"versao2", time: '2023-02-03T04:53:54.043Z'}]], bahia_admin:[[{}]], admin_spitz:[[{}]],spitz_admin:[[{}]],  admin_rafael:[[{}]],rafael_admin:[[{}]], bahia_rafael:[[{}]],rafael_bahia:[[{}]], bahia_spitz:[[{}]],spitz_bahia:[[{}]]  };
 
 function addMessageContactToPerson(de,para,mensagem){
-
+	dateTime = new Date();
 	let toPerson = [{para,mensagem}];
 	//chatToArray[from][to] = [];
-	destino = findValueByPrefix(chatObj,de);
-	destino2 = findValueByPrefix(chatObj,para);
-	console.log("destino2: ");
-	console.log(para);
-	//console.log(destino2);
+	prefix = de+"_"+para;
+	prefixinv = para+"_"+de;
+	console.log("prefix: "+prefix);
 
-	remetente = findValueByPrefix(destino,para);
-	remetente2 = findValueByPrefix(destino2,de);
+	destino = findValueByPrefix(chatObj2,prefix);
+	destino2 = findValueByPrefix(chatObj2,prefixinv);
+	console.log("destino: ");
+	console.log(destino);
+	//console.log(para);
+
+	remetente = findValueByPrefix(destino,de);
+	remetente2 = findValueByPrefix(destino2,para);
 	console.log("remetente: ");
 	console.log(remetente);
 	console.log("remetente2: ");
 	console.log(remetente2);
-	remetente.push([{from:de,to:para,message:mensagem}])
-	remetente2.push([{from:de,to:para,message:mensagem}])
+	destino.push([{from:de,to:para,message:mensagem,time:dateTime}])
+	destino2.push([{from:de,to:para,message:mensagem,time:dateTime}])
 	
-	console.log(chatObj);
+	//console.log(chatObj);
 }
 
 
@@ -218,14 +224,19 @@ app.get ('/logged_users',function (req,res) {
 	console.log(logged_users);
 	res.json(logged_users);
 });
+
+
 app.get ('/rest/loadChatWith/:from/:to',function (req,res) {
 	const from = req.params.from;
+	const to = req.params.to;
+
 	nome = getUsernameFromHeadersAuthorization(req)
 	if (nome == '') {nome = "anonymous"}
 
-	console.log("MONSTRADINHO o /rest/loadChatWith");
-	obj = findValueByPrefix(chatObj,from)
-	console.log(obj);
+	//console.log("GET no /rest/loadChatWith/"+from+"/"+to);
+	prefix = from + "_" + to;
+	obj = findValueByPrefix(chatObj2,prefix)
+	//console.log(obj);
 	res.send(obj);
 });
 
@@ -675,7 +686,7 @@ io.on('connection', (socket) => {
         io.sockets.emit('contactTo', data);
 
 		if ((data.from != undefined) && (data.toContact != undefined) )
-		addMessageContactToPerson(data.from, data.toContact, data.message);
+		addMessageContactToPerson(data.from, data.toContact, data.message, data.time);
      })
 
      socket.on('beos', (data) => {
