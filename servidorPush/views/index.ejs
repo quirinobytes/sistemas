@@ -1,12 +1,13 @@
 <!DOCTYPE html>
   <head>
+    <title>Chat Privado</title>
+
     <meta http-equiv="Content-Type" const="text/html;charset=UTF-8" />
     <link href="https://fonts.googleapis.com/css?family=Comfortaa" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="style.css" >
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
-    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
-    <script src="chat.js"></script>
-    <title>Servidor Push - Chatops </title>
+    <script src="js/jquery/jquery-latest.min.js"></script>
+    <script src="js/chat_mural.js"></script>
 
     <script>
         
@@ -28,19 +29,32 @@
 </head>
 
 <body>
-   <section id="titulo">
-      <header class="nav-auth-img-container">
-              <a class="nav-auth-img-container">
-              <img class="nav-auth-img" ng-src="user-icon.png" src="<%=usuario%>-user-icon.png">
-                        <div class="nav-auth-img-container" id=loggeduser><%= usuario %></div>
-              </a>
-      </header>
-   </section>
+
+    <section id="titulo">
+        <header id="tituloText"> 
+          <div style="display: flex; justify-content: space-between; align:left">
+            <div id="divChatContactUsersInChat">
+                <a class="nav-auth-img-container">
+                    <img class="nav-auth-img" ng-src="user-icon.png" src="<%=usuario%>-user-icon.png">
+                    <div class="nav-auth-img-container" id='loggeduser' ><%= usuario %></div>
+                </a>
+            </div>
+          <h3> Mural </h3>
+          <div style="align:right">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          </div>
+        </div>
+        </header>
+    </section>
+
+
+
+
 
    <section id="apelido">
-    <div id="myname">
-		<input id="username" type="text" />
-		<button id="send_username" type="button">Apelido</button>
+    <div>
+		  <input id="username" type="text" />
+		  <button id="send_username" type="button">Apelido</button>
     </div>
    </section>
 

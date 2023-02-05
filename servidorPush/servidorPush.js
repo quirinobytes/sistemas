@@ -126,11 +126,12 @@ function findValueByPrefix(object, prefix) {
   }
 // var chatToArray = [][];
 
-var chatObj = {admin: {bahia:[[{from:"admin",to:"bahia",message:"blablabla", time: '2023-02-03T04:53:54.043Z'}]]}, bahia:{admin:[]}, admin: {rafael:[[{}]]}, rafael: {admin:[[{}]]}   };
-
-var chatObj2 = {admin_bahia:[[{from:"admin",to:"bahia",message:"versao2", time: '2023-02-03T04:53:54.043Z'}]], bahia_admin:[[{}]], admin_spitz:[[{}]],spitz_admin:[[{}]],  admin_rafael:[[{}]],rafael_admin:[[{}]], bahia_rafael:[[{}]],rafael_bahia:[[{}]], bahia_spitz:[[{}]],spitz_bahia:[[{}]]  };
+var privadoChat = {admin_bahia:[[{from:"admin",to:"bahia",message:"versao2", time: '2023-02-03T04:53:54.043Z'}]], bahia_admin:[[{}]], admin_spitz:[[{}]],spitz_admin:[[{}]],  admin_rafael:[[{}]],rafael_admin:[[{}]], bahia_rafael:[[{}]],rafael_bahia:[[{}]], bahia_spitz:[[{}]],spitz_bahia:[[{}]],marcia_rafael:[[{}]], rafael_marcia:[[{}]]   };
 
 function addMessageContactToPerson(de,para,mensagem){
+	//se nao tiver carregado um board para falar com alguem, aqui pode ficar sem um para
+	if (!para)
+	 	return;
 	dateTime = new Date();
 	let toPerson = [{para,mensagem}];
 	//chatToArray[from][to] = [];
@@ -138,22 +139,22 @@ function addMessageContactToPerson(de,para,mensagem){
 	prefixinv = para+"_"+de;
 	console.log("prefix: "+prefix);
 
-	destino = findValueByPrefix(chatObj2,prefix);
-	destino2 = findValueByPrefix(chatObj2,prefixinv);
-	console.log("destino: ");
-	console.log(destino);
+	destino = findValueByPrefix(privadoChat,prefix);
+	destino2 = findValueByPrefix(privadoChat,prefixinv);
+	//console.log("destino: ");
+	//console.log(destino);
 	//console.log(para);
 
-	remetente = findValueByPrefix(destino,de);
-	remetente2 = findValueByPrefix(destino2,para);
-	console.log("remetente: ");
-	console.log(remetente);
-	console.log("remetente2: ");
-	console.log(remetente2);
+	//remetente = findValueByPrefix(destino,de);
+	//remetente2 = findValueByPrefix(destino2,para);
+	//console.log("remetente: ");
+	//console.log(remetente);
+	// console.log("remetente2: ");
+	// console.log(remetente2);
 	destino.push([{from:de,to:para,message:mensagem,time:dateTime}])
 	destino2.push([{from:de,to:para,message:mensagem,time:dateTime}])
 	
-	//console.log(chatObj);
+	//console.log(privadoChat);
 }
 
 
@@ -175,7 +176,11 @@ app.set('view engine', 'ejs')
 app.use(expressLayouts)
 //middlewares
 app.use(express.static('images'))
-app.use(express.static('public'))
+app.use(express.static('public'));
+app.use(express.static('public/js'));
+app.use(express.static('public/jquery'));
+
+
 
 // create /metrics and add the prometheus middleware to all routes
 //app.use(metricsMiddleware)
@@ -217,6 +222,7 @@ app.get('/', (req, res) => {
 app.get ('/contact',function (req,res) {
 	nome = getUsernameFromHeadersAuthorization(req)
 	if (nome == '') {nome = "anonymous"}
+	console.log("user:"+nome);
 	res.render('contact',{usuario:nome })
 });
 //route /logged_users
@@ -235,7 +241,7 @@ app.get ('/rest/loadChatWith/:from/:to',function (req,res) {
 
 	//console.log("GET no /rest/loadChatWith/"+from+"/"+to);
 	prefix = from + "_" + to;
-	obj = findValueByPrefix(chatObj2,prefix)
+	obj = findValueByPrefix(privadoChat,prefix)
 	//console.log(obj);
 	res.send(obj);
 });

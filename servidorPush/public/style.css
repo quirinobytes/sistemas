@@ -113,7 +113,7 @@ div#change_username, section#input_zone {
 
 div#myname { 
     text-align: center;
-    width: 50%;
+    /* width: 50%; */
 }
 div#box {
     height: 10%;
@@ -132,6 +132,7 @@ div.container {
     vertical-align: bottom;
     align-content: center;
 }
+
 
 #messageTo:nth-child(even) {
     background-color: rgb(180, 214, 224);
@@ -153,7 +154,7 @@ section#chatroom{
 
 }
 section#contactRoom {
-    background-color: rgb(200, 200, 230);
+    background-color: rgb(192, 192, 218);
     width: 50%;
     align-content: center;
     display: flex;
@@ -181,7 +182,12 @@ section#titulo {
     font-size: 12px;
     text-align: right;
     align-content: space-between;
+    justify-content: space-between;
 }
+header#tituloText {
+    text-align: center;    
+}
+
 
 section# {
     border: 2px ;
@@ -191,7 +197,9 @@ section# {
     display: block;
     color: white;
     font-size: 12px;
-   
+    justify-content: space-between;
+    display: flow-root;
+    align-content: center;
 }
 
 section#input_zone {
@@ -201,6 +209,8 @@ section#input_zone {
     background-color: rgb(213, 215, 216);
     color: rgb(44, 46, 61);
     padding: 20px;
+    background-color: rgb(11, 11, 109);
+    align-content: center;
 }
 
 .vertical-align {
