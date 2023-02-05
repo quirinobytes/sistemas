@@ -203,7 +203,7 @@ $(function(){
             //divMessageTo.append(data.time +": [" + data.from +"] " + data.message + "</br> ")
 			divMessageTo.append("<p class='message'><font color='gray'>  " + data.time + "</font> <b>[" + data.from + "]</b> " + data.message + "</p>");
 		}
-		else{
+		else{ //caso o board do seu contato nao esteja selecionado, e nao seja o seu board
 			if (data.toContact == loggedUser && data.from != divContato.innerText){
 				//console.log(cList[0])
 				console.log("tamanho= "+cList[0].children.length);
@@ -221,14 +221,16 @@ $(function(){
 						console.log( "ACHEI: Alterando o div do: " + cList[0].children[cont].innerText);
 						$( cList[0].children[cont]).addClass("temMensagemNaoLida");
 						// cList[0].children(cont).
+						$('#chatAudio')[0].play();
 					}
 				}
 			}
 		}
-		//colocar as mensagens da pessoa para mim, no board.
+		//colocar as mensagens da pessoa para mim, no board e soa um bip
 		if (data.from == divContato.innerText){
 			//divMessageTo.append(data.time + ": [" + data.from +"] " + data.message + "</br> ")
 			divMessageTo.append("<p class='message'><font color='gray'>  " + data.time + "</font> <b>[" + data.from + "]</b> " + data.message + "</p>");
+			$('#chatAudio')[0].play();
 		}
 				
 		

@@ -1,35 +1,22 @@
+// $(function() {
+// 	var sendButton = $("#sendFile")
+// 	var fileuploadMural = $("#fileuploadMural")
 
-// function loadChatWith(username) {
-
-// 	var usr = $("#change_username");
-// 	var messageTo = $("#messageTo");
+// 	sendButton.change(function (){
+// 		fileuploadMural.submit();
+// 	});
+//  });
+function copyMessageToAddInPhotoIfExist(){
+	var texto = $("#messageInAttach")
+	var str = $("#message")
+	texto[0].defaultValue = str.val()
+	console.log(texto)
+	texto.val(str.val()).trigger("change");
 	
-	
-// 	//Limpa o board do chat
-// 	console.log ("empty board")
-// 	messageTo.empty();
-
-// 	contato.innerHTML = username;
+}
 
 
-// 	//mostrar nome do loggedUser
-// 	//console.log(usr[0].innerText);
-// 	myname = usr[0].innerText ;
-// 	$.ajax({
-// 			url: "./rest/loadChatWith/"+myname+"/"+username
-// 	}).then(function(data) {
-	
-// 		//mostrar as mensagens de retorno
-// 		//console.log(data);
 
-// 		data.forEach(item => { 
-// 			  var dt = new Date(item.time);
-// 			  const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
-// 			  messageTo.append( "<p class='message'><font color='gray'>  " + hora + "</font> <b>[" + item.username + "]</b> " + item.message + "</p>") 
-// 		});
-//     });
-	
-// } 
 
 $(function(){
    	//make connection direct on web server using relative hosts 
@@ -46,8 +33,6 @@ $(function(){
 	var loggeduser = $("#loggeduser")
 	var container = $("#container")
 
-	
-
 	$( document ).ready(function() {
 		
 
@@ -59,9 +44,14 @@ $(function(){
 			console.log(data);
 
 			data.forEach(item => { 
+					  
                       var dt = new Date(item.time);
                       const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
-                      chatroom.append( "<p class='message'><font color='gray'>  " + hora + "</font> <b>[" + item.username + "]</b> " + item.message + "</p>") 
+					  if (item.username == loggeduser.text())
+						chatroom.append( "<p class='message'><font color='gray'>  " + hora + "</font> <b>[" + item.username + "]</b> " + item.message + "</p>") 
+					  else
+					    chatroom.append( "<p class='message' style='text-align:rigth'><font color='gray'>  " + hora + "</font> <b>[" + item.username + "]</b> " + item.message + "</p>") 
+					  
                    });
    		});
 
@@ -95,7 +85,8 @@ $(function(){
 
 	//Emit message
 	send_message.click(function(){
-		socket.emit('message', {message : message.val()})
+		time = new Date();
+		socket.emit('message', {message : message.val(), username:username, time:time})
 
 		//limpar o inputbox do message, depois que enviar mensagem
 		message.val('');
@@ -114,12 +105,16 @@ $(function(){
 	socket.on("message", (data) => {
 		//limpar o campo que indica que um usuário está digitando: User is typing a message...
 		feedback.html('');
-    console.log(data);
-    var dt = new Date(data.time);
-    const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
-    chatroom.append( "<p class='message'><font color='gray'>  " + hora + "</font> <b>[" + data.username + "]</b> " + data.message + "</p>") 
-/////////////		chatroom.append("<p class='message'><b>" + data.username + "</b>: " + data.message + "</p>")
-
+    	//console.log(data);
+    	var dt = new Date(data.time);
+		
+   		const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
+		  
+		   if (data.username == loggeduser.text())
+						chatroom.append( "<p class='message' style='text-align:left'><font color='gray'>  " + hora + "</font> <b>[" + data.username + "]</b> " + data.message + "</p>") 
+					  else
+					    chatroom.append( "<p class='message' style='text-align:right'><font color='gray'>  " + hora + "</font> <b>[" + data.username + "]</b> " + data.message + "</p>") 
+    	// chatroom.append( "<p class='message'><font color='gray'>  " + hora + "</font> <b>[" + data.username + "]</b> " + data.message + "</p>") 
 		//container.animate({ scrollTop: $(document).height() }, 1000)
 
 		//fazer o scroll down a cada mensagem nova.
@@ -131,7 +126,6 @@ $(function(){
 			console.log(data.username + " | " + loggeduser.text())
 		    $('#chatAudio')[0].play();
 		}
-		
 	})
 
 	//Emit a username when click on send_username button.

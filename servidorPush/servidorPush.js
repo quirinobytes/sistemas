@@ -1,26 +1,35 @@
 #!/usr/bin/env node
 
 //prometheus / sockket.io
-const prometheus = require ('socket.io-prometheus-metrics');
+const prometheus = require ('socket.io-prometheus-metrics')
 
 
 //prometheus metrics
-const apiMetrics = require('prometheus-api-metrics');
+const apiMetrics = require('prometheus-api-metrics')
 // const HttpMetricsCollector = require('prometheus-api-metrics').HttpMetricsCollector;
 // const collector = new HttpMetricsCollector();
 
 
 //const promBundle = require("express-prom-bundle");
-const Prometheus = require('prom-client');
+const Prometheus = require('prom-client')
 const messagesTotal = new Prometheus.Counter({
 	name: 'messages_total',
 	help: 'Total number of user\'s messages',
 	labelNames: ['add_user_message']
-  });
+});
 
 
-
-
+// usado retorno do content-type para envio de anexos permitidos.
+var mime = {
+    html: 'text/html',
+    txt: 'text/plain',
+    css: 'text/css',
+    gif: 'image/gif',
+    jpg: 'image/jpeg',
+    png: 'image/png',
+    svg: 'image/svg+xml',
+    js: 'application/javascript'
+}
 
 var Convert = require('ansi-to-html');
 //opcoes para o convert ANSI COLOR to HTML criar nova linha tmb
@@ -30,23 +39,24 @@ var convert = new Convert({
     newline: true,
     escapeXML: false,
     stream: false
-});
+})
 
-var fs = require('fs');
-var commands_json = './comandos.json';
-var commandsJsonFile = fs.readFileSync(commands_json);
-var commands = JSON.parse(commandsJsonFile);
+
+var fs = require('fs')
+var commands_json = './comandos.json'
+var commandsJsonFile = fs.readFileSync(commands_json)
+var commands = JSON.parse(commandsJsonFile)
 //var commands = [{ command: "ping 8.8.8.8 -c1"},{command: "/root/shell/push/deploy.js deploy"},{command:"/root/shell/push/command.js 'wall rafael'"},{command:"hostname"}];
 
 // Formidable para upload de arquivos
-var formidable = require('formidable');
+var formidable = require('formidable')
 
 // Layout do ejs
-var expressLayouts = require('express-ejs-layouts');
+var expressLayouts = require('express-ejs-layouts')
 
 
-const express = require('express');
-const app = express();
+const express = require('express')
+const app = express()
 
 // Add the options to the prometheus middleware most option are for http_request_duration_seconds histogram metric
 // const metricsMiddleware = promBundle({
@@ -77,7 +87,7 @@ var projetos = [{id:01,"name":"shell","apelido":"CDSHELL","desc":"Esse projeto �
 var farms = [{id:01,"name":"cdshell_FARM","apelido":"CDSHELL FARM","desc":"Esse projeto é sobre o CDSHELL","nodes":["dev1","dev2"]},{id:02,"name":"workspace_FARM","apelido":"WK FARM","desc":"Esse projeto é sobre o WORKSPACE","nodes":["dev3","dev4"]}];
 var roles = [{id:01,"name":"frontend","apelido":"Servidores Front-End","icon":"https://visualpharm.com/assets/896/Cisco%20Router-595b40b75ba036ed117d8b7b.svg"},{id:02,"name":"backend","apelido":"Servidores Back-End","icon":"https://visualpharm.com/assets/419/Hub-595b40b75ba036ed117d8d05.svg"},{id:03,"name":"Nas","apelido":"Servidores NAS","icon":"https://visualpharm.com/assets/761/Nas-595b40b75ba036ed117d8dcd.svg"}];
 var logged_users = [];
-
+var lastMessageFrom = []
 
 // function that check for basic auth header and return the username base64 decoded.
 function getUsernameFromHeadersAuthorization(req){
@@ -91,8 +101,8 @@ function getUsernameFromHeadersAuthorization(req){
 	return user;
 }
 
-function chat_add_message({username,message}){
-  dateTime = new Date();
+function chat_add_message({username,message,time}){
+	if (time!="") dateTime = new Date();
 	newMessage = {id:chatMessageId,username:username,message:message,time:dateTime};
 	chatMessageId++;
 	chatMessages.push(newMessage);
@@ -128,33 +138,22 @@ function findValueByPrefix(object, prefix) {
 
 var privadoChat = {admin_bahia:[[{from:"admin",to:"bahia",message:"versao2", time: '2023-02-03T04:53:54.043Z'}]], bahia_admin:[[{}]], admin_spitz:[[{}]],spitz_admin:[[{}]],  admin_rafael:[[{}]],rafael_admin:[[{}]], bahia_rafael:[[{}]],rafael_bahia:[[{}]], bahia_spitz:[[{}]],spitz_bahia:[[{}]],marcia_rafael:[[{}]], rafael_marcia:[[{}]]   };
 
-function addMessageContactToPerson(de,para,mensagem){
+function addMessageContactToPerson(de,para,mensagem,time){
 	//se nao tiver carregado um board para falar com alguem, aqui pode ficar sem um para
 	if (!para)
 	 	return;
-	dateTime = new Date();
-	let toPerson = [{para,mensagem}];
-	//chatToArray[from][to] = [];
+	if (!time)
+		dateTime = new Date();
+	else
+		dateTime = time;
+	
 	prefix = de+"_"+para;
 	prefixinv = para+"_"+de;
-	console.log("prefix: "+prefix);
 
 	destino = findValueByPrefix(privadoChat,prefix);
 	destino2 = findValueByPrefix(privadoChat,prefixinv);
-	//console.log("destino: ");
-	//console.log(destino);
-	//console.log(para);
-
-	//remetente = findValueByPrefix(destino,de);
-	//remetente2 = findValueByPrefix(destino2,para);
-	//console.log("remetente: ");
-	//console.log(remetente);
-	// console.log("remetente2: ");
-	// console.log(remetente2);
 	destino.push([{from:de,to:para,message:mensagem,time:dateTime}])
 	destino2.push([{from:de,to:para,message:mensagem,time:dateTime}])
-	
-	//console.log(privadoChat);
 }
 
 
@@ -176,9 +175,9 @@ app.set('view engine', 'ejs')
 app.use(expressLayouts)
 //middlewares
 app.use(express.static('images'))
-app.use(express.static('public'));
-app.use(express.static('public/js'));
-app.use(express.static('public/jquery'));
+app.use(express.static('public'))
+app.use(express.static('public/js'))
+app.use(express.static('public/jquery'))
 
 
 
@@ -219,11 +218,11 @@ app.get('/', (req, res) => {
 })
 
 //route /contact
-app.get ('/contact',function (req,res) {
+app.get ('/privado',function (req,res) {
 	nome = getUsernameFromHeadersAuthorization(req)
 	if (nome == '') {nome = "anonymous"}
 	console.log("user:"+nome);
-	res.render('contact',{usuario:nome })
+	res.render('privado',{usuario:nome })
 });
 //route /logged_users
 app.get ('/logged_users',function (req,res) {
@@ -254,27 +253,82 @@ app.get('/upload', (req, res) => {
 	fs.readdir(path, (err, files) => res.render('upload', { items: files }  ));
 })
 
+
+
 app.post('/fileupload', (req, res) => {
-	
+	var form = new formidable.IncomingForm();
 
-var form = new formidable.IncomingForm();
+	form.parse(req, function (err, fields, files) {
+		var oldpath = files.filetoupload.path;
+		var newpath = './fileupload/' + files.filetoupload.name;
+		fs.rename(oldpath, newpath, function (err) {
 
- form.parse(req, function (err, fields, files) {
-	var oldpath = files.filetoupload.path;
-	var newpath = './fileupload/' + files.filetoupload.name;
-	fs.rename(oldpath, newpath, function (err) {
-
- 	if (err) throw err;
-		//prometheus metrics
-		//collector.collect(err || res);
-
-		//res.write('File uploaded and moved!');
-		res.redirect('./upload')
-    	res.end();
- 	});
- });
-
+		if (err) throw err;
+			//prometheus metrics
+			//collector.collect(err || res);
+			//res.write('File uploaded and moved!');
+			res.redirect('./upload')
+			res.end();
+		});
+	});
 })
+
+
+
+
+
+app.post('/fileuploadMural/', (req, res) => {
+	var form = new formidable.IncomingForm();
+
+
+	form.parse(req, function (err, fields, files) {
+		if (!files.filetoupload.name) return;
+		var username = fields.usuario;
+		var messageInAttach = fields.messageInAttach;
+		console.log("messageInAttach"+ fields.messageInAttach)
+		
+		var oldpath = files.filetoupload.path;
+		var newpath = './fileuploadMural/' + files.filetoupload.name;
+		fs.rename(oldpath, newpath, function (err) {
+
+		if (err) throw err;
+			//prometheus metrics
+			//collector.collect(err || res);
+			//res.write('File uploaded and moved!');
+            
+			//Inserindo a <img> no canal de message para aparecer no Mural.
+			
+			var link = "<p class='message'> <div class='imageBox'> <img src='" + newpath +"' alt='imagem' />  " + messageInAttach + " </div> </p>"
+			chat_add_message({message : link, username:username })
+			io.sockets.emit('message', {message : link , username: username})
+
+			res.redirect('/')
+			res.end()
+		});
+	});
+})
+
+
+//para servir as imagens do fileuploadMural
+app.get('/fileuploadMural/:file', function (req, res) {
+	var path = require('path');
+	var dir = ( './fileuploadMural');
+    var file = req.params.file;
+   
+    var type = mime[path.extname(file).slice(1)] || 'text/plain';
+    var s = fs.createReadStream(dir+"/"+file);
+    s.on('open', function () {
+        res.set('Content-Type', type);
+        s.pipe(res);
+		
+		//res.redirect('/')
+		//res.end();
+    });
+    s.on('error', function () {
+        res.set('Content-Type', 'text/plain');
+        res.status(404).end('Not found');
+    });
+});
 
 
 /////////////////////
@@ -314,24 +368,32 @@ app.get('/deletefile/:filename', (req,res) => {
 	res.redirect('./../upload')
 })
 
-//############
-// REST API //
-//############
+            //###############
+			//#             #
+			//#   REST API  #
+			//#             #
+			//###############
 
 app.get ('/rest/projetos/list/',function (req,res) {
 		res.json(projetos);
         res.end();
 });
 
+
+
 app.get ('/rest/farms/list/',function (req,res) {
 		res.json(farms);
         res.end();
 });
 
+
+
 app.get ('/rest/roles/list/',function (req,res) {
 		res.json(roles);
         res.end();
 });
+
+
 
 app.get ('/rest/message/:ativo',function (req,res) {
 	const ioclient = require("socket.io-client")
@@ -347,6 +409,8 @@ app.get ('/rest/message/:ativo',function (req,res) {
 		socketclient.emit('message', {message : ativo , username : socketclient.username});
 });
 
+
+
 app.get ('/rest/chat/list/',function (req,res) {
 //        res.writeHeader(200, {"Content-Type": "text/json"});
 //        res.write(chatMessages.text);
@@ -354,11 +418,15 @@ app.get ('/rest/chat/list/',function (req,res) {
         res.end();
 });
 
+
+
 app.get ('/rest/chat/add/:username/:messageText',function (req,res) {
 		chat_add_message({username:req.params.username, message:req.params.messageText});
   		res.json(chatMessages);
         res.end();
 });
+
+
 
 app.get ('/rest/chat/del/:messageId',function (req,res) {
 
@@ -379,11 +447,14 @@ app.get ('/rest/chat/del/:messageId',function (req,res) {
 });
 
 
+
 app.get ('/rest/nodes/',function (req,res) {
 		//console.log(nodes);
         res.json(nodes);
         res.end();
 });
+
+
 
 app.get ('/rest/hostconfig/:hostname',function (req,res) {
 		for (i = 0; i < nodes.length; ++i) {
@@ -399,6 +470,7 @@ app.get ('/rest/hostconfig/:hostname',function (req,res) {
 		res.json({});
         res.end();
 });
+
 
 app.post ('/rest/hostconfig/:hostname/autoupdate/:autoupdate',function (req,res) {
 	if ( req.params.autoupdate == "undefined"  || req.params.hostname == "undefined" )  {
@@ -419,6 +491,7 @@ app.post ('/rest/hostconfig/:hostname/autoupdate/:autoupdate',function (req,res)
 	res.json({"exitcode":1});
     res.end();
 });
+
 
 app.post ('/rest/hostconfig/:hostname/mainfunction/:mainfunction',function (req,res) {
 	if ( req.params.mainfunction == "undefined"  || req.params.hostname == "undefined" )  {
@@ -650,22 +723,25 @@ io.on('connection', (socket) => {
 
 		messagesTotal.inc({
 			add_user_message: data.username
-		  }) 
-	  hostname = data.hostname
+	  	}) 
+	  	hostname = data.hostname
+	  	if (data.time!=undefined && data.time !="")
+	  		time = data.time;
+	  	else
+	  		time = new Date();
 
       //broadcast the new message
-      io.sockets.emit('message', {message : data.message, username : socket.username});
+      io.sockets.emit('message', {message: data.message, username: socket.username, time:time});
 
-	  chat_add_message({username : socket.username, message : data.message});
+	  chat_add_message({message:data.message, username:socket.username, time:time });
 
 	  //dependendo do texto enviado na mensagem, responder com determinadas ações:
 		if (data.message == "getnodes"){
 			const { exec } = require('child_process');
 			exec('cd /root/shell ; /root/shell/linux/Getnodes.sh ', (err, stdout, stderr) => {
-        	stdout = convert.toHtml(stdout)
-		    socket.emit('message', { message : "getnodes: [ " + stdout + "]", username : "Bot@" + hostname  });
-		    });
-            io.sockets.emit('message', {message : "devops" , username : socket.username});
+        		stdout = convert.toHtml(stdout)
+		    	socket.emit('message', { message : "getnodes: <hr>[ " + stdout + "]", username : "Bot@" + hostname, time:time });
+			})
 
 		}
 	  	if (data.message == "help"){
@@ -673,54 +749,49 @@ io.on('connection', (socket) => {
                                              "tente umas das opções<br> "+
                                              "* deploy -> inicia um novo deploy <br>"+
                                              "* version -> exibe a versao do servidor <br>"+
-                                             "* date -> executa o comando data ", username : "Bot@" + hostname});
-		                             }
+                                             "* date -> executa o comando data ", username : "Bot@" + hostname, time:time});
+		}
         if (data.message == "ntp"){
-			  io.sockets.emit('command', {message : "ntp ntp.cais.rnp.br", username : socket.username});
+			  io.sockets.emit('command', {message : "ntp ntp.cais.rnp.br", username : socket.username, time:time});
       	}
-		  if (data.message == "version"){
-			const { exec } = require('child_process');
-     		exec('cd /root/shell ; /root/shell/linux/cdshell -V', (err, stdout, stderr) => {
-             socket.emit('message', { message : "Minha versão instalada: [ " + stdout + "]", username : "Bot@" + socket.username  });
-	       });
-		  }
-     })
+		if (data.message == "version"){
+		    const { exec } = require('child_process');
+     	    exec('cd /root/shell ; /root/shell/linux/cdshell -V', (err, stdout, stderr) => {
+               socket.emit('message', { message : "Versão CDSHELL do servidor: [ " + stdout + "]", username: "Bot", time:time  });
+	        });
+		}	
+    })
 
-	 socket.on('contactTo', (data) => {
-        //broadcast the new message
-		//console.log(data);
+	socket.on('contactTo', (data) => {
         io.sockets.emit('contactTo', data);
-
 		if ((data.from != undefined) && (data.toContact != undefined) )
-		addMessageContactToPerson(data.from, data.toContact, data.message, data.time);
-     })
+			addMessageContactToPerson(data.from, data.toContact, data.message, data.time);
+    })
 
-     socket.on('beos', (data) => {
-        //broadcast the new message
-        io.sockets.emit('beos', {message : data.message, username : socket.username});
-     })
+    socket.on('beos', (data) => {
+        io.sockets.emit('beos', {message : data.message, username : socket.username, time:data.time});
+    })
 
-	   socket.on('command', (data) => {
-        //broadcast the new message
-        io.sockets.emit('distributed', {message : data.message, username : socket.username});
-		 console.log('DISTRIBUTING [ '+ data.message + ' ] on nodes...')
-     })
+	socket.on('command', (data) => {
+		console.log("channel command: "+data.message);
+		const { exec } = require('child_process');
+     	    exec(data.message, (err, stdout, stderr) => {
+               io.sockets.emit('message', { message: "Saida do comando: [ " + stdout + "]", username: "Bot", time:new Date() });
+	        })
+    })
 
-	   socket.on('sair', (data) => {
-        //broadcast the new message
-        socket.emit('sair', {message : data.message, username : socket.username});
-     })
+	socket.on('sair', (data) => {
+        socket.emit('sair', {message : data.message, username : socket.username, time: data.time});
+    })
 
-	   socket.on('version', (data) => {
-		   if (data.message == "hostversion"){
-         socket.emit('message', { message : data.message });
-			   console.log("VERSION VAZIA ENVIADA" + data.message);
-		   }
+	socket.on('version', (data) => {
+		   if (data.message == "hostversion")
+         		socket.emit('message', { message : data.message, username: socket.username, time: data.time });
+		   
 		   if (data.message == "CDSHELL"){
-			 //io.sockets.emit('command', {message : "ntpdate ntp.cais.rnp.br", username : socket.username});
 			   const { exec } = require('child_process');
-     		 exec('cd /root/shell ; /root/shell/linux/cdshell -g', (err, stdout, stderr) => {
-        		socket.emit('message', { message : stdout });
+     		 	exec('cd /root/shell ; /root/shell/linux/cdshell -g', (err, stdout, stderr) => {
+        	   socket.emit('message', { message : stdout, username:"Bot", time: data.time });
 	       });
 		   }
 		   if (data.message == "sistemas"){

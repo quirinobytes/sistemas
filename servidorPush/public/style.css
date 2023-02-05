@@ -58,14 +58,17 @@ h1 {
 }
 
 #divChatContactUsersInChat {
-    text-align: left;
+    text-align: center;
     display: block;
 }
-#divChatContactTitulo{
+#divChatContactTitulo, #divContato{
  text-align: left;
 }
+#divChatContactTitulo, #divContato{
+    text-align: center;
+}
 
-div#change_username, section#input_zone {
+div#change_username{
     border: 2px outset rgb(74, 123, 179);
     text-align: right;
 }
@@ -132,7 +135,9 @@ div.container {
     vertical-align: bottom;
     align-content: center;
 }
-
+header#tituloText {
+    text-align: center;    
+}
 
 #messageTo:nth-child(even) {
     background-color: rgb(180, 214, 224);
@@ -184,9 +189,7 @@ section#titulo {
     align-content: space-between;
     justify-content: space-between;
 }
-header#tituloText {
-    text-align: center;    
-}
+
 
 
 section# {
@@ -211,6 +214,7 @@ section#input_zone {
     padding: 20px;
     background-color: rgb(11, 11, 109);
     align-content: center;
+    display: inline-flexbox;
 }
 
 .vertical-align {
@@ -225,6 +229,19 @@ input#username {
     font-family: 'Comfortaa', sans-serif;
 }
 
+.imageBox{
+    width: 100%;
+    height: 100%;    
+    /* border: 5px dashed #f7a239; */
+    display: flex;
+    justify-content: space-around;
+    
+}
+
+img {
+
+    object-fit: cover;
+}
 input#message {
     display: inline-block;
     width: 65%;
@@ -239,7 +256,7 @@ button#send_message {
     /*width: 10%;*/
 }
 
-p#message {
+p.message {
     margin: 0px;
     width: 100%;
     /*height: 40px;*/
