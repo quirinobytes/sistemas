@@ -368,22 +368,37 @@ app.post('/upload-audio/', (req, res) => {
 		console.log("nome: "+arquivo.name)
 		console.log("tipo: "+arquivo.type) 
 		console.log("path: "+arquivo.path) 
+		console.log("FD: "+arquivo._writeStream.fd)
 
-		var newpath = './audios/' + name;
 
-		var oldpath = arquivo.path
-		var newpath = './audioupload/' + arquivo.name;
-		fs.rename(oldpath, newpath, function (err) {
- 			if (err) throw err;
+		novoNome = arquivo.path
+		remover = "/tmp/"
+		novoNome = novoNome.substring(novoNome.indexOf(remover) + remover.length);
+		console.log("novo Nome: "+novoNome)
+		var newpath = './audioupload/' + novoNome + '.ogg'
 
-			 console.log("GRAVOU")
-		});
+		// var newpath = './audioupload/' + arquivo.name + '.ogg';
+		// fs.writeFile(novoNome, arquivo, function (err) {
+ 		// 	if (err) throw err;
+
+		// 	 console.log("GRAVOU")
+		// });
 	
+		console.log(files)
+		let keys=Object.keys(files);
+		fs.readFile(files[keys[0]].path,(err,e)=>{
+			if(err) console.log(err);
+			fs.writeFile(newpath,e,(err)=>{
+					console.log(err)
+			})
+			
+		})
+		io.sockets.emit('audio', {src : newpath})
 		//var link = "<p class='message'> <div class='imageBox'> <img src='" + newpath +"' alt='imagem' />  " + messageInAttach + " </div> </p>"
 		//chat_add_message({message : link, username:username })
 		addMessageContactToPerson("rafael", "bahia", "<audio> <source src='./audioupload/"+arquivo.name+"' type='audio/ogg'> </audio>")
 		
-		io.sockets.emit('audio', {filename : arquivo.name})
+		
 
 		//res.redirect('/')
 		res.end()

@@ -111,6 +111,7 @@ $(function(){
 	var logged_users = {};
 	var downloadLink = $("#downloadLink")
 	var audioPrivado = $("#audioPrivado")
+	audioPrivadoSrc = $("#audioPrivadoSrc")
 	
 	$( document ).ready(function() {
 
@@ -193,9 +194,18 @@ $(function(){
 		usuarioDeslogado(name);
 	})
 	socket.on('audio', (media) => {
-		audioPrivado[0].play();
-		
-		console.log(media)
+		// console.log("src"+media.src);
+
+		if (media.src!=""){
+				var audio = $("#audioPrivado");      
+				$("#audioPrivadoSrc").attr("src", media.src);
+				/****************/
+				audio[0].pause();
+				audio[0].load();//suspends and restores all audio element
+			
+				//audio[0].play(); changed based on Sprachprofi's comment below
+				audio[0].oncanplaythrough = audio[0].play();
+		}
 	})
 
 
@@ -276,9 +286,9 @@ $(function(){
 					audio = new Audio(audio_url)
 					audio.setAttribute("controls",1)
 
-					const audiofile = new File([blob], "audiofile", {
-					 	type: "audio/wav",
-					});
+					// const audiofile = new File([blob], "audiofile", {
+					//  	type: "audio/wav",
+					// });
 
 					//   console.log(audiofile)
 					// formData.append("dados",data.files, "nomeqq");
