@@ -6,6 +6,8 @@
 // 		fileuploadMural.submit();
 // 	});
 //  });
+
+
 function copyMessageToAddInPhotoIfExist(){
 	var texto = $("#messageInAttach")
 	var str = $("#message")
@@ -92,6 +94,9 @@ $(function(){
 		message.val('');
 	})
 
+
+
+
 	// send_message_to_contact.click(function(){
 	// 	alert("oi")
 	// 	console.log("ahhaahh");
@@ -123,8 +128,8 @@ $(function(){
 		
 		//play sound when new message arrives but not in my chat.
 		if (data.username != loggeduser.text()){
-			console.log(data.username + " | " + loggeduser.text())
-		    $('#chatAudio')[0].play();
+			//console.log(data.username + " | " + loggeduser.text())
+		    $('#playSoundOnNewMessage')[0].play();
 		}
 	})
 

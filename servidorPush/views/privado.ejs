@@ -1,4 +1,5 @@
   <head>
+    <title>ChatPVT - Privado</title>
     <meta http-equiv="Content-Type" const="text/html;charset=UTF-8" />
     <link href="https://fonts.googleapis.com/css?family=Comfortaa" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="style.css" >
@@ -16,13 +17,13 @@
             }
         }
     </script>
-  </head>
+  </head> 
 
   <body>
       <section id="titulo">
           <header id="tituloText"> 
             <div style="display: flex; justify-content: space-between; text-align:left">
-              <div id="divChatContactUsersInChat">
+              <div id="divUserAvatarName">
                 <img class="nav-auth-img" src='<%= usuario %>-user-icon.png'/>
               <div id="myname"><%=usuario %></div>
             </div>
@@ -51,7 +52,7 @@
       </div>
    </section>
 
-   <audio id="chatAudio">
+   <audio id="playSoundOnNewMessage">
     <source src="notify.ogg" type="audio/ogg">
     <source src="notify.mp3" type="audio/mpeg">
     <source src="notify.wav" type="audio/wav">

@@ -3,9 +3,6 @@ var globalContatosList = [];
 var globalAudio;
 
 
-
-
-
 function loadChatWith(username) {
 
 	var usr = $("#myname");
@@ -42,14 +39,13 @@ function loadChatWith(username) {
 		//console.log(ret);
 
 		data.forEach(item => { 
-			console.log("ITEM:");
-			console.log()
+			// console.log("ITEM:");
 			de = item[0].from;
 			para = item[0].to;
 			mensagem = item[0].message;
 			  var dt = new Date(item[0].time);
 			  const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
-			  messageTo.append("<p class='message'><font color='gray'>  " + hora + "</font> <b>[" + de + "]</b> " + mensagem + "</p>") 
+			 messageTo.append("<p class='message'><font color='gray'>  " + hora + "</font> <b>[" + de + "]</b> " + mensagem + "</p>") 
 		});
     });
 } 
@@ -217,7 +213,6 @@ $(function(){
 	
 		//colocar minhas mensagens com a pessoa e for mensagem para mim, no board.
 		if (data.toContact == friendUsername && data.from == loggedUser){
-			
 			//divMessageTo.append(data.message);
 			
             //divMessageTo.append(data.time +": [" + data.from +"] " + data.message + "</br> ")
@@ -228,11 +223,6 @@ $(function(){
 				//console.log(cList[0])
 				//console.log("tamanho= "+cList[0].children.length);
 				var cont =0;
-				//$("#contacts:contains("+data.from+")").attr("style","font-weight:bold");
-				//$("#contacts:contains("+data.from+")").attr("style","color:red");
-				//$("#contacts:contains("+data.from+")").addClass("temMensagemNaoLida");
-				
-				
 				
 			//caso nao estava no board, rastreiar os outros para destacar como MENSAGEM NAO LIDA.
 				for (cont=0;cont<cList[0].children.length;cont++){
@@ -240,7 +230,7 @@ $(function(){
 					if (cList[0].children[cont].innerText == data.from ){
 						//console.log( "ACHEI: Alterando o div do: " + cList[0].children[cont].innerText);
 						$( cList[0].children[cont]).addClass("temMensagemNaoLida");
-						$('#chatAudio')[0].play();
+						$('#playSoundOnNewMessage')[0].play();
 					}
 				}
 			}
@@ -249,7 +239,7 @@ $(function(){
 		if (data.from == divContato.innerText){
 			//divMessageTo.append(data.time + ": [" + data.from +"] " + data.message + "</br> ")
 			divMessageTo.append("<p class='message'><font color='gray'>  " + data.time + "</font> <b>[" + data.from + "]</b> " + data.message + "</p>");
-			$('#chatAudio')[0].play();
+			$('#playSoundOnNewMessage')[0].play();
 		}
 	})
 	

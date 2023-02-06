@@ -57,7 +57,7 @@ h1 {
     margin: 0px;
 }
 
-#divChatContactUsersInChat {
+#divUserAvatarName {
     text-align: center;
     display: block;
 }
@@ -127,7 +127,7 @@ div#box {
 }
 
 div.container {
-   overflow: auto;
+   overflow:hidden;
    /*max-height: 130%;*/
 }
 
@@ -135,6 +135,7 @@ div.container {
     vertical-align: bottom;
     align-content: center;
 }
+
 header#tituloText {
     text-align: center;    
 }
@@ -191,7 +192,6 @@ section#titulo {
 }
 
 
-
 section# {
     border: 2px ;
     width: 50%;
@@ -217,13 +217,7 @@ section#input_zone {
     display: inline-flexbox;
 }
 
-.vertical-align {
-    position: relative;
-    top: 50%;
-    -webkit-transform: translateY(-50%);
-    -ms-transform: translateY(-50%);
-    transform: translateY(-50%);
-}
+
 
 input#username {
     font-family: 'Comfortaa', sans-serif;
@@ -249,6 +243,9 @@ input#message {
     font-family: 'Comfortaa', sans-serif;
 /*    font-size: 1vh; */
 }
+input#filetoupload{
+    color: white;
+}
 
 button#send_message {
     display: inline-block;
@@ -272,4 +269,12 @@ p.message {
 
 .message:nth-child(odd) {
     background-color: rgb(210, 226, 241);
+}
+.vertical-align {
+    position: relative;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    margin-top: 15px;
 }

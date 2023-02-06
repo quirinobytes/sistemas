@@ -211,10 +211,10 @@ app.use(apiMetrics({
   }))
 
 //route /
-app.get('/', (req, res) => {
+app.get('/mural', (req, res) => {
 	nome = getUsernameFromHeadersAuthorization(req)
 	if (nome == '') {nome = "anonymous"}
-	res.render('index',{usuario:nome })
+	res.render('mural',{usuario:nome })
 })
 
 //route /contact
@@ -302,7 +302,7 @@ app.post('/fileuploadMural/', (req, res) => {
 			chat_add_message({message : link, username:username })
 			io.sockets.emit('message', {message : link , username: username})
 
-			res.redirect('/')
+			res.redirect('/mural')
 			res.end()
 		});
 	});
@@ -391,12 +391,11 @@ app.post('/upload-audio/', (req, res) => {
 			fs.writeFile(newpath,e,(err)=>{
 					console.log(err)
 			})
-			
 		})
 		io.sockets.emit('audio', {src: newpath})
 		//var link = "<p class='message'> <div class='imageBox'> <img src='" + newpath +"' alt='imagem' />  " + messageInAttach + " </div> </p>"
 		
-		addMessageContactToPerson("rafael", "bahia", "<audio> <source src='./audioupload/" + newpath + "' type='audio/ogg'> </audio>", new Date() )
+		addMessageContactToPerson("rafael", "bahia", "<audio> <source src='/" + newpath + "' type='audio/ogg'> </audio>", new Date() )
 		//res.redirect('/')
 		// res.end()
 	
