@@ -1,7 +1,4 @@
 
-
-
-
 function pararVideo(){
     localStream.getVideoTracks()[0].stop();
 }

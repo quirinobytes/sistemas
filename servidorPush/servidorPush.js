@@ -248,9 +248,12 @@ app.get ('/rest/loadChatWith/:from/:to',function (req,res) {
 //route /upload
 app.get('/upload', (req, res) => {
 
+	nome = getUsernameFromHeadersAuthorization(req)
+	if (nome == '') {nome = "anonymous"}
+
 	path = "./fileupload/";
 	//abre o diretorio path e renderiza para o ejs renderizar o arquivo upload.ejc com a var items
-	fs.readdir(path, (err, files) => res.render('upload', { items: files }  ));
+	fs.readdir(path, (err, files) => res.render('upload', { usuario:nome, items: files }  ));
 })
 
 
@@ -298,7 +301,7 @@ app.post('/fileuploadMural/', (req, res) => {
             
 			//Inserindo a <img> no canal de message para aparecer no Mural.
 			
-			var link = "<p class='message'> <div class='imageBox'> <img src='" + newpath +"' alt='imagem' />  " + messageInAttach + " </div> </p>"
+			var link = "<p class='message'> <div class='imageBox'> <img class='imgMural' src='" + newpath +"' alt='imagem' />  " + messageInAttach + " </div> </p>"
 			chat_add_message({message : link, username:username })
 			io.sockets.emit('message', {message : link , username: username})
 

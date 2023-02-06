@@ -7,17 +7,48 @@
 // 	});
 //  });
 
+function enviarMensagemEOUFoto(){
+	console.log($("#message").val())
+	
+	if ($("#message").val() == ""){
+		if ( $("#filetoupload").get(0).files.lenth == 0 ){
+			alert("Nao tem fotos nem texto")
+		}
+	 	else { //senao o upload tem foro
+			alert("so tem  foto")
+		 	$("#formSendImagemToMural").submit();
+		}
+	}
+	else {//entao o textearea tem mensagem, envia e depois vamos ver se tem fotos
+		if (!$('#filetoupload').val() ){
+			console.log("numero de arquivos"+$("#filetoupload").get(0).files.lenth)
+			alert("so tem mensagem")
+			send_message.click();
+		}
+		else{
+			console.log("numero de arquivos"+$("#filetoupload").get(0).files.lenth)
+			alert("tem foto e tem mensagem")
+			copyMessageToAddInPhotoIfExist()
+			$("#formSendImagemToMural").submit();
+		}
+
+	}
+
+}
+
 
 function copyMessageToAddInPhotoIfExist(){
 	var texto = $("#messageInAttach")
 	var str = $("#message")
 	texto[0].defaultValue = str.val()
-	console.log(texto)
 	texto.val(str.val()).trigger("change");
 	
 }
 
-
+function auto_height(elem) {  /* javascript */
+    elem.style.height = "1px";
+    elem.style.height = (elem.scrollHeight)+"px";
+}
 
 
 $(function(){
@@ -87,11 +118,12 @@ $(function(){
 
 	//Emit message
 	send_message.click(function(){
-		time = new Date();
+		time = new Date()
 		socket.emit('message', {message : message.val(), username:username, time:time})
 
-		//limpar o inputbox do message, depois que enviar mensagem
-		message.val('');
+		//limpar o inputbox do message, depois que enviar mensagem, e chamar a auto dimensionar o textarea
+		message.val('')
+		message.attr("rows","1")
 	})
 
 
