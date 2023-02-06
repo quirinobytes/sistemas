@@ -84,10 +84,6 @@ function blinkLoggedUsers(){
 	    });
 }
 
-function enviaAudio(form, url){
-	
-
-}
 
 $(function(){
    	//make connection direct on web server using relative hosts 
@@ -195,7 +191,6 @@ $(function(){
 	})
 	socket.on('audio', (media) => {
 		// console.log("src"+media.src);
-
 		if (media.src!=""){
 				var audio = $("#audioPrivado");      
 				$("#audioPrivadoSrc").attr("src", media.src);
@@ -215,8 +210,8 @@ $(function(){
 		friendUsername=divContato.innerText;
 		var usr = $("#myname");
 		loggedUser = usr[0].innerText ;
-		console.log("data.time");
-		console.log(data.time);
+		//console.log("data.time");
+		//console.log(data.time);
 		
 
 	
@@ -231,7 +226,7 @@ $(function(){
 		else{ //caso o board do seu contato nao esteja selecionado, e nao seja o seu board
 			if (data.toContact == loggedUser && data.from != divContato.innerText){
 				//console.log(cList[0])
-				console.log("tamanho= "+cList[0].children.length);
+				//console.log("tamanho= "+cList[0].children.length);
 				var cont =0;
 				//$("#contacts:contains("+data.from+")").attr("style","font-weight:bold");
 				//$("#contacts:contains("+data.from+")").attr("style","color:red");
@@ -243,9 +238,8 @@ $(function(){
 				for (cont=0;cont<cList[0].children.length;cont++){
 
 					if (cList[0].children[cont].innerText == data.from ){
-						console.log( "ACHEI: Alterando o div do: " + cList[0].children[cont].innerText);
+						//console.log( "ACHEI: Alterando o div do: " + cList[0].children[cont].innerText);
 						$( cList[0].children[cont]).addClass("temMensagemNaoLida");
-						// cList[0].children(cont).
 						$('#chatAudio')[0].play();
 					}
 				}
@@ -257,9 +251,6 @@ $(function(){
 			divMessageTo.append("<p class='message'><font color='gray'>  " + data.time + "</font> <b>[" + data.from + "]</b> " + data.message + "</p>");
 			$('#chatAudio')[0].play();
 		}
-				
-		
-		
 	})
 	
 
@@ -286,14 +277,8 @@ $(function(){
 					audio = new Audio(audio_url)
 					audio.setAttribute("controls",1)
 
-					// const audiofile = new File([blob], "audiofile", {
-					//  	type: "audio/wav",
-					// });
 
-					//   console.log(audiofile)
-					// formData.append("dados",data.files, "nomeqq");
-					// formData.append('name', blob, "nomezinho");
-					//console.log(formData.entries)
+
 					const formData = new FormData();
 					formData.append('fname', "blob.ogg");
 					formData.append('file', blob, "audio.ogg" );
@@ -314,10 +299,6 @@ $(function(){
 						}).then(function(result) {
 							console.log(result);
 						});
-				
-
-					
-				
 					//console.log(result)
 					//socket.emit("audio", {audio:audio, from:"rafael", to:"spitz"})
 					//divMessageTo.append(audio)

@@ -137,6 +137,8 @@ function findValueByPrefix(object, prefix) {
 // var chatToArray = [][];
 
 var privadoChat = {admin_bahia:[[{from:"admin",to:"bahia",message:"versao2", time: '2023-02-03T04:53:54.043Z'}]], bahia_admin:[[{}]], admin_spitz:[[{}]],spitz_admin:[[{}]],  admin_rafael:[[{}]],rafael_admin:[[{}]], bahia_rafael:[[{}]],rafael_bahia:[[{}]], bahia_spitz:[[{}]],spitz_bahia:[[{}]],marcia_rafael:[[{}]], rafael_marcia:[[{}]]   };
+var destino = {}
+var destino2 = {}
 
 function addMessageContactToPerson(de,para,mensagem,time){
 	//se nao tiver carregado um board para falar com alguem, aqui pode ficar sem um para
@@ -151,6 +153,8 @@ function addMessageContactToPerson(de,para,mensagem,time){
 	prefixinv = para+"_"+de;
 
 	destino = findValueByPrefix(privadoChat,prefix);
+	console.log(destino);
+	console.log(destino2);
 	destino2 = findValueByPrefix(privadoChat,prefixinv);
 	destino.push([{from:de,to:para,message:mensagem,time:dateTime}])
 	destino2.push([{from:de,to:para,message:mensagem,time:dateTime}])
@@ -193,20 +197,16 @@ app.use(apiMetrics({
 		
 //		console.log("#METRICS " +req.host +" | " + req.headers.authorization);
 //		console.log(req);
-		
 //		console.log(authorization);
 		if (req.headers){
 			let username = getUsernameFromHeadersAuthorization(req)
-			return {
-				user: username,
-				ip: req['hostname']
-			}
+			return {user: username,	ip: req['hostname']	}
 		}
 		else
-		return {
-			user: 'root',
-			ip: req['hostname']
-		  }
+			return {
+				user: 'root',
+				ip: req['hostname']
+		    }
 	}
   }))
 
@@ -241,7 +241,7 @@ app.get ('/rest/loadChatWith/:from/:to',function (req,res) {
 	//console.log("GET no /rest/loadChatWith/"+from+"/"+to);
 	prefix = from + "_" + to;
 	obj = findValueByPrefix(privadoChat,prefix)
-	//console.log(obj);
+	console.log(obj);
 	res.send(obj);
 });
 
@@ -393,15 +393,12 @@ app.post('/upload-audio/', (req, res) => {
 			})
 			
 		})
-		io.sockets.emit('audio', {src : newpath})
+		io.sockets.emit('audio', {src: newpath})
 		//var link = "<p class='message'> <div class='imageBox'> <img src='" + newpath +"' alt='imagem' />  " + messageInAttach + " </div> </p>"
-		//chat_add_message({message : link, username:username })
-		addMessageContactToPerson("rafael", "bahia", "<audio> <source src='./audioupload/"+arquivo.name+"' type='audio/ogg'> </audio>")
 		
-		
-
+		addMessageContactToPerson("rafael", "bahia", "<audio> <source src='./audioupload/" + newpath + "' type='audio/ogg'> </audio>", new Date() )
 		//res.redirect('/')
-		res.end()
+		// res.end()
 	
 	});
 
