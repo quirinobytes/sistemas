@@ -1,5 +1,9 @@
 
 var globalContatosList = [];
+var globalAudio;
+
+
+
 
 
 function loadChatWith(username) {
@@ -31,7 +35,6 @@ function loadChatWith(username) {
 	$.ajax({
 			url: "./rest/loadChatWith/"+myname+"/"+username
 	}).then(function(data) {
-	
 		//mostrar as mensagens de retorno
 		//console.log("MOSTRANDO o RETORNO DO HISTORICO")
 		//console.log(data);
@@ -62,7 +65,6 @@ function usuarioDeslogado(nome){
 	$("#"+nome+"_logged_user").removeClass("logged_user");
 }
 function blinkLoggedUsers(){
-
 	//limpando tudo antes
 	globalContatosList.forEach( item => {
 		if (item.username != undefined ) {
@@ -74,12 +76,16 @@ function blinkLoggedUsers(){
 	$.ajax(
 		{ url: "./logged_users"
 		}).then(function(lista) {
-			console.log("GET /logged_users: " +lista)
+				//console.log("GET /logged_users: " +lista)
 				lista.forEach(item =>{
 					//console.log("vou chamar a usuarioLogado("+item+")")
 					usuarioLogado(item);
 				});
-	});
+	    });
+}
+
+function enviaAudio(form, url){
+	
 
 }
 
@@ -99,10 +105,13 @@ $(function(){
 	var feedback = $("#feedback")
 	var loggeduser = $("#loggeduser")
 	var container = $("#container")
-	var cList  = $("#contactList");
+	var cList  = $("#contactList")
+	var pararAudio = $("#pararAudio")
+	var gravarAudio = $("#gravarAudio")
 	var logged_users = {};
+	var downloadLink = $("#downloadLink")
+	var audioPrivado = $("#audioPrivado")
 	
-
 	$( document ).ready(function() {
 
 		socket.emit('username', {username : myname.text()});
@@ -110,9 +119,9 @@ $(function(){
 		$.ajax(
 			{ url: "./logged_users"
 			}).then(function(obj) {
-			let logged_users = obj;
-			console.log("LOGGED USERS");
-			console.log(logged_users);
+				let logged_users = obj;
+				console.log("LOGGED USERS");
+				console.log(logged_users);
 			});
 		
 		// Aqui estou pegando a lista dos usuários do "konga"
@@ -183,6 +192,12 @@ $(function(){
 		console.log("desconectando o fulano:"+name)
 		usuarioDeslogado(name);
 	})
+	socket.on('audio', (media) => {
+		audioPrivado[0].play();
+		
+		console.log(media)
+	})
+
 
 	socket.on('contactTo', (data) => {
 		var dt = new Date(data.time);
@@ -226,7 +241,7 @@ $(function(){
 				}
 			}
 		}
-		//colocar as mensagens da pessoa para mim, no board e soa um bip
+		//colocar as mensagens de outra pessoa para mim, no board e soa um bip
 		if (data.from == divContato.innerText){
 			//divMessageTo.append(data.time + ": [" + data.from +"] " + data.message + "</br> ")
 			divMessageTo.append("<p class='message'><font color='gray'>  " + data.time + "</font> <b>[" + data.from + "]</b> " + data.message + "</p>");
@@ -237,6 +252,73 @@ $(function(){
 		
 	})
 	
+
+	gravarAudio.click(function(){
+			navigator.mediaDevices.getUserMedia({ audio: true})
+			.then(stream => {
+				const options = {mimeType: 'audio/webm'};
+				mediaRecorder = new MediaRecorder(stream,options)
+				mediaRecorder.start()
+				chuck = []
+				
+				mediaRecorder.addEventListener("dataavailable", e => {
+					chuck.push(e.data)
+				})
+		
+				mediaRecorder.addEventListener("stop", e => {
+					blob = new Blob(chuck,{ type: "audio/ogg"} )
+					const data = {
+						"name" : "audiofile.ogg",
+						"files":  blob,
+						"files.File": blob
+					  };
+					audio_url = URL.createObjectURL(blob)
+					audio = new Audio(audio_url)
+					audio.setAttribute("controls",1)
+
+					const audiofile = new File([blob], "audiofile", {
+					 	type: "audio/wav",
+					});
+
+					//   console.log(audiofile)
+					// formData.append("dados",data.files, "nomeqq");
+					// formData.append('name', blob, "nomezinho");
+					//console.log(formData.entries)
+					const formData = new FormData();
+					formData.append('fname', "blob.ogg");
+					formData.append('file', blob, "audio.ogg" );
+
+
+					$.ajax(
+						{ 
+							url: "./upload-audio/",
+							type: "POST",
+							processData: false,
+							contentType: false,
+							data: formData,
+							dataType: 'json',
+							// contentType: "application/x-www-form-urlencoded",
+							//enctype: "multipart/form-data",
+							data: formData // Dont serializes .
+
+						}).then(function(result) {
+							console.log(result);
+						});
+				
+
+					
+				
+					//console.log(result)
+					//socket.emit("audio", {audio:audio, from:"rafael", to:"spitz"})
+					//divMessageTo.append(audio)
+				})
+			
+			})
+	})
+
+	pararAudio.click(function(){
+		mediaRecorder.stop()
+	})
 });
 
 

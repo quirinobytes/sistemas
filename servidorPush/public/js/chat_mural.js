@@ -111,7 +111,7 @@ $(function(){
    		const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
 		  
 		   if (data.username == loggeduser.text())
-						chatroom.append( "<p class='message' style='text-align:left'><font color='gray'>  " + hora + "</font> <b>[" + data.username + "]</b> " + data.message + "</p>") 
+						chatroom.append( "<p class='message'><font color='gray'>  " + hora + "</font> <b>[" + data.username + "]</b> " + data.message + "</p>") 
 					  else
 					    chatroom.append( "<p class='message' style='text-align:right'><font color='gray'>  " + hora + "</font> <b>[" + data.username + "]</b> " + data.message + "</p>") 
     	// chatroom.append( "<p class='message'><font color='gray'>  " + hora + "</font> <b>[" + data.username + "]</b> " + data.message + "</p>") 

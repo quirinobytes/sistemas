@@ -1,11 +1,9 @@
-<!DOCTYPE html>
-<html>
   <head>
     <meta http-equiv="Content-Type" const="text/html;charset=UTF-8" />
     <link href="https://fonts.googleapis.com/css?family=Comfortaa" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="style.css" >
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
-    <title>Privado Chat </title>
+    
     <script src="jquery/jquery-latest.min.js"></script>
     <script src="js/chat_privado.js"></script>
     <script>
@@ -50,11 +48,36 @@
     <section id="input_zone">
       <input name="message" id="message" class="vertical-align" type="text" tabindex="0" autofocus="autofocus" onkeyup="checkForEnterKey(this.value)">
       <button id="send_message" class="vertical-align" tabindex="0" role="button" type="submit" value="submit">Enviar</button>
+      <hr>
+      <button id="gravarAudio"> Gravar Audio</button>
+      <button id="pararAudio"> Parar Audio</button>
+
+      <!-- <video width="320" height="240" controls autoplay></video> -->
+      <div id="ok">
+        <a id="downloadLink">Download Audio</a>
+      </div>
+      <!-- <p>
+        <button id=audio onclick="pararAudio()">
+          gravar video
+        </button>
+        <button id=video>
+          stop video
+        </button>
+        <button id=both>
+          stop both
+        </button>
+      </p> -->
+
    </section>
 
    <audio id="chatAudio">
-    <source src="notify.ogg" type="audio/ogg"><source src="notify.mp3" type="audio/mpeg"><source src="notify.wav" type="audio/wav">
+    <source src="notify.ogg" type="audio/ogg">
+    <source src="notify.mp3" type="audio/mpeg">
+    <source src="notify.wav" type="audio/wav">
   </audio> 
+  <audio id="audioPrivado"> 
+    <source src="./audioupload/audio.ogg" type="audio/ogg">
+  </audio>
   
   </body>
 </html>

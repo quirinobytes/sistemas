@@ -255,6 +255,7 @@ app.get('/upload', (req, res) => {
 
 
 
+
 app.post('/fileupload', (req, res) => {
 	var form = new formidable.IncomingForm();
 
@@ -280,12 +281,11 @@ app.post('/fileupload', (req, res) => {
 app.post('/fileuploadMural/', (req, res) => {
 	var form = new formidable.IncomingForm();
 
-
 	form.parse(req, function (err, fields, files) {
 		if (!files.filetoupload.name) return;
 		var username = fields.usuario;
 		var messageInAttach = fields.messageInAttach;
-		console.log("messageInAttach"+ fields.messageInAttach)
+		//console.log("messageInAttach"+ fields.messageInAttach)
 		
 		var oldpath = files.filetoupload.path;
 		var newpath = './fileuploadMural/' + files.filetoupload.name;
@@ -329,6 +329,69 @@ app.get('/fileuploadMural/:file', function (req, res) {
         res.status(404).end('Not found');
     });
 });
+
+
+app.get('/audioupload/:file', function (req, res) {
+	var path = require('path');
+	var dir = ( './audioupload/');
+    var file = req.params.file;
+   
+    var type = mime[path.extname(file).slice(1)] || 'audio/ogg';
+    var s = fs.createReadStream(dir+"/"+file);
+    s.on('open', function () {
+        res.set('Content-Type', type);
+        s.pipe(res);
+		
+		//res.redirect('/')
+		//res.end();
+    });
+    s.on('error', function () {
+        res.set('Content-Type', 'text/plain');
+        res.status(404).end('Not found');
+    });
+});
+
+app.post('/upload-audio/', (req, res) => {
+
+	var form = new formidable.IncomingForm(req.formidable);
+
+	form.parse(req, function (err, fields, files) {
+
+		console.log(fields)
+
+		 if (!files) return;
+				
+		var name = fields.fname
+		var arquivo = files.file
+		console.log("name: "+name)
+		console.log("tamanho: "+ arquivo.size)
+		console.log("nome: "+arquivo.name)
+		console.log("tipo: "+arquivo.type) 
+		console.log("path: "+arquivo.path) 
+
+		var newpath = './audios/' + name;
+
+		var oldpath = arquivo.path
+		var newpath = './audioupload/' + arquivo.name;
+		fs.rename(oldpath, newpath, function (err) {
+ 			if (err) throw err;
+
+			 console.log("GRAVOU")
+		});
+	
+		//var link = "<p class='message'> <div class='imageBox'> <img src='" + newpath +"' alt='imagem' />  " + messageInAttach + " </div> </p>"
+		//chat_add_message({message : link, username:username })
+		addMessageContactToPerson("rafael", "bahia", "<audio> <source src='./audioupload/"+arquivo.name+"' type='audio/ogg'> </audio>")
+		
+		io.sockets.emit('audio', {filename : arquivo.name})
+
+		//res.redirect('/')
+		res.end()
+	
+	});
+
+
+})
 
 
 /////////////////////
@@ -824,6 +887,10 @@ io.on('connection', (socket) => {
 		io.sockets.emit('newlogin', username);
 		//console.log(data);
 
+	})
+	socket.on("audio",(media) => {
+		io.sockets.emit('audio', media);
+		console.log(media);
 	})
 })
 
