@@ -10,8 +10,8 @@
 function enviarMensagemEOUFoto(){
 	console.log($("#message").val())
 	
-	if ($("#message").val() == ""){
-		if ( $("#filetoupload").get(0).files.lenth == 0 ){
+	if (! $("#message").val()){
+		if ( $("#filetoupload").get(0).files.length == 0 ){
 			alert("Nao tem fotos nem texto")
 		}
 	 	else { //senao o upload tem foro
@@ -21,12 +21,12 @@ function enviarMensagemEOUFoto(){
 	}
 	else {//entao o textearea tem mensagem, envia e depois vamos ver se tem fotos
 		if (!$('#filetoupload').val() ){
-			console.log("numero de arquivos"+$("#filetoupload").get(0).files.lenth)
+			console.log("numero de arquivos"+$("#filetoupload").get(0).files.length)
 			alert("so tem mensagem")
 			send_message.click();
 		}
 		else{
-			console.log("numero de arquivos"+$("#filetoupload").get(0).files.lenth)
+			console.log("numero de arquivos"+$("#filetoupload").get(0).files.length)
 			alert("tem foto e tem mensagem")
 			copyMessageToAddInPhotoIfExist()
 			$("#formSendImagemToMural").submit();
@@ -67,14 +67,13 @@ $(function(){
 	var container = $("#container")
 
 	$( document ).ready(function() {
-		
 
 		socket.emit('username', {username : loggeduser.text()});
 
 		$.ajax({
 			url: "./rest/chat/list"
 		}).then(function(data) {
-			console.log(data);
+			//console.log(data);
 
 			data.forEach(item => { 
 					  
@@ -84,7 +83,6 @@ $(function(){
 						chatroom.append( "<p class='message'><font color='gray'>  " + hora + "</font> <b>[" + item.username + "]</b> " + item.message + "</p>") 
 					  else
 					    chatroom.append( "<p class='message' style='text-align:rigth'><font color='gray'>  " + hora + "</font> <b>[" + item.username + "]</b> " + item.message + "</p>") 
-					  
                    });
    		});
 
@@ -98,16 +96,11 @@ $(function(){
 			//console.log(usuarios_kong);
 			
 			usuarios_kong.forEach(item => { 
-                      
                       //contactTo.append( "<p class='message'>[" + item.username + "]</p>");
 					  //contactTo.append( '<div>' + item.username + '</div>');
 					  contactList.innerHTML += "<div id='contacts' onclick='loadChatWith(this.innerHTML);'>" + item.username + "</div>";
-
                    });
-
    		});
-
-
 
 	//Appending HTML5 Audio Tag in HTML Body
 	$('').appendTo('body');
@@ -147,12 +140,10 @@ $(function(){
 		
    		const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
 		  
-		   if (data.username == loggeduser.text())
-						chatroom.append( "<p class='message'><font color='gray'>  " + hora + "</font> <b>[" + data.username + "]</b> " + data.message + "</p>") 
-					  else
-					    chatroom.append( "<p class='message' style='text-align:right'><font color='gray'>  " + hora + "</font> <b>[" + data.username + "]</b> " + data.message + "</p>") 
-    	// chatroom.append( "<p class='message'><font color='gray'>  " + hora + "</font> <b>[" + data.username + "]</b> " + data.message + "</p>") 
-		//container.animate({ scrollTop: $(document).height() }, 1000)
+		    if (data.username == loggeduser.text())
+				chatroom.append( "<p class='message'><font color='gray'>  " + hora + "</font> <b>[" + data.username + "]</b> " + data.message + "</p>") 
+	        else
+			    chatroom.append( "<p class='message' style='text-align:right'><font color='gray'>  " + hora + "</font> <b>[" + data.username + "]</b> " + data.message + "</p>") 
 
 		//fazer o scroll down a cada mensagem nova.
 		container.animate({"scrollTop": $('#chatroom')[0].scrollHeight}, "slow")

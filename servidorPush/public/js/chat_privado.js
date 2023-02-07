@@ -50,7 +50,10 @@ function loadChatWith(username) {
     });
 } 
 
-
+function auto_height(elem) {
+	elem.style.height = "1px";
+	elem.style.height = (elem.scrollHeight)+"px";
+}
 function removeClassTemMensagemNaoLida(username){
 	$("#contacts:contains("+username+")").removeClass("temMensagemNaoLida");
 }
@@ -129,15 +132,15 @@ $(function(){
 				globalContatosList = usuarios_kong;
 
 				usuarios_kong.forEach(item => { 
-					
 						//fazer isso para remover o nome do usuario logado e nao mostrar na lista de contatos, pois ele tmb esta na lista e nao faz sentido ele falar com ele.
 						if ( item.username != myname[0].innerText )
-    							contactList.innerHTML += "<div id='contactLine'> <div id='contacts' onclick='loadChatWith(this.innerHTML);'>" + item.username + "</div> <div id='"+item.username+"_logged_user' ></div> </div>";
+    						contactList.innerHTML += "<div id='contactLine'> <div id='contacts' onclick='loadChatWith(this.innerHTML);'>" + item.username + "</div> <div id='"+item.username+"_logged_user' ></div> </div>";
 				});
 
-				//por fim deixar os usuarios logados com a bolinha verde.
-				blinkLoggedUsers();
+			//por fim deixar os usuarios logados com a bolinha verde.
+			blinkLoggedUsers();
 			});
+
 	//Appending HTML5 Audio Tag in HTML Body
 	$('').appendTo('body');
 
@@ -147,15 +150,14 @@ $(function(){
 	send_message.click(function(){
 		var dt = new Date();
         const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
-
 		var logged_usr = myname[0].innerText
-		console.log("send_message.click("+message.val()+")");
-		console.log("from:")
-		console.log(logged_usr);
+	//	console.log("send_message.click("+message.val()+")");
+	//	console.log("from:")
+	//	console.log(logged_usr);
 		socket.emit("contactTo", {message : message.val(),from:logged_usr,toContact:divContato.innerText,time:hora})
-
 		//limpar o inputbox do message, depois que enviar mensagem
-		message.val('');
+		message.val('')
+		message.attr("rows","1")
 	})
 
 	

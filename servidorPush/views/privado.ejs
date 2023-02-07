@@ -21,7 +21,7 @@
 
   <body>
       <section id="titulo">
-          <header id="tituloText"> 
+          <header id="headerMenu"> 
             <div style="display: flex; justify-content: space-between; text-align:left">
               <div id="divUserAvatarName">
                 <img class="nav-auth-img" src='<%= usuario %>-user-icon.png'/>
@@ -44,7 +44,8 @@
         </section>
     </section>
     <section id="input_zone">
-      <input name="message" id="message" class="vertical-align" type="text" tabindex="0" autofocus="autofocus" onkeyup="checkForEnterKey(this.value)">
+      <textarea name='message' id="message" rows="1" class="auto_height vertical-align" onkeypress="auto_height(this)"  tabindex="0" autofocus="autofocus" onkeyup="checkForEnterKey(this.value)"></textarea>
+      <!-- <input name="message" id="message" class="vertical-align" type="text" tabindex="0" autofocus="autofocus" onkeyup="checkForEnterKey(this.value)"> -->
       <button id="send_message" class="vertical-align" tabindex="0" role="button" type="submit" value="submit">Enviar</button>
       <hr>
       <button id="gravarAudio"> Gravar Audio</button>
@@ -53,7 +54,7 @@
       </div>
    </section>
 
-   <audio id="playSoundOnNewMessage">
+  <audio id="playSoundOnNewMessage">
     <source src="notify.ogg" type="audio/ogg">
     <source src="notify.mp3" type="audio/mpeg">
     <source src="notify.wav" type="audio/wav">
@@ -61,6 +62,4 @@
   <audio id="audioPrivado"> 
     <source id="audioPrivadoSrc" src="./audioupload/audio.ogg" type="audio/ogg">
   </audio>
-  
   </body>
-</html>

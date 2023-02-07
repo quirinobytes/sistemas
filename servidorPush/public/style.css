@@ -18,48 +18,102 @@
 }
 
 html {
-    height: 50%;
-   /* width: 50%;*/
+    display: flex;
+    flex-flow: row nowrap;  
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    height:100%;
+    margin: 0;
+    padding: 0;
+
+   /* width: 50%; */
+}
+main{
+    vertical-align: middle;
 }
 
 body {
-    margin: 3%;
-    height: 80%%;
+    border-radius: 10px;
+    height: 80%;
     text-align: center;
     background-color: black;
+    justify-content: center;
+    box-shadow: 0px 0px 96px 0px rgba(224, 210, 210, 0.75);
+            width: 60%;
+            /* height: 50%; */
+            margin: 15% 20% 25% 20%;
+            border: 1px solid;
+            
+        
 }
 
-.auto_height { /* CSS */
+.auto_height { 
     width: 100%;
-  }
-
-#contactList{
-    display: grid;
-    position:relative;
-}
-#contactLine{
-    display: inline-grid;
 }
 
-.logged_user {
-    background: #78de45;
-    border-radius: 50%;
-    box-sizing: border-box;
-    position: absolute;
-    border: 1.5px solid rgb(255, 255, 255);
-    height: 10px;
-    margin: 15px 0px 0px -5px;
-    width: 10px;
+button#send_message {
+    display: inline-block;
+}
+#contacts{
     justify-content: flex-end;
-    text-align: left;
-    left: 10px;
-
+    display: flex;
+    text-align: center;
 }
 
-h1 {
-    font-family: 'Comfortaa', sans-serif;
-    margin: 0px;
+#contactLine {
+    font-size: large;
+    text-align: right;
+    padding: 20px;
 }
+#contactLine:hover {
+    background-color: rgb(11, 11, 124) !important;
+    color: white;
+    transition: background-color 0.5s;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.6);
+    border: white 1px solid;
+}
+
+#contactLine:nth-child(even){
+    background-color:  rgb(101, 153, 248);
+}
+
+#contactLine:nth-child(odd){
+    background-color: rgb(158, 188, 243);
+}
+#contactList{
+    display: block;
+    position:static;
+}
+
+
+div#myname { 
+    text-align: center;
+    /* width: 50%; */
+}
+
+div#box {
+    height: 10%;
+    width: 10%;
+    display: inline-block;
+    background-color: rgb(158, 156, 179);
+    align-content: center;
+}
+
+div.container {
+   /* overflow:hidden; */
+   /* width: auto; */
+   /* min-width: min-content; */
+   max-height:fit-content;
+   align-content: center;
+   position: relative;
+}
+
+#divMessageTo {
+    vertical-align: bottom;
+    align-content: center;
+}
+
 
 #divUserAvatarName {
     text-align: center;
@@ -76,159 +130,6 @@ div#change_username{
     border: 2px outset rgb(74, 123, 179);
     text-align: right;
 }
-
-.nav-auth-img{
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    border: 1px solid #1abb9c;
-    padding: 2px;
-}
-
-.nav-auth-img-container{
-    align-content: left;
-    padding: 0px;
-    color: 'white'
-}
-
-.temMensagemNaoLida{
-    color: red;
-    font-weight: bold;
-}
-
-#contacts{
-    justify-content: flex-end;
-    flex-direction: row;
-    display: flex;
-}
-
-#contacts:on {
-    outline: 2px solid;  /* example focus style */
-}
-
-#contactLine:nth-child(even){
-    background-color: rgb(101, 153, 248);
-    font-size: large;
-    padding: 10px;
-    /* display: block; */
-    text-align: left;
-   
-}
-
-
-#contactLine:nth-child(odd){
-    background-color: rgb(158, 188, 243);
-    font-size: large;
-    padding: 10px;
-    /* display: block; */
-    text-align: left;
-}
-
-div#myname { 
-    text-align: center;
-    /* width: 50%; */
-}
-div#box {
-    height: 10%;
-    width: 10%;
-    display: inline-block;
-    background-color: rgb(158, 156, 179);
-    align-content: center;
-}
-
-div.container {
-   overflow:hidden;
-   /*max-height: 130%;*/
-}
-
-#divMessageTo {
-    vertical-align: bottom;
-    align-content: center;
-}
-
-header#tituloText {
-    text-align: center;    
-}
-
-#messageTo:nth-child(even) {
-    background-color: rgb(180, 214, 224);
-    color: blueviolet;
-}
-
-#messageTo:nth-child(odd) {
-    background-color: rgb(210, 226, 241);
-    color: blue;
-}
-
-section#chatroom{
-    border: 5px ;
-    width: 50%;
-    background-color: rgb(200, 200, 230);
-    padding: 10px;
-    display: block;
-    text-align: left;
-
-}
-section#contactRoom {
-    background-color: rgb(192, 192, 218);
-    width: 50%;
-    align-content: center;
-    display: flex;
-    text-align: left;
-}
-
-section#apelido {
-    border: 2px ;
-    width: 50%;
-    background-color: rgb(16, 16, 80);
-    padding: 10px;
-    display: flex;
-    font-size: 12px;
-    color: black;
-    text-align: right;
-    flex-direction: row-reverse;
-}
-section#titulo {
-    border: 2px ;
-    width: 50%;
-    background-color: rgb(11, 11, 109);
-    padding: 10px;
-    display: block;
-    color: white;
-    font-size: 12px;
-    text-align: right;
-    align-content: space-between;
-    justify-content: space-between;
-}
-
-
-section# {
-    border: 2px ;
-    width: 50%;
-    background-color: rgb(12, 30, 224);
-    padding: 10px;
-    display: block;
-    color: white;
-    font-size: 12px;
-    justify-content: space-between;
-    display: flow-root;
-    align-content: center;
-}
-
-section#input_zone {
-    /*height: 20%;*/
-    width: 50%;
-    text-align: right;
-    background-color: rgb(213, 215, 216);
-    color: rgb(44, 46, 61);
-    padding: 20px;
-    background-color: rgb(11, 11, 109);
-    align-content: center;
-    display: inline-flexbox;
-}
-
-
-
 input#username {
     font-family: 'Comfortaa', sans-serif;
 }
@@ -257,24 +158,31 @@ input#message {
     font-family: 'Comfortaa', sans-serif;
 /*    font-size: 1vh; */
 }
+
 input#filetoupload{
     color:transparent;
 }
 
-button#send_message {
-    display: inline-block;
-    /*height: 100%;*/
-    /*width: 10%;*/
+.logged_user {
+    background: #4cf80d;
+    border-radius: 70% ;
+    border: 2px solid rgb(16, 139, 20);
+    margin: -20px 0px 0px -10px;
+    height: 18px;
+    width: 18px;
 }
 
-p.message {
+h1 {
+    font-family: 'Comfortaa', sans-serif;
     margin: 0px;
-    width: 100%;
-    /*height: 40px;*/
-    font-weight: regular;
-    font-size: 14px;
-    font-family: arial, sans-serif;
-    padding: 1vh;
+}
+
+
+header#headerMenu {
+    text-align: center;    
+    display: grid;
+    border-radius: 5px ;
+    margin-top: 10px;
 }
 
 .message:nth-child(even) {
@@ -284,6 +192,114 @@ p.message {
 .message:nth-child(odd) {
     background-color: rgb(210, 226, 241);
 }
+#messageTo:nth-child(even) {
+    background-color: rgb(180, 214, 224);
+}
+
+#messageTo:nth-child(odd) {
+    background-color: rgb(210, 226, 241);
+}
+
+.navbar{
+    border-radius: 50px;
+}
+.nav-auth-img{
+    width: 60px;
+    height: 60px;
+    border-radius: 20%;
+    border: 1px solid #1abb9c;
+    padding: 2px;
+}
+
+.nav-auth-img-container{
+    align-content: left;
+    padding: 0px;
+    color: 'white'
+}
+
+
+
+p.message p.messageTo  {
+    margin: 0px;
+    width: 100%;
+    /*height: 40px;*/
+    font-weight: regular;
+    font-size: 14px;
+    font-family: arial, sans-serif;
+    padding: 1vh;
+    word-wrap: break-word;
+}
+
+section# {
+    border: 2px ;
+    width: 50%;
+    background-color: rgb(12, 30, 224);
+    padding: 10px;
+    display: block;
+    color: white;
+    font-size: 12px;
+    justify-content: space-between;
+    display: flow-root;
+    align-content: center;
+}
+section#apelido {
+    border: 2px ;
+    width: 50%;
+    background-color: rgb(16, 16, 80);
+    padding: 10px;
+    display: flex;
+    font-size: 12px;
+    color: black;
+    text-align: right;
+    flex-direction: row-reverse;
+}
+section#chatroom{
+    border: 5px ;
+    width: 50%;
+    background-color: rgb(200, 200, 230);
+    padding: 10px;
+    display: block;
+    text-align: left;
+    word-wrap: break-word;
+
+}
+section#contactRoom {
+    background-color: rgb(192, 192, 218);
+    width: 50%;
+    align-content: center;
+    display: flex;
+    text-align: left;
+    min-width: none;
+}
+section#input_zone {
+    /*height: 20%;*/
+    width: 50%;
+    text-align: right;
+    background-color: rgb(213, 215, 216);
+    color: rgb(44, 46, 61);
+    padding: 30px;
+    background-color: rgb(11, 11, 109);
+    align-content: center;
+    display: inline-flexbox;
+    border-radius: 5px;
+}
+section#titulo {
+    border: 2px white solid;
+    width: 50%;
+    background-color: rgb(11, 11, 109);
+    padding: 10px;
+    display: block;
+    color: white;
+    font-size: 12px;
+    text-align: right;
+    align-content: space-between;
+    justify-content: space-between;
+    border-bottom-left-radius: 20px;
+    border-top-right-radius: 20px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
 .vertical-align {
     position: relative;
     top: 50%;
@@ -291,4 +307,9 @@ p.message {
     -ms-transform: translateY(-50%);
     transform: translateY(-50%);
     margin-top: 15px;
+}
+
+.temMensagemNaoLida{
+    color: red;
+    font-weight: bold;
 }
