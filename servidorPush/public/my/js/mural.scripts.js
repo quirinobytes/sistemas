@@ -112,11 +112,20 @@ $(function(){
 	//Emit message
 	send_message.click(function(){
 		console.log("send_message.click(function(){"+message.val());
+		texto = message.val();
+
+		if (texto[texto.length-1] == '\n')
+			console.log("ultimo letra é um enter ")
+
 		time = new Date()
-		socket.emit('message', {message: message.val(), username:username, time:time})
+
+		//enviar a mensagem no canal 'message'
+		socket.emit('message', {message: texto.trim(), username:username, time:time})
 
 		//limpar o inputbox do message, depois que enviar mensagem, e chamar a auto dimensionar o textarea
 		message.val('')
+
+		//redimenciar o textearea caso ele tenha ficado grande com o texto que o usuaŕio digitou no box.
 		message.attr("rows","1")
 	})
 
