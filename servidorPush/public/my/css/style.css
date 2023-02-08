@@ -205,6 +205,12 @@ header#headerMenu {
     background-color: rgb(210, 226, 241);
 }
 
+.miniAvatar{
+    height: 30px;
+    width: 30px;
+    border-radius: 100%;
+    border: 1px black solid;
+}
 .navbar{
     border-radius: 12px;
     background-color: #292929;
@@ -239,6 +245,7 @@ p.message, p.messageTo  {
     font-weight: regular;
     font-family: arial, sans-serif;
     word-wrap: break-word;
+    border-radius: 8px;
 }
 
 section_REVER {

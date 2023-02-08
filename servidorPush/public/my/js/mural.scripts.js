@@ -1,11 +1,5 @@
-// $(function() {
-// 	var sendButton = $("#sendFile")
-// 	var fileuploadMural = $("#fileuploadMural")
+// MURAL SCRIPTS 
 
-// 	sendButton.change(function (){
-// 		fileuploadMural.submit();
-// 	});
-//  });
 
 function enviarMensagemEOUFoto(){
 	//console.log("to na enviarMensagemEOUFoto("+$("#message").val()+")")
@@ -77,12 +71,12 @@ $(function(){
 				const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
 				
 				if (item.username == loggeduser.text()){
-					console.log("carregando mensagens do usuario")
-					chatroom.append( "<p class='message'><font color='gray'>  " + hora + "</font> <b>[" + item.username + "]</b> " + item.message + "</p>") 
+					// console.log("carregando mensagens do usuario")
+					chatroom.append( "<p class='message'> <img class='miniAvatar' src='usersAvatar/"+item.username+"-user-icon.png' />  <font color='gray'>  " + hora + "</font> <b>[" + item.username + "]</b> " + item.message + "</p>") 
 				}
 				else{
-					console.log("carregando mensagens de alguem")
-					chatroom.append( "<p class='message' style='text-align:right'><font color='gray'>  " + hora + "</font> <b>[" + item.username + "]</b> " + item.message + "</p>") 
+					// console.log("carregando mensagens de alguem")
+					chatroom.append( "<p class='message' style='text-align:right'>"+ item.message + " <b>[" + item.username + "]</b> <font color='gray'>  " + hora + "</font> " + " <img class='miniAvatar' src='usersAvatar/"+item.username+"-user-icon.png' /> </p> ") 
 				}
 			});
    		});
@@ -124,9 +118,10 @@ $(function(){
    		const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
 		  
 		    if (data.username == loggeduser.text())
-				chatroom.append( "<p class='message'><font color='gray'>  " + hora + "</font> <b>[" + data.username + "]</b> " + data.message + "</p>") 
+			
+				chatroom.append("<p class='message'> <img class='miniAvatar' src='usersAvatar/"+data.username+"-user-icon.png' />  <font color='gray'>  " + hora + "</font> <b>[" + data.username + "]</b> " + data.message + "</p>") 
 	        else
-			    chatroom.append( "<p class='message' style='text-align:right'><font color='gray'>  " + hora + "</font> <b>[" + data.username + "]</b> " + data.message + "</p>") 
+			    chatroom.append("<p class='message' style='text-align:right'>"+ data.message + " <b>[" + data.username + "]</b> <font color='gray'>  " + hora + "</font> " + " <img class='miniAvatar' src='usersAvatar/"+data.username+"-user-icon.png' /> </p> ") 
 
 		//fazer o scroll down a cada mensagem nova.
 		container.animate({"scrollTop": $('#chatroom')[0].scrollHeight}, "slow")
