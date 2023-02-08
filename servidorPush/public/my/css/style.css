@@ -231,21 +231,20 @@ header#headerMenu {
     color: 'white'
 }
 
-p.message p.messageTo  {
-    margin: 0px;
+p.message, p.messageTo  {
+    padding-left: 4px;
+    padding-right: 4px;
     width: 100%;
     /*height: 40px;*/
     font-weight: regular;
-    font-size: 14px;
     font-family: arial, sans-serif;
-    padding: 1vh;
     word-wrap: break-word;
 }
 
-section# {
+section_REVER {
     border: 2px ;
   /* remover width */
-    width: 50%;
+    /* width: 50%; */
     background-color: rgb(12, 30, 224);
     padding: 10px;
     display: block;

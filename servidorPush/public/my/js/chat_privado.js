@@ -150,12 +150,7 @@ $(function(){
 		var dt = new Date();
         const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
 		var logged_usr = myname[0].innerText
-		console.log("send_message.click("+message.val()+")");
-		console.log("from:")
-		console.log(logged_usr);
-		console.log("para:")
-
-		console.log(divContato.innerText);
+	
 		socket.emit("contactTo", {message : message.val(),from:logged_usr,toContact:divContato.innerText,time:hora})
 		//limpar o inputbox do message, depois que enviar mensagem
 		message.val('')
@@ -190,6 +185,7 @@ $(function(){
 	socket.on('logout', (name) => {
 		console.log("desconectando o fulano:"+name)
 		usuarioDeslogado(name);
+		blinkLoggedUsers();
 	})
 	socket.on('audio', (media) => {
 		// console.log("src"+media.src);
@@ -208,9 +204,8 @@ $(function(){
 	//Wait on new message on channel "contactTo"
 	socket.on('contactTo', (data) => {
 		
-		friendUsername=divContato.innerText;
-		var usr = $("#myname");
-		loggedUser = usr[0].innerText ;
+		friendUsername=divContato.innerText
+		loggedUser = $("#myname")[0].innerText
 			
 		//colocar minhas mensagens com a pessoa e for mensagem para mim, no board.
 		if (data.toContact == friendUsername && data.from == loggedUser){
