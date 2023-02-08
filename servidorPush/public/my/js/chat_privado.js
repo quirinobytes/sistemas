@@ -41,9 +41,9 @@ function loadChatWith(username) {
 			mensagem = item[0].message
 			// if (mensagem != undefined)
 			  if (para != myname)
-			  		messageTo.append("<p class='message'><font color='gray'>  " + item[0].time + "</font> <b>[" + de + "]</b> " + mensagem + "</p>") 
+			  		messageTo.append("<p class='message'> <img class='miniAvatar' src='usersAvatar/"+de+"-user-icon.png'> <font color='gray'>  " + item[0].time + "</font> <b>[" + de + "]</b> " + mensagem + "</p>") 
 		  	  else
-				  	messageTo.append("<p class='message' style='text-align:right'><font color='gray'>  " + item[0].time + "</font> <b>[" + de + "]</b> " + mensagem + "</p>") 
+				  	messageTo.append("<p class='message' style='text-align:right'> "+ mensagem +" <b>[" + de + "]</b> <font color='gray'>  " + item[0].time + "</font>  <img class='miniAvatar' src='usersAvatar/"+de+"-user-icon.png'> </p>") 
 		});
     });
 } 
@@ -211,9 +211,9 @@ $(function(){
 		if (data.toContact == friendUsername && data.from == loggedUser){
 			// console.log("to colocando minhas msg no board")
 			if (data.from == loggedUser)
-				divMessageTo.append("<p class='message'><font color='gray'>  " + data.time + "</font> <b>[" + data.from + "]</b> " + data.message + "</p>");
+				divMessageTo.append("<p class='message'><img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png'><font color='gray'>" + data.time + "</font> <b>[" + data.from + "]</b> " + data.message + "</p>");
 			else
-				divMessageTo.append("<p class='message' style='text-align:right'><font color='gray'>  " + data.time + "</font> <b>[" + data.from + "]</b> " + data.message + "</p>");
+				divMessageTo.append("<p class='message' style='text-align:right'>" + data.message + "<b>[" + data.from + "]</b> <font color='gray'>" + data.time + "</font> <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png'> </p>");
 		}
 		else{ 
 			//caso o board do seu contato nao esteja selecionado, e nao seja o seu board
@@ -237,7 +237,7 @@ $(function(){
 		//caso eu esteja com o board de mensagens do amigo selecionada, colocar as mensagens dele pra mim, e soa um bip
 		if (data.from == divContato.innerText && data.toContact == loggedUser ){
 			// alert("aqui rodou o ultimo if, que coloca as mensagens dos amigos")
-			divMessageTo.append("<p class='message' style='text-align:right'><font color='gray'>  " + data.time + "</font> <b>[" + data.from + "]</b> " + data.message + "</p>");
+			divMessageTo.append("<p class='message' style='text-align:right'>" + data.message +  "<b>[" + data.from + "]</b><font color='gray'>" + data.time + "</font><img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png'></p>");
 			$('#playSoundOnNewMessage')[0].play();
 			feedback.empty();
 		}
