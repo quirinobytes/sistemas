@@ -89,7 +89,7 @@ var roles = [{id:01,"name":"frontend","apelido":"Servidores Front-End","icon":"h
 var logged_users = [];
 var lastMessageFrom = []
 
-var privadoChat = {admin_bahia:[[{from:"admin",to:"bahia",message:"versao2", time: '2023-02-03T04:53:54.043Z'}]], bahia_admin:[[{}]], admin_spitz:[[{}]],spitz_admin:[[{}]],  admin_rafael:[[{}]],rafael_admin:[[{}]], bahia_rafael:[[{}]],rafael_bahia:[[{}]], bahia_spitz:[[{}]],spitz_bahia:[[{}]],marcia_rafael:[[{}]], rafael_marcia:[[{}]]   };
+var privadoChat = {admin_bahia:[[{}]], bahia_admin:[[{}]], admin_spitz:[[{}]],spitz_admin:[[{}]],  admin_rafael:[[{}]],rafael_admin:[[{}]], bahia_rafael:[[{}]],rafael_bahia:[[{}]], bahia_spitz:[[{}]],spitz_bahia:[[{}]],marcia_rafael:[[{}]], rafael_marcia:[[{}]] ,marcia_admin:[[{}]], admin_marcia:[[{}]]  };
 var destino = {}
 var destino2 = {}
 
@@ -257,7 +257,7 @@ app.get ('/rest/loadChatWith/:from/:to',function (req,res) {
 app.get('/upload', (req, res) => {
 
 	nome = getUsernameFromHeadersAuthorization(req)
-	if (nome == '') {nome = "anonymous"}
+	if (nome == '') nome = "anonymous"
 
 	path = "./fileupload/";
 	//abre o diretorio path e renderiza para o ejs renderizar o arquivo upload.ejc com a var items

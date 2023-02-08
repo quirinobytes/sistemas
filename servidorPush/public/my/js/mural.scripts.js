@@ -67,6 +67,7 @@ $(function(){
 			url: "./rest/chat/list"
 		}).then(function(data) {
 			data.forEach(item => { 
+				
 				var dt = new Date(item.time);
 				const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
 				

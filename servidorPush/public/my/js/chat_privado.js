@@ -40,6 +40,7 @@ function loadChatWith(username) {
 			para = item[0].to
 			mensagem = item[0].message
 			// if (mensagem != undefined)
+			if (mensagem)
 			  if (para != myname)
 			  		messageTo.append("<p class='message'> <img class='miniAvatar' src='usersAvatar/"+de+"-user-icon.png'> <font color='gray'>  " + item[0].time + "</font> <b>[" + de + "]</b> " + mensagem + "</p>") 
 		  	  else
