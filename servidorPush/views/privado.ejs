@@ -1,12 +1,13 @@
   <head>
     <title>ChatPVT - Privado</title>
-    <meta http-equiv="Content-Type" const="text/html;charset=UTF-8" />
-    <link href="https://fonts.googleapis.com/css?family=Comfortaa" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" type="text/css" href="style.css" >
+
+    <!-- <link href="https://fonts.googleapis.com/css?family=Comfortaa" rel="stylesheet" type="text/css"> -->
+    
+    <!-- <link rel="stylesheet" type="text/css" href="style.css" > -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
     
-    <script src="jquery/jquery-latest.min.js"></script>
-    <script src="js/chat_privado.js"></script>
+    <script src="lib/js/jquery/jquery-latest.min.js"></script>
+    <script src="my/js/chat_privado.js"></script>
     <script>
        function checkForEnterKey(){
 
@@ -54,12 +55,7 @@
       </div>
    </section>
 
-  <audio id="playSoundOnNewMessage">
-    <source src="notify.ogg" type="audio/ogg">
-    <source src="notify.mp3" type="audio/mpeg">
-    <source src="notify.wav" type="audio/wav">
-  </audio> 
   <audio id="audioPrivado"> 
-    <source id="audioPrivadoSrc" src="./audioupload/audio.ogg" type="audio/ogg">
+    <source id="audioPrivadoSrc" src="my/audio/audio.ogg" type="audio/ogg">
   </audio>
   </body>

@@ -1,11 +1,12 @@
  <head>
     <title>ChatPVT - Mural</title>
-    <meta http-equiv="Content-Type" const="text/html;charset=UTF-8" />
+    
 
-    <link href="https://fonts.googleapis.com/css?family=Comfortaa" rel="stylesheet" type="text/css">
+    <!-- <link href="https://fonts.googleapis.com/css?family=Comfortaa" rel="stylesheet" type="text/css"> -->
+   
+   
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
-    <script src="js/jquery/jquery-latest.min.js"></script>
-    <script src="js/mural.scripts.js"></script>
+    <script src="my/js/mural.scripts.js"></script>
 
     <script>
       function checkForEnterKey(){
@@ -15,8 +16,8 @@
         }
       }
     </script>
-    <input type="hidden" id="send_message_to_contact"> 
-    <input type="hidden" id="contactList"> 
+    <input type="hidden" id="send_message_to_contact"/> 
+    <input type="hidden" id="contactList"/> 
 </head>
  
 <body>
@@ -46,6 +47,7 @@
 
   <section id="chatroom">
   </section>
+</body>
 
   <section id="input_zone">
     <form id="formSendImagemToMural" action="fileuploadMural" method="post" enctype="multipart/form-data">
@@ -63,4 +65,3 @@
 
  
 
-</body>

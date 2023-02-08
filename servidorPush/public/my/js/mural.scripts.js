@@ -8,7 +8,7 @@
 //  });
 
 function enviarMensagemEOUFoto(){
-	console.log($("#message").val())
+	console.log("to na enviarMensagemEOUFoto("+$("#message").val()+")")
 	
 	if (! $("#message").val()){
 		if ( $("#filetoupload").get(0).files.length == 0 ){
@@ -40,9 +40,9 @@ function enviarMensagemEOUFoto(){
 function copyMessageToAddInPhotoIfExist(){
 	var texto = $("#messageInAttach")
 	var str = $("#message")
-	texto[0].defaultValue = str.val()
+	texto[0].defaultValue = str[0].val()
+	console.log("str.val()"+str[0].val())
 	texto.val(str.val()).trigger("change");
-	
 }
 
 function auto_height(elem) {  /* javascript */
@@ -111,8 +111,9 @@ $(function(){
 
 	//Emit message
 	send_message.click(function(){
+		console.log("send_message.click(function(){"+message.val());
 		time = new Date()
-		socket.emit('message', {message : message.val(), username:username, time:time})
+		socket.emit('message', {message: message.val(), username:username, time:time})
 
 		//limpar o inputbox do message, depois que enviar mensagem, e chamar a auto dimensionar o textarea
 		message.val('')
@@ -135,7 +136,7 @@ $(function(){
 	socket.on("message", (data) => {
 		//limpar o campo que indica que um usuário está digitando: User is typing a message...
 		feedback.html('');
-    	//console.log(data);
+    	console.log("to na socket.on(message=("+data.message+")");
     	var dt = new Date(data.time);
 		
    		const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
@@ -163,7 +164,7 @@ $(function(){
 
 	//Emit typing
 	message.bind("keypress", () => {
-		socket.emit('typing')
+		socket.emit('typing',{username:username.val()})
 	})
 
 	//Listen on typing

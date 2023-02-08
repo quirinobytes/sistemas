@@ -183,6 +183,13 @@ app.use(express.static('public'))
 app.use(express.static('public/js'))
 app.use(express.static('public/jquery'))
 
+app.use(express.static('lib/css'))
+app.use(express.static('lib/js'))
+app.use(express.static('lib'))
+
+
+
+
 
 
 // create /metrics and add the prometheus middleware to all routes
@@ -837,6 +844,8 @@ io.on('connection', (socket) => {
                socket.emit('message', { message : "Versão CDSHELL do servidor: [ " + stdout + "]", username: "Bot", time:time  });
 	        });
 		}	
+		
+		
     })
 
 	socket.on('contactTo', (data) => {
