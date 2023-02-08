@@ -100,7 +100,9 @@ $(function(){
 	//Emit message
 	send_message.click(function(){
 		texto = message.val()
-		time = new Date()
+		var dt = new Date();
+		const time = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
+				
 		//enviar a mensagem no canal 'message'
 		socket.emit('message', {message: texto.trim(), username:username, time:time})
 		//limpar o inputbox do message, depois que enviar mensagem, e chamar a auto dimensionar o textarea
@@ -114,21 +116,20 @@ $(function(){
 		//limpar o campo que indica que um usuário está digitando: User is typing a message...
 		feedback.html('');
     	// console.log("to na socket.on(message=("+data.message+")");
-    	var dt = new Date(data.time);
-   		const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
+    	// var dt = new Date(data.time);
+   		// const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
 		  
 		    if (data.username == loggeduser.text())
-			
-				chatroom.append("<p class='message'> <img class='miniAvatar' src='usersAvatar/"+data.username+"-user-icon.png' />  <font color='gray'>  " + hora + "</font> <b>[" + data.username + "]</b> " + data.message + "</p>") 
+				chatroom.append("<p class='message'> <img class='miniAvatar' src='usersAvatar/"+data.username+"-user-icon.png' />  <font color='gray'>  " + data.time + "</font> <b>[" + data.username + "]</b> " + data.message + "</p>") 
 	        else
-			    chatroom.append("<p class='message' style='text-align:right'>"+ data.message + " <b>[" + data.username + "]</b> <font color='gray'>  " + hora + "</font> " + " <img class='miniAvatar' src='usersAvatar/"+data.username+"-user-icon.png' /> </p> ") 
+			    chatroom.append("<p class='message' style='text-align:right'>"+ data.message + " <b>[" + data.username + "]</b> <font color='gray'>  " + data.time + "</font><img class='miniAvatar' src='usersAvatar/"+data.username+"-user-icon.png' /> </p> ") 
 
 		//fazer o scroll down a cada mensagem nova.
 		container.animate({"scrollTop": $('#chatroom')[0].scrollHeight}, "slow")
 		
 		//play sound when new message arrives but not in my chat.
 		if (data.username != loggeduser.text()){
-			console.log(data.username + " | " + loggeduser.text())
+			// console.log(data.username + " | " + loggeduser.text())
 		    $('#playSoundOnNewMessage')[0].play();
 		}
 	})
