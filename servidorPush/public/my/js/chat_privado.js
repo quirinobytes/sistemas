@@ -17,17 +17,15 @@ function loadChatWith(username) {
 		messageTo.empty();
 		feedback.empty();
 
-	imgContactTo.attr("src",username+"-user-icon.png");
+	imgContactTo.attr("src","usersAvatar/"+username+"-user-icon.png");
 	
+	//Limpar a lista no div=contacts caso tenha mensagemNaoLida, agora no carregamento. 
 	for (cont=0;cont<cList[0].children.length;cont++){
 		if (cList[0].children[cont].innerText == username )
 			$( cList[0].children[cont]).removeClass("temMensagemNaoLida");
 	}
-	//Limpar a lista no div=contacts caso tenha mensagemNaoLida, agora no carregamento. 
 
-	console.log ("aqui foi chamado a loadChatWith/"+loggedUser+"/"+username+"/");
-	
-
+	// console.log ("aqui foi chamado a loadChatWith/"+loggedUser+"/"+username+"/");
 
 	divContato.innerHTML = username;
 
@@ -41,12 +39,12 @@ function loadChatWith(username) {
 			de = item[0].from
 			para = item[0].to
 			mensagem = item[0].message
-			  var dt = new Date(item[0].time)
-			  const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
+			//   var dt = new Date(item[0].time)
+			//   const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
 			  if (para != myname)
-			  		messageTo.append("<p class='message'><font color='gray'>  " + hora + "</font> <b>[" + de + "]</b> " + mensagem + "</p>") 
+			  		messageTo.append("<p class='message'><font color='gray'>  " + item[0].time + "</font> <b>[" + de + "]</b> " + mensagem + "</p>") 
 		  	  else
-				  	messageTo.append("<p class='message' style='text-align:right'><font color='gray'>  " + hora + "</font> <b>[" + de + "]</b> " + mensagem + "</p>") 
+				  	messageTo.append("<p class='message' style='text-align:right'><font color='gray'>  " + item[0].time + "</font> <b>[" + de + "]</b> " + mensagem + "</p>") 
 		});
     });
 } 
@@ -68,18 +66,17 @@ function blinkLoggedUsers(){
 	//limpando tudo antes
 	globalContatosList.forEach( item => {
 		if (item.username != undefined ) {
-			console.log("Usuário deslogado: "+item.username)
 			usuarioDeslogado(item.username)
 		}
 	})
 
-	$.ajax(
-		{ url: "./logged_users"
-			}).then(function(lista) {
-					lista.forEach(item =>{
-						usuarioLogado(item);
-					});
-	    		});
+	$.ajax({ 
+		url: "./logged_users"
+	}).then(function(lista) {
+		lista.forEach(item =>{
+			usuarioLogado(item);
+		});
+	});
 }
 
 
@@ -117,32 +114,32 @@ $(function(){
 
 		$.ajax(
 			{ url: "./logged_users"
-			}).then(function(obj) {
+		}).then(function(obj) {
 				let logged_users = obj;
-				console.log("LOGGED USERS");
-				console.log(logged_users);
-			});
+				// console.log("LOGGED USERS");
+				// console.log(logged_users);
+		});
 		
 		// Aqui estou pegando a lista dos usuários do "konga"
 		// o /consumers é um api gateway para dentro do konga na 8001, control plane port
 		$.ajax(
 			{ url: "./consumers"
-			}).then(function(obj_consumers) {
+		}).then(function(obj_consumers) {
 				
-				usuarios_kong = obj_consumers.data;
-				console.log(usuarios_kong);
-				//salvando na variavel global para usar no blinkLoggedUsers
-				globalContatosList = usuarios_kong;
+			usuarios_kong = obj_consumers.data;
+			// console.log(usuarios_kong);
+			//salvando na variavel global para usar no blinkLoggedUsers
+			globalContatosList = usuarios_kong;
 
-				usuarios_kong.forEach(item => { 
-						//fazer isso para remover o nome do usuario logado e nao mostrar na lista de contatos, pois ele tmb esta na lista e nao faz sentido ele falar com ele.
-						if ( item.username != myname[0].innerText )
-    						contactList.innerHTML += "<div id='contactLine'> <div id='contacts' onclick='loadChatWith(this.innerHTML);'>" + item.username + "</div> <div id='"+item.username+"_logged_user' ></div> </div>";
-				});
-
-			//por fim deixar os usuarios logados com a bolinha verde.
-			blinkLoggedUsers();
+			usuarios_kong.forEach(item => { 
+					//fazer isso para remover o nome do usuario logado e nao mostrar na lista de contatos, pois ele tmb esta na lista e nao faz sentido ele falar com ele.
+					if ( item.username != myname[0].innerText )
+						contactList.innerHTML += "<div id='contactLine'> <div id='contacts' onclick='loadChatWith(this.innerHTML);'>" + item.username + "</div> <div id='"+item.username+"_logged_user' ></div> </div>";
 			});
+
+		//por fim deixar os usuarios logados com a bolinha verde.
+		blinkLoggedUsers();
+		});
 
 	//Appending HTML5 Audio Tag in HTML Body
 	$('').appendTo('body');
@@ -163,10 +160,6 @@ $(function(){
 		message.attr("rows","1")
 	})
 
-	
-
-	//Wait on new_message
-	
 
 	//Emit a username when click on send_username button.
 	send_username.click(function(){
@@ -189,22 +182,12 @@ $(function(){
 			feedback.fadeOut(500);
 			feedback.attr("style","color:green")
 			feedback.fadeIn(500);	
-
-			// setInterval(() => {
-			// 	feedback.attr("style","color:white")
-
-			// 	feedback.fadeIn(5000);	
-			// }, 5000);
-
-
-
-			// feedback.animate({},"slow")
 		}
 	})
 
 	socket.on('newlogin', (data) => {
 		blinkLoggedUsers();
-		console.log("chamando a blickLoggedUsers()")
+		// console.log("chamando a blickLoggedUsers()")
 	})
 	socket.on('logout', (name) => {
 		console.log("desconectando o fulano:"+name)
@@ -224,7 +207,7 @@ $(function(){
 		}
 	})
 
-
+	//Wait on new message on channel "contactTo"
 	socket.on('contactTo', (data) => {
 		var dt = new Date(data.time);
         const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
@@ -247,7 +230,7 @@ $(function(){
 				//console.log("tamanho= "+cList[0].children.length);
 				var cont =0;
 				
-			//caso nao estava selecionado o board de mensagens do contato, rastreiar os outros para destacar em vermelho como MENSAGEM NAO LIDA.
+			    //caso nao estava selecionado o board de mensagens do contato, rastreiar os outros para destacar em vermelho como MENSAGEM NAO LIDA.
 				for (cont=0;cont<cList[0].children.length;cont++){
 					if (cList[0].children[cont].innerText == data.from ){
 						//console.log( "ACHEI: Alterando o div do: " + cList[0].children[cont].innerText);
