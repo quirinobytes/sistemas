@@ -894,7 +894,7 @@ io.on('connection', (socket) => {
 
     //listen on typing
     socket.on('typing', (data) => {
-    	socket.broadcast.emit('typing', {username : socket.username})
+    	socket.broadcast.emit('typing', data)
     })
 
  	socket.on('hostexec', (data) => {

@@ -167,6 +167,9 @@ input#filetoupload{
     color:transparent;
 }
 
+
+
+
 .logged_user {
     background: #4cf80d;
     border-radius: 70% ;
@@ -175,18 +178,15 @@ input#filetoupload{
     height: 18px;
     width: 18px;
 }
-
+/* 
 h1 {
     font-family: 'Comfortaa', sans-serif;
     margin: 0px;
-}
-
+} */
 
 header#headerMenu {
     text-align: center;    
     display: grid;
-    border-radius: 5px ;
-
     margin: 10px 10px 0px 10px;
 }
 
@@ -206,8 +206,17 @@ header#headerMenu {
 }
 
 .navbar{
-    border-radius: 50px;
+    border-radius: 12px;
+    background-color: #292929;
 }
+
+.navbar-inverse .navbar-nav > li > a:hover{
+    color: #4cf80d;
+    background-color: black;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
 .nav-auth-img{
     width: 60px;
     height: 60px;

@@ -5,13 +5,13 @@
   <link rel="stylesheet" type="text/css" href="lib/bootstrap/css/bootstrap.css">
   <link rel="stylesheet" type="text/css" href="my/css/style.css">
 
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script> -->
+  <script src="lib/js/socket.io/socket.io.js"></script>
   <script src="lib/js/jquery/jquery-latest.min.js"></script>
   <script src="my/js/layout.scripts.comuns.js"></script>
-
- 
 </head>
 
-    <body>
+<body>
       <header id="headerMenu">
         <nav class="navbar navbar-inverse">
           <ul class="nav navbar-nav">
@@ -23,16 +23,14 @@
       </header>
 
       <main>
-      <div id=container" class="container">
-        
+        <div id=container" class="container">
           <%- body %>
-      
-      </div>
+        </div>
       </main>
-    </body>
+  </body>
   
   <footer style="display:none;">
-   Minha estrutura de layout está no arquivo layout.ejs, que injeta o body que está no index.ejs dentro da div=container
+    Minha estrutura de layout está no arquivo layout.ejs, que injeta o body que está no index.ejs dentro da div=container
     <audio id="playSoundOnNewMessage">
       <source src="my/audio/notify.ogg" type="audio/ogg">
     </audio>

@@ -39,8 +39,7 @@ function loadChatWith(username) {
 			de = item[0].from
 			para = item[0].to
 			mensagem = item[0].message
-			//   var dt = new Date(item[0].time)
-			//   const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
+			// if (mensagem != undefined)
 			  if (para != myname)
 			  		messageTo.append("<p class='message'><font color='gray'>  " + item[0].time + "</font> <b>[" + de + "]</b> " + mensagem + "</p>") 
 		  	  else
@@ -151,9 +150,12 @@ $(function(){
 		var dt = new Date();
         const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
 		var logged_usr = myname[0].innerText
-	//	console.log("send_message.click("+message.val()+")");
-	//	console.log("from:")
-	//	console.log(logged_usr);
+		console.log("send_message.click("+message.val()+")");
+		console.log("from:")
+		console.log(logged_usr);
+		console.log("para:")
+
+		console.log(divContato.innerText);
 		socket.emit("contactTo", {message : message.val(),from:logged_usr,toContact:divContato.innerText,time:hora})
 		//limpar o inputbox do message, depois que enviar mensagem
 		message.val('')
@@ -168,20 +170,16 @@ $(function(){
 
 	//Emit typing
 	message.bind("keypress", () => {
-		socket.emit('typing', {username : username.val()} )
+		socket.emit('typing', {from: $("#myname")[0].innerText, to:$("#divContato")[0].textContent} )
 	})
 
 	//Listen on typing
 	socket.on('typing', (data) => {
-		var divContatoSelecionado = $("#divContato")[0].textContent
-		// console.log("typing user:"+ data.username)
-		// console.log("para :"+divContatoSelecionado)
-		if (data.username == divContatoSelecionado){
-			feedback.html("<p><i>" + data.username + " is typing a message..." + "</i></p>")
-						
+		if (data.from == $("#divContato")[0].textContent && data.to == loggedUser){
+			feedback.html("<p><i>is typing ... </i></p>")
+			feedback.fadeIn(500);
+			feedback.attr("style","color:orange; font-weight:bold;")
 			feedback.fadeOut(500);
-			feedback.attr("style","color:green")
-			feedback.fadeIn(500);	
 		}
 	})
 
@@ -209,23 +207,24 @@ $(function(){
 
 	//Wait on new message on channel "contactTo"
 	socket.on('contactTo', (data) => {
-		var dt = new Date(data.time);
-        const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
+		
 		friendUsername=divContato.innerText;
 		var usr = $("#myname");
 		loggedUser = usr[0].innerText ;
-		//console.log("data.time");
-		//console.log(data.time);
-	
+			
 		//colocar minhas mensagens com a pessoa e for mensagem para mim, no board.
 		if (data.toContact == friendUsername && data.from == loggedUser){
+			// console.log("to colocando minhas msg no board")
 			if (data.from == loggedUser)
 				divMessageTo.append("<p class='message'><font color='gray'>  " + data.time + "</font> <b>[" + data.from + "]</b> " + data.message + "</p>");
 			else
 				divMessageTo.append("<p class='message' style='text-align:right'><font color='gray'>  " + data.time + "</font> <b>[" + data.from + "]</b> " + data.message + "</p>");
 		}
-		else{ //caso o board do seu contato nao esteja selecionado, e nao seja o seu board
+		else{ 
+			//caso o board do seu contato nao esteja selecionado, e nao seja o seu board
 			if (data.toContact == loggedUser && data.from != divContato.innerText){
+				// console.log("aqui é a hora do vermelho?")
+
 				//console.log(cList[0])
 				//console.log("tamanho= "+cList[0].children.length);
 				var cont =0;
@@ -241,7 +240,8 @@ $(function(){
 			}
 		}
 		//caso eu esteja com o board de mensagens do amigo selecionada, colocar as mensagens dele pra mim, e soa um bip
-		if (data.from == divContato.innerText){
+		if (data.from == divContato.innerText && data.toContact == loggedUser ){
+			// alert("aqui rodou o ultimo if, que coloca as mensagens dos amigos")
 			divMessageTo.append("<p class='message' style='text-align:right'><font color='gray'>  " + data.time + "</font> <b>[" + data.from + "]</b> " + data.message + "</p>");
 			$('#playSoundOnNewMessage')[0].play();
 			feedback.empty();
