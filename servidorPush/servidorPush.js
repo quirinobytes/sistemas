@@ -94,6 +94,40 @@ var destino = {}
 var destino2 = {}
 
 
+function loadMuralHistoryFs2Json(){
+	rawdata = fs.readFileSync('chatMessages.json');
+	chatMessages = JSON.parse(rawdata);
+	// console.log(chatMessages);
+}
+
+function loadPrivadoHistoryFs2Json(){
+	rawdata = fs.readFileSync('privadoChat.json');
+	privadoChat = JSON.parse(rawdata);
+	// console.log(chatMessages);
+}
+
+function writeMuralHistoryJson2Fs(){
+		const data = JSON.stringify(privadoChat)
+		fs.writeFile('chatMessages.json', data, err => {
+		if (err) {
+			throw err
+		}
+		})
+}
+
+function writePrivadoHistoryJson2Fs(){
+	const data = JSON.stringify(chatMessages)
+	fs.writeFile('privadoChat.json', data, err => {
+	if (err) {
+		throw err
+	}
+	// console.log('JSON data is saved.')
+	})
+}
+
+loadMuralHistoryFs2Json()
+loadPrivadoHistoryFs2Json()
+
 // function that check for basic auth header and return the username base64 decoded.
 function getUsernameFromHeadersAuthorization(req){
 	// verify auth credentials <- Aqui eu pego as credenciais para uso no kong
@@ -112,15 +146,14 @@ function chat_add_message({username,message,time}){
 	chatMessageId++;
 	chatMessages.push(newMessage);
 
-
 	if (username!==undefined) {
 	//incrementando o contador do metrics do prometheus
 	messagesTotal.inc({
 		add_user_message: username
 	  })
 	}
+	writeMuralHistoryJson2Fs()
 	return chatMessages;
-
 }
 
 
@@ -159,6 +192,8 @@ function addMessageContactToPerson(de,para,mensagem,time){
 	destino2 = findValueByPrefix(privadoChat,prefixinv);
 	destino.push([{from:de,to:para,message:mensagem,time:dateTime}])
 	destino2.push([{from:de,to:para,message:mensagem,time:dateTime}])
+
+	writePrivadoHistoryJson2Fs()
 }
 
 
