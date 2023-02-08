@@ -8,41 +8,36 @@
 //  });
 
 function enviarMensagemEOUFoto(){
-	console.log("to na enviarMensagemEOUFoto("+$("#message").val()+")")
+	//console.log("to na enviarMensagemEOUFoto("+$("#message").val()+")")
 	
-	if (! $("#message").val()){
-		if ( $("#filetoupload").get(0).files.length == 0 ){
-			alert("Nao tem fotos nem texto")
+	if (! $("#message").val()){ // ver se tem mensagem no textearea
+		if ( $("#filetoupload").get(0).files.length == 0 ){  //ver se tem imagens para enviar
+			return
+			// alert("Nao tem fotos nem texto")
 		}
-	 	else { //senao o upload tem foro
-			alert("so tem  foto")
-		 	$("#formSendImagemToMural").submit();
+	 	else { //entao so tem imagem para enviar
+			$("#formSendImagemToMural").submit();
+			 // alert("so tem  foto")
 		}
 	}
 	else {//entao o textearea tem mensagem, envia e depois vamos ver se tem fotos
-		if (!$('#filetoupload').val() ){
-			console.log("numero de arquivos"+$("#filetoupload").get(0).files.length)
-			alert("so tem mensagem")
+		if (!$('#filetoupload').val() ){ //verifica se tem imagem
+			// console.log("numero de arquivos"+$("#filetoupload").get(0).files.length)
+			// alert("so tem mensagem")
 			send_message.click();
 		}
-		else{
-			console.log("numero de arquivos"+$("#filetoupload").get(0).files.length)
-			alert("tem foto e tem mensagem")
+		else{ //entao tem imagem e mensagem para enviarem juntos
+			// console.log("numero de arquivos"+$("#filetoupload").get(0).files.length)
 			copyMessageToAddInPhotoIfExist()
 			$("#formSendImagemToMural").submit();
 		}
-
 	}
-
 }
 
-
 function copyMessageToAddInPhotoIfExist(){
-	var texto = $("#messageInAttach")
-	var str = $("#message")
-	texto[0].defaultValue = str[0].val()
-	console.log("str.val()"+str[0].val())
-	texto.val(str.val()).trigger("change");
+	texto = $("#messageInAttach")
+	str = $("#message").val()
+	texto.val(str)
 }
 
 function auto_height(elem) {  /* javascript */
@@ -53,7 +48,7 @@ function auto_height(elem) {  /* javascript */
 
 $(function(){
    	//make connection direct on web server using relative hosts 
-	  //var socket = io.connect('http://servidorpush.ddns.net:3000/', { secure: true, reconnect: true, rejectUnauthorized : false })
+	//var socket = io.connect('http://servidorpush.ddns.net:3000/', { secure: true, reconnect: true, rejectUnauthorized : false })
 	var socket = io.connect('/', { secure: true, reconnect: true, rejectUnauthorized : false })
 
 	//buttons and inputs
@@ -66,88 +61,66 @@ $(function(){
 	var loggeduser = $("#loggeduser")
 	var container = $("#container")
 
+	// Logo que a pagina carregar "document.ready()", pega a lista de usuários 
+	// e o historico do board para ser carregado na section "chatroom"
 	$( document ).ready(function() {
 
+		//qdo carregar a pagina já se apresente e faça o login
 		socket.emit('username', {username : loggeduser.text()});
 
+		//carregando o historico de mensagens do Mural
 		$.ajax({
 			url: "./rest/chat/list"
 		}).then(function(data) {
-			//console.log(data);
-
 			data.forEach(item => { 
-					  
-                      var dt = new Date(item.time);
-                      const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
-					  if (item.username == loggeduser.text())
-						chatroom.append( "<p class='message'><font color='gray'>  " + hora + "</font> <b>[" + item.username + "]</b> " + item.message + "</p>") 
-					  else
-					    chatroom.append( "<p class='message' style='text-align:rigth'><font color='gray'>  " + hora + "</font> <b>[" + item.username + "]</b> " + item.message + "</p>") 
-                   });
+				var dt = new Date(item.time);
+				const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
+				
+				if (item.username == loggeduser.text()){
+					console.log("carregando mensagens do usuario")
+					chatroom.append( "<p class='message'><font color='gray'>  " + hora + "</font> <b>[" + item.username + "]</b> " + item.message + "</p>") 
+				}
+				else{
+					console.log("carregando mensagens de alguem")
+					chatroom.append( "<p class='message' style='text-align:right'><font color='gray'>  " + hora + "</font> <b>[" + item.username + "]</b> " + item.message + "</p>") 
+				}
+			});
    		});
-
 
 		// Aqui estou pegando a lista dos usuários do konga
 		$.ajax({
 			url: "./consumers"
-		}).then(function(obj_consumers) {
-			
-			usuarios_kong = obj_consumers.data;
-			//console.log(usuarios_kong);
-			
-			usuarios_kong.forEach(item => { 
-                      //contactTo.append( "<p class='message'>[" + item.username + "]</p>");
-					  //contactTo.append( '<div>' + item.username + '</div>');
-					  contactList.innerHTML += "<div id='contacts' onclick='loadChatWith(this.innerHTML);'>" + item.username + "</div>";
-                   });
-   		});
+			}).then(function(obj_consumers) {
+				usuarios_kong = obj_consumers.data;
+				usuarios_kong.forEach(item => { 
+                    //contactTo.append( "<p class='message'>[" + item.username + "]</p>");
+					//contactTo.append( '<div>' + item.username + '</div>');
+					contactList.innerHTML += "<div id='contacts' onclick='loadChatWith(this.innerHTML);'>" + item.username + "</div>";
+                });
+   			});
 
-	//Appending HTML5 Audio Tag in HTML Body
-	$('').appendTo('body');
-
+		//Appending HTML5 Audio Tag in HTML Body
+		$('').appendTo('body');
 	})
-
-	
 
 	//Emit message
 	send_message.click(function(){
-		console.log("send_message.click(function(){"+message.val());
-		texto = message.val();
-
-		if (texto[texto.length-1] == '\n')
-			console.log("ultimo letra é um enter ")
-
+		texto = message.val()
 		time = new Date()
-
 		//enviar a mensagem no canal 'message'
 		socket.emit('message', {message: texto.trim(), username:username, time:time})
-
 		//limpar o inputbox do message, depois que enviar mensagem, e chamar a auto dimensionar o textarea
 		message.val('')
-
 		//redimenciar o textearea caso ele tenha ficado grande com o texto que o usuaŕio digitou no box.
 		message.attr("rows","1")
 	})
 
-
-
-
-	// send_message_to_contact.click(function(){
-	// 	alert("oi")
-	// 	console.log("ahhaahh");
-	// 	socket.emit('message_to_contact', {message : message.val(),toContact:contactName});
-
-	// 	//limpar o inputbox do message, depois que enviar mensagem
-	// 	message.empty();
-	// })
-
-	//Wait on new_message
+	// Wait on new_message on channel "message"
 	socket.on("message", (data) => {
 		//limpar o campo que indica que um usuário está digitando: User is typing a message...
 		feedback.html('');
-    	console.log("to na socket.on(message=("+data.message+")");
+    	// console.log("to na socket.on(message=("+data.message+")");
     	var dt = new Date(data.time);
-		
    		const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
 		  
 		    if (data.username == loggeduser.text())
@@ -157,11 +130,10 @@ $(function(){
 
 		//fazer o scroll down a cada mensagem nova.
 		container.animate({"scrollTop": $('#chatroom')[0].scrollHeight}, "slow")
-		$('body').animate({"scrollTop": $('#chatroom')[0].scrollHeight}, "slow")
 		
 		//play sound when new message arrives but not in my chat.
 		if (data.username != loggeduser.text()){
-			//console.log(data.username + " | " + loggeduser.text())
+			console.log(data.username + " | " + loggeduser.text())
 		    $('#playSoundOnNewMessage')[0].play();
 		}
 	})

@@ -6,9 +6,16 @@ var globalAudio;
 function loadChatWith(username) {
 
 	var usr = $("#myname");
-	var messageTo = $("#divMessageTo");
-	var imgContactTo = $("#imgContactTo");
-	var cList  = $("#contactList");
+	myname = usr[0].innerText ;
+	loggedUser = usr[0].innerText ;
+
+	var messageTo = $("#divMessageTo")
+	var imgContactTo = $("#imgContactTo")
+	var cList  = $("#contactList")
+	var feedback = $("#feedback")
+		//Limpa o board chatroom para carregar as mensagens com o amigo que foi selecionado.
+		messageTo.empty();
+		feedback.empty();
 
 	imgContactTo.attr("src",username+"-user-icon.png");
 	
@@ -17,70 +24,62 @@ function loadChatWith(username) {
 			$( cList[0].children[cont]).removeClass("temMensagemNaoLida");
 	}
 	//Limpar a lista no div=contacts caso tenha mensagemNaoLida, agora no carregamento. 
+
+	console.log ("aqui foi chamado a loadChatWith/"+loggedUser+"/"+username+"/");
 	
 
-	//Limpa o board do chat
-	console.log ("aqui foi chamado a loadChatWith("+username+") -> emptying messages in the Privado");
-	messageTo.empty();
 
 	divContato.innerHTML = username;
 
-	//mostrar nome do loggedUser
-	//console.log(usr[0].innerText);
-	
-	myname = usr[0].innerText ;
 	$.ajax({
 			url: "./rest/loadChatWith/"+myname+"/"+username
 	}).then(function(data) {
-		//mostrar as mensagens de retorno
-		//console.log("MOSTRANDO o RETORNO DO HISTORICO")
-		//console.log(data);
-		//ret = findValueByPrefix(data,username)
-		//console.log(ret);
 
+		if (data)
 		data.forEach(item => { 
 			// console.log("ITEM:");
-			de = item[0].from;
-			para = item[0].to;
-			mensagem = item[0].message;
-			  var dt = new Date(item[0].time);
+			de = item[0].from
+			para = item[0].to
+			mensagem = item[0].message
+			  var dt = new Date(item[0].time)
 			  const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
-			 messageTo.append("<p class='message'><font color='gray'>  " + hora + "</font> <b>[" + de + "]</b> " + mensagem + "</p>") 
+			  if (para != myname)
+			  		messageTo.append("<p class='message'><font color='gray'>  " + hora + "</font> <b>[" + de + "]</b> " + mensagem + "</p>") 
+		  	  else
+				  	messageTo.append("<p class='message' style='text-align:right'><font color='gray'>  " + hora + "</font> <b>[" + de + "]</b> " + mensagem + "</p>") 
 		});
     });
 } 
 
 function auto_height(elem) {
-	elem.style.height = "1px";
-	elem.style.height = (elem.scrollHeight)+"px";
+	elem.style.height = "1px"
+	elem.style.height = (elem.scrollHeight) + "px"
 }
 function removeClassTemMensagemNaoLida(username){
-	$("#contacts:contains("+username+")").removeClass("temMensagemNaoLida");
+	$("#contacts:contains("+username+")").removeClass("temMensagemNaoLida")
 }
 function usuarioLogado(nome){
-	$("#"+nome+"_logged_user").addClass("logged_user");
+	$("#"+nome+"_logged_user").addClass("logged_user")
 }
 function usuarioDeslogado(nome){
-	$("#"+nome+"_logged_user").removeClass("logged_user");
+	$("#"+nome+"_logged_user").removeClass("logged_user")
 }
 function blinkLoggedUsers(){
 	//limpando tudo antes
 	globalContatosList.forEach( item => {
 		if (item.username != undefined ) {
-			console.log(item.username);
-			usuarioDeslogado(item.username);
+			console.log("Usuário deslogado: "+item.username)
+			usuarioDeslogado(item.username)
 		}
-	});
+	})
 
 	$.ajax(
 		{ url: "./logged_users"
-		}).then(function(lista) {
-				//console.log("GET /logged_users: " +lista)
-				lista.forEach(item =>{
-					//console.log("vou chamar a usuarioLogado("+item+")")
-					usuarioLogado(item);
-				});
-	    });
+			}).then(function(lista) {
+					lista.forEach(item =>{
+						usuarioLogado(item);
+					});
+	    		});
 }
 
 
@@ -96,7 +95,11 @@ $(function(){
 	var send_message = $("#send_message")
 	var send_username = $("#send_username")
 	var divMessageTo = $("#divMessageTo")
+
+	//apagar isso, parece q nao usa
 	var contactTo = $("#contactTo")
+
+
 	var feedback = $("#feedback")
 	var loggeduser = $("#loggeduser")
 	var container = $("#container")
@@ -172,13 +175,33 @@ $(function(){
 
 	//Emit typing
 	message.bind("keypress", () => {
-		socket.emit('typing')
+		socket.emit('typing', {username : username.val()} )
 	})
 
 	//Listen on typing
 	socket.on('typing', (data) => {
-		feedback.html("<p><i>" + data.username + " is typing a message..." + "</i></p>")
+		var divContatoSelecionado = $("#divContato")[0].textContent
+		// console.log("typing user:"+ data.username)
+		// console.log("para :"+divContatoSelecionado)
+		if (data.username == divContatoSelecionado){
+			feedback.html("<p><i>" + data.username + " is typing a message..." + "</i></p>")
+						
+			feedback.fadeOut(500);
+			feedback.attr("style","color:green")
+			feedback.fadeIn(500);	
+
+			// setInterval(() => {
+			// 	feedback.attr("style","color:white")
+
+			// 	feedback.fadeIn(5000);	
+			// }, 5000);
+
+
+
+			// feedback.animate({},"slow")
+		}
 	})
+
 	socket.on('newlogin', (data) => {
 		blinkLoggedUsers();
 		console.log("chamando a blickLoggedUsers()")
@@ -210,15 +233,13 @@ $(function(){
 		loggedUser = usr[0].innerText ;
 		//console.log("data.time");
 		//console.log(data.time);
-		
-
 	
 		//colocar minhas mensagens com a pessoa e for mensagem para mim, no board.
 		if (data.toContact == friendUsername && data.from == loggedUser){
-			//divMessageTo.append(data.message);
-			
-            //divMessageTo.append(data.time +": [" + data.from +"] " + data.message + "</br> ")
-			divMessageTo.append("<p class='message'><font color='gray'>  " + data.time + "</font> <b>[" + data.from + "]</b> " + data.message + "</p>");
+			if (data.from == loggedUser)
+				divMessageTo.append("<p class='message'><font color='gray'>  " + data.time + "</font> <b>[" + data.from + "]</b> " + data.message + "</p>");
+			else
+				divMessageTo.append("<p class='message' style='text-align:right'><font color='gray'>  " + data.time + "</font> <b>[" + data.from + "]</b> " + data.message + "</p>");
 		}
 		else{ //caso o board do seu contato nao esteja selecionado, e nao seja o seu board
 			if (data.toContact == loggedUser && data.from != divContato.innerText){
@@ -226,9 +247,8 @@ $(function(){
 				//console.log("tamanho= "+cList[0].children.length);
 				var cont =0;
 				
-			//caso nao estava no board, rastreiar os outros para destacar como MENSAGEM NAO LIDA.
+			//caso nao estava selecionado o board de mensagens do contato, rastreiar os outros para destacar em vermelho como MENSAGEM NAO LIDA.
 				for (cont=0;cont<cList[0].children.length;cont++){
-
 					if (cList[0].children[cont].innerText == data.from ){
 						//console.log( "ACHEI: Alterando o div do: " + cList[0].children[cont].innerText);
 						$( cList[0].children[cont]).addClass("temMensagemNaoLida");
@@ -237,11 +257,11 @@ $(function(){
 				}
 			}
 		}
-		//colocar as mensagens de outra pessoa para mim, no board e soa um bip
+		//caso eu esteja com o board de mensagens do amigo selecionada, colocar as mensagens dele pra mim, e soa um bip
 		if (data.from == divContato.innerText){
-			//divMessageTo.append(data.time + ": [" + data.from +"] " + data.message + "</br> ")
-			divMessageTo.append("<p class='message'><font color='gray'>  " + data.time + "</font> <b>[" + data.from + "]</b> " + data.message + "</p>");
+			divMessageTo.append("<p class='message' style='text-align:right'><font color='gray'>  " + data.time + "</font> <b>[" + data.from + "]</b> " + data.message + "</p>");
 			$('#playSoundOnNewMessage')[0].play();
+			feedback.empty();
 		}
 	})
 	

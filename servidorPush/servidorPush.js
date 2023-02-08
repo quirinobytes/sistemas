@@ -89,6 +89,11 @@ var roles = [{id:01,"name":"frontend","apelido":"Servidores Front-End","icon":"h
 var logged_users = [];
 var lastMessageFrom = []
 
+var privadoChat = {admin_bahia:[[{from:"admin",to:"bahia",message:"versao2", time: '2023-02-03T04:53:54.043Z'}]], bahia_admin:[[{}]], admin_spitz:[[{}]],spitz_admin:[[{}]],  admin_rafael:[[{}]],rafael_admin:[[{}]], bahia_rafael:[[{}]],rafael_bahia:[[{}]], bahia_spitz:[[{}]],spitz_bahia:[[{}]],marcia_rafael:[[{}]], rafael_marcia:[[{}]]   };
+var destino = {}
+var destino2 = {}
+
+
 // function that check for basic auth header and return the username base64 decoded.
 function getUsernameFromHeadersAuthorization(req){
 	// verify auth credentials <- Aqui eu pego as credenciais para uso no kong
@@ -134,11 +139,7 @@ function findValueByPrefix(object, prefix) {
 	  }
 	}
   }
-// var chatToArray = [][];
 
-var privadoChat = {admin_bahia:[[{from:"admin",to:"bahia",message:"versao2", time: '2023-02-03T04:53:54.043Z'}]], bahia_admin:[[{}]], admin_spitz:[[{}]],spitz_admin:[[{}]],  admin_rafael:[[{}]],rafael_admin:[[{}]], bahia_rafael:[[{}]],rafael_bahia:[[{}]], bahia_spitz:[[{}]],spitz_bahia:[[{}]],marcia_rafael:[[{}]], rafael_marcia:[[{}]]   };
-var destino = {}
-var destino2 = {}
 
 function addMessageContactToPerson(de,para,mensagem,time){
 	//se nao tiver carregado um board para falar com alguem, aqui pode ficar sem um para

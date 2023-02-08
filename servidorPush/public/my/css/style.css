@@ -33,7 +33,6 @@ main{
     vertical-align: middle;
     overflow-y: scroll;
     object-fit: contain;
-
     width:inherit;
 }
 
@@ -114,8 +113,6 @@ div.container {
    overflow-y: scroll;
    padding-right: 15px;
    padding-left: 15px;
-
-
     max-height: 60%;
 
 }
@@ -123,6 +120,7 @@ div.container {
 #divMessageTo {
     vertical-align: bottom;
     align-content: center;
+    width: 100%;
 }
 
 
@@ -227,8 +225,6 @@ header#headerMenu {
     color: 'white'
 }
 
-
-
 p.message p.messageTo  {
     margin: 0px;
     width: 100%;
@@ -242,6 +238,7 @@ p.message p.messageTo  {
 
 section# {
     border: 2px ;
+  /* remover width */
     width: 50%;
     background-color: rgb(12, 30, 224);
     padding: 10px;
