@@ -90,10 +90,8 @@ button#send_message {
     position:static;
 }
 
-
 div#myname { 
     text-align: center;
-    /* width: 50%; */
 }
 
 div#box {
@@ -113,8 +111,7 @@ div.container {
    overflow-y: scroll;
    padding-right: 15px;
    padding-left: 15px;
-    max-height: 60%;
-
+   max-height: 75%;
 }
 
 #divMessageTo {
