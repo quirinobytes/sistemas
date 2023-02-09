@@ -101,7 +101,7 @@ var privadoChat = {admin_bahia:[[{}]], bahia_admin:[[{}]], admin_spitz:[[{}]],sp
 var destino = {}
 var destino2 = {}
 
-valor = 1;
+
 
 function loadMuralHistoryFs2Json(){
 	// rawdata = fs.readFileSync('chatMessages.json');
@@ -174,7 +174,7 @@ function chat_add_message({username,message,time}){
 	writeMuralHistoryJson2Fs()
 	chatMessageController.save(chatMessageId,username,message,time,function(resp){
 	//	res.json(resp);
-	console.log(resp)
+	//console.log(resp)
 	})
 	return chatMessages;
 }
@@ -274,14 +274,10 @@ app.get('/mural', (req, res) => {
 
 app.get('/ultimos10/:apos', (req, res) => {
 	var aposX = req.params.apos;
-	console.log("quero chatMessages APOS ["+aposX+"] itens agora")
-	console.log("valor="+valor)
-	valor = parseInt(aposX)
+	// console.log("quero chatMessages APOS ["+aposX+"] itens agora")
 
-
-	chatMessageController.ultimos10(valor,function(resp){
+	chatMessageController.ultimos10(parseInt(aposX),function(resp){
 		//	res.json(resp);
-		//valor = valor + 10
 		var array = []
 		if (resp)
 			resp.forEach(function(item){
@@ -290,14 +286,7 @@ app.get('/ultimos10/:apos', (req, res) => {
 			})
 		res.json(array)
 		res.end();
-		// chatMessages = resp
-		// res.writeHeader(200, {"Content-Type": "text/json"});
-		// res.write("Achei");
-	
-		
 	})
-	
-	
 })
 
 
@@ -343,9 +332,6 @@ app.get('/upload', (req, res) => {
 	fs.readdir(path, (err, files) => res.render('upload', { usuario:nome, items: files }  ));
 })
 
-
-
-
 app.post('/fileupload', (req, res) => {
 	var form = new formidable.IncomingForm();
 
@@ -363,9 +349,6 @@ app.post('/fileupload', (req, res) => {
 		});
 	});
 })
-
-
-
 
 
 app.post('/fileuploadMural/', (req, res) => {

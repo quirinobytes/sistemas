@@ -6,7 +6,7 @@ var ChatMessagesSchema = new Schema({
     type: Number,
     required: [true, 'Message must have a ID'],
     trim: true,
-    // unique: true
+    // unique: true      <- Verificar isso, colocar pra funcionar.
   },
   username: {
     type: String,

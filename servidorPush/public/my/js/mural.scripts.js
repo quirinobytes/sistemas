@@ -131,13 +131,13 @@ $(function(){
 		//limpar o campo que indica que um usuário está digitando: User is typing a message...
 		feedback.html('');
     	// console.log("to na socket.on(message=("+data.message+")");
-    	// var dt = new Date(data.time);
-   		// const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
+    	var dt = new Date(data.time);
+   		const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
 		  
 		    if (data.username == loggeduser.text())
-				chatroom.append("<p class='message'> <img class='miniAvatar' src='usersAvatar/"+data.username+"-user-icon.png' />  <font color='gray'>  " + data.time + "</font> <b>[" + data.username + "]</b> " + data.message + "</p>") 
+				chatroom.append("<p class='message'> <img class='miniAvatar' src='usersAvatar/"+data.username+"-user-icon.png'/> <font color='gray'>" + hora + "</font> <b>[" + data.username + "]</b> " + data.message + "</p>") 
 	        else
-			    chatroom.append("<p class='message' style='text-align:right'>"+ data.message + " <b>[" + data.username + "]</b> <font color='gray'>  " + data.time + "</font><img class='miniAvatar' src='usersAvatar/"+data.username+"-user-icon.png' /> </p> ") 
+			    chatroom.append("<p class='message' style='text-align:right'>"+ data.message + " <b>[" + data.username + "]</b> <font color='gray'>" + hora + "</font><img class='miniAvatar' src='usersAvatar/"+data.username+"-user-icon.png' /> </p> ") 
 
 		//fazer o scroll down a cada mensagem nova.
 		container.animate({"scrollTop": $('#chatroom')[0].scrollHeight}, "slow")
