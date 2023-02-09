@@ -42,19 +42,6 @@ exports.ultimos10 = function (aposNItens, callback){
 			});
 		}
 
-
-
-// exports.last10 = function (jaLidos, callback){
-// 	ChatMessage.find({{}.sort({time:1}).limit(10).skip(jaLidos)}, function(error, chatmessage) {
-// 	// exec(exports.last10 = function (callback){
-// 		if (error){
-// 			callback ({error: "Não foi possível encontrar essa merda de mensage pelo last10"});
-// 		}else{
-// 			callback(chatmessage);
-// 		}
-// 	});
-// }
-
 exports.delete = function (id, callback){
 	ChatMessage.findById(id, function(error, chatmessage){
 		if (error){

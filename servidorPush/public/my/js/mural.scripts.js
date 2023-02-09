@@ -1,6 +1,6 @@
 // MURAL SCRIPTS 
 
-var contadorMuralMensagens = 1;
+var contadorMuralMensagens = 0;
 
 function enviarMensagemEOUFoto(){
 	//console.log("to na enviarMensagemEOUFoto("+$("#message").val()+")")
@@ -65,13 +65,13 @@ $(function(){
 		//qdo carregar a pagina já se apresente e faça o login
 		socket.emit('username', {username : loggeduser.text()});
 
-		carregaMaisAlguns(10);
+		carregaMaisAlguns(contadorMuralMensagens);
 		console.log(contadorMuralMensagens)
 
 		$('div.container').on('scroll', function() {
 				if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
 					carregaMaisAlguns(contadorMuralMensagens);
-					contadorMuralMensagens+= 10
+					
 				}
 			})
 
@@ -147,6 +147,9 @@ $(function(){
 			// console.log(data.username + " | " + loggeduser.text())
 		    $('#playSoundOnNewMessage')[0].play();
 		}
+
+		//incrementa o contador para qdo ele chamar mais, nao vir as que ja vieram pelo socket.io
+		contadorMuralMensagens++;
 	})
 
 	//Emit a username when click on send_username button.
@@ -166,24 +169,31 @@ $(function(){
 
 	
 	function carregaMaisAlguns(aposXItens){
-		console.log("chamando a carrega mais alguns "+aposXItens)
+		console.log("chamando a carrega mais 20 apos "+aposXItens+" itens")
 		$.ajax({
 			url: "ultimos10/"+aposXItens
 		}).then(function(data) {
-			data.forEach(item => { 
-				
-				var dt = new Date(item.time);
-				const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
-				
-				if (item.username == loggeduser.text()){
-					// console.log("carregando mensagens do usuario")
-					chatroom.append( "<p class='message'> <img class='miniAvatar' src='usersAvatar/"+item.username+"-user-icon.png' />  <font color='gray'>  " + hora + "</font> <b>[" + item.username + "]</b> " + item.message + "</p>") 
-				}
-				else{
-					// console.log("carregando mensagens de alguem")
-					chatroom.append( "<p class='message' style='text-align:right'>"+ item.message + " <b>[" + item.username + "]</b> <font color='gray'>  " + hora + "</font> " + " <img class='miniAvatar' src='usersAvatar/"+item.username+"-user-icon.png' /> </p> ") 
-				}
-			});
+			if (data.length > 0){
+				contadorMuralMensagens+= 10
+				data.forEach(item => { 
+					
+					var dt = new Date(item.time);
+					const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
+					
+					if (item.username == loggeduser.text()){
+						// console.log("carregando mensagens do usuario")
+						chatroom.append( "<p class='message'> <img class='miniAvatar' src='usersAvatar/"+item.username+"-user-icon.png' />  <font color='gray'>  " + hora + "</font> <b>[" + item.username + "]</b> " + item.message + "</p>") 
+					}
+					else{
+						// console.log("carregando mensagens de alguem")
+						chatroom.append( "<p class='message' style='text-align:right'>"+ item.message + " <b>[" + item.username + "]</b> <font color='gray'>  " + hora + "</font> " + " <img class='miniAvatar' src='usersAvatar/"+item.username+"-user-icon.png' /> </p> ") 
+					}
+				});
+			}
+			else{
+				console.log("Nao tem mais nada pra vir")
+			}
+
 		});
 	}
 
