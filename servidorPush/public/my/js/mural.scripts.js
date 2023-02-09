@@ -1,6 +1,7 @@
 // MURAL SCRIPTS 
 
 
+
 function enviarMensagemEOUFoto(){
 	//console.log("to na enviarMensagemEOUFoto("+$("#message").val()+")")
 	
@@ -62,9 +63,15 @@ $(function(){
 		//qdo carregar a pagina já se apresente e faça o login
 		socket.emit('username', {username : loggeduser.text()});
 
+		$('div.container').on('scroll', function() {
+				if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
+					carregaMaisAlguns(20);
+				}
+			})
+
 		//carregando o historico de mensagens do Mural
 		$.ajax({
-			url: "./rest/chat/list"
+			url: "ultimos10/"
 		}).then(function(data) {
 			data.forEach(item => { 
 				
@@ -103,9 +110,10 @@ $(function(){
 		texto = message.val()
 		var dt = new Date();
 		const time = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
-				
-		//enviar a mensagem no canal 'message'
-		socket.emit('message', {message: texto.trim(), username:username, time:time})
+		
+		//enviar a mensagem no canal 'message' somente se houver username e mensagem
+		if (username && texto)
+		socket.emit('message', {message: texto.trim(), username:username, time:dt})
 		//limpar o inputbox do message, depois que enviar mensagem, e chamar a auto dimensionar o textarea
 		message.val('')
 		//redimenciar o textearea caso ele tenha ficado grande com o texto que o usuaŕio digitou no box.
@@ -149,7 +157,29 @@ $(function(){
 	socket.on('typing', (data) => {
 		feedback.html("<p><i>" + data.username + " is typing a message..." + "</i></p>")
 	})
-		
+
+	
+	function carregaMaisAlguns(){
+		$.ajax({
+			url: "ultimos10/"
+		}).then(function(data) {
+			data.forEach(item => { 
+				
+				var dt = new Date(item.time);
+				const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
+				
+				if (item.username == loggeduser.text()){
+					// console.log("carregando mensagens do usuario")
+					chatroom.append( "<p class='message'> <img class='miniAvatar' src='usersAvatar/"+item.username+"-user-icon.png' />  <font color='gray'>  " + hora + "</font> <b>[" + item.username + "]</b> " + item.message + "</p>") 
+				}
+				else{
+					// console.log("carregando mensagens de alguem")
+					chatroom.append( "<p class='message' style='text-align:right'>"+ item.message + " <b>[" + item.username + "]</b> <font color='gray'>  " + hora + "</font> " + " <img class='miniAvatar' src='usersAvatar/"+item.username+"-user-icon.png' /> </p> ") 
+				}
+			});
+		   });
+	}
+
 });
 
 

@@ -1,5 +1,12 @@
 #!/usr/bin/env node
 
+//mongo config
+var db = require('./config/db_config.js');
+var chatMessageModel = require('./models/chatMessage');
+var chatMessageController = require('./controllers/chatMessagesController');
+
+
+
 //prometheus / sockket.io
 const prometheus = require ('socket.io-prometheus-metrics')
 
@@ -55,7 +62,8 @@ var formidable = require('formidable')
 var expressLayouts = require('express-ejs-layouts')
 
 
-const express = require('express')
+const express = require('express');
+const id = require('faker/lib/locales/id_ID');
 const app = express()
 
 // Add the options to the prometheus middleware most option are for http_request_duration_seconds histogram metric
@@ -89,15 +97,24 @@ var roles = [{id:01,"name":"frontend","apelido":"Servidores Front-End","icon":"h
 var logged_users = [];
 var lastMessageFrom = []
 
-var privadoChat = {admin_bahia:[[{}]], bahia_admin:[[{}]], admin_spitz:[[{}]],spitz_admin:[[{}]],  admin_rafael:[[{}]],rafael_admin:[[{}]], bahia_rafael:[[{}]],rafael_bahia:[[{}]], bahia_spitz:[[{}]],spitz_bahia:[[{}]],marcia_rafael:[[{}]], rafael_marcia:[[{}]] ,marcia_admin:[[{}]], admin_marcia:[[{}]]  };
+var privadoChat = {admin_bahia:[[{}]], bahia_admin:[[{}]], admin_spitz:[[{}]],spitz_admin:[[{}]],  admin_rafael:[[{}]],rafael_admin:[[{}]], bahia_rafael:[[{}]],rafael_bahia:[[{}]], bahia_spitz:[[{}]],spitz_bahia:[[{}]],marcia_rafael:[[{}]], rafael_marcia:[[{}]] ,marcia_admin:[[{}]], admin_marcia:[[{}]], spitz_rafael:[[{}]], rafael_spitz:[[{}]]  };
 var destino = {}
 var destino2 = {}
 
+valor = 1;
 
 function loadMuralHistoryFs2Json(){
-	rawdata = fs.readFileSync('chatMessages.json');
-	chatMessages = JSON.parse(rawdata);
+	// rawdata = fs.readFileSync('chatMessages.json');
+	// chatMessages = JSON.parse(rawdata);
 	// console.log(chatMessages);
+
+	chatMessageController.ultimos10(valor,function(resp){
+		//	res.json(resp);
+		valor = valor + 10
+		console.log(resp)
+		chatMessages = resp
+	})
+	
 }
 
 function loadPrivadoHistoryFs2Json(){
@@ -107,7 +124,7 @@ function loadPrivadoHistoryFs2Json(){
 }
 
 function writeMuralHistoryJson2Fs(){
-		const data = JSON.stringify(privadoChat)
+		const data = JSON.stringify(chatMessages)
 		fs.writeFile('chatMessages.json', data, err => {
 		if (err) {
 			throw err
@@ -116,11 +133,11 @@ function writeMuralHistoryJson2Fs(){
 }
 
 function writePrivadoHistoryJson2Fs(){
-	const data = JSON.stringify(chatMessages)
+	const data = JSON.stringify(privadoChat)
 	fs.writeFile('privadoChat.json', data, err => {
-	if (err) {
-		throw err
-	}
+		if (err) {
+			throw err
+		}
 	// console.log('JSON data is saved.')
 	})
 }
@@ -152,17 +169,15 @@ function chat_add_message({username,message,time}){
 		add_user_message: username
 	  })
 	}
+
+	//chatmessages igual a Mural messages
 	writeMuralHistoryJson2Fs()
+	chatMessageController.save(chatMessageId,username,message,time,function(resp){
+	//	res.json(resp);
+	console.log(resp)
+	})
 	return chatMessages;
 }
-
-
-
-
-
-
-
-
 
 function findValueByPrefix(object, prefix) {
 	for (var property in object) {
@@ -187,8 +202,8 @@ function addMessageContactToPerson(de,para,mensagem,time){
 	prefixinv = para+"_"+de;
 
 	destino = findValueByPrefix(privadoChat,prefix);
-	console.log(destino);
-	console.log(destino2);
+	//console.log(destino);
+	//console.log(destino2);
 	destino2 = findValueByPrefix(privadoChat,prefixinv);
 	destino.push([{from:de,to:para,message:mensagem,time:dateTime}])
 	destino2.push([{from:de,to:para,message:mensagem,time:dateTime}])
@@ -196,10 +211,7 @@ function addMessageContactToPerson(de,para,mensagem,time){
 	writePrivadoHistoryJson2Fs()
 }
 
-
-
-
-
+//############################################################
 
 //Listen on port 3000
 server = app.listen(3000)
@@ -260,18 +272,45 @@ app.get('/mural', (req, res) => {
 	res.render('mural',{usuario:nome })
 })
 
+app.get('/ultimos10/', (req, res) => {
+	const aposX = req.params.aposX;
+	chatMessageController.ultimos10(valor,function(resp){
+		//	res.json(resp);
+		valor = valor + 10
+		var array = []
+
+		resp.forEach(function(item){
+			array.push(item._doc)
+			console.log(item._doc)
+		})
+		res.json(array)
+		res.end();
+		// chatMessages = resp
+		// res.writeHeader(200, {"Content-Type": "text/json"});
+		// res.write("Achei");
+	
+		
+	})
+	
+	
+})
+
+
+
+
 //route /contact
 app.get ('/privado',function (req,res) {
 	nome = getUsernameFromHeadersAuthorization(req)
 	if (nome == '') {nome = "anonymous"}
-	console.log("user:"+nome);
+	//console.log("user:"+nome);
 	res.render('privado',{usuario:nome })
-});
+})
+
 //route /logged_users
 app.get ('/logged_users',function (req,res) {
-	console.log(logged_users);
+	//console.log(logged_users);
 	res.json(logged_users);
-});
+})
 
 
 app.get ('/rest/loadChatWith/:from/:to',function (req,res) {
@@ -284,9 +323,9 @@ app.get ('/rest/loadChatWith/:from/:to',function (req,res) {
 	//console.log("GET no /rest/loadChatWith/"+from+"/"+to);
 	prefix = from + "_" + to;
 	obj = findValueByPrefix(privadoChat,prefix)
-	console.log(obj);
+	// console.log(obj);
 	res.send(obj);
-});
+})
 
 //route /upload
 app.get('/upload', (req, res) => {
@@ -374,7 +413,7 @@ app.get('/fileuploadMural/:file', function (req, res) {
         res.set('Content-Type', 'text/plain');
         res.status(404).end('Not found');
     });
-});
+})
 
 
 app.get('/audioupload/:file', function (req, res) {
@@ -395,7 +434,7 @@ app.get('/audioupload/:file', function (req, res) {
         res.set('Content-Type', 'text/plain');
         res.status(404).end('Not found');
     });
-});
+})
 
 app.post('/upload-audio/', (req, res) => {
 
@@ -403,24 +442,24 @@ app.post('/upload-audio/', (req, res) => {
 
 	form.parse(req, function (err, fields, files) {
 
-		console.log(fields)
+		// console.log(fields)
 
 		 if (!files) return;
 				
 		var name = fields.fname
 		var arquivo = files.file
-		console.log("name: "+name)
-		console.log("tamanho: "+ arquivo.size)
-		console.log("nome: "+arquivo.name)
-		console.log("tipo: "+arquivo.type) 
-		console.log("path: "+arquivo.path) 
-		console.log("FD: "+arquivo._writeStream.fd)
+		// console.log("name: "+name)
+		// console.log("tamanho: "+ arquivo.size)
+		// console.log("nome: "+arquivo.name)
+		// console.log("tipo: "+arquivo.type) 
+		// console.log("path: "+arquivo.path) 
+		// console.log("FD: "+arquivo._writeStream.fd)
 
 
 		novoNome = arquivo.path
 		remover = "/tmp/"
 		novoNome = novoNome.substring(novoNome.indexOf(remover) + remover.length);
-		console.log("novo Nome: "+novoNome)
+		//console.log("novo Nome: "+novoNome)
 		var newpath = './audioupload/' + novoNome + '.ogg'
 
 		// var newpath = './audioupload/' + arquivo.name + '.ogg';
@@ -430,7 +469,7 @@ app.post('/upload-audio/', (req, res) => {
 		// 	 console.log("GRAVOU")
 		// });
 	
-		console.log(files)
+		//console.log(files)
 		let keys=Object.keys(files);
 		fs.readFile(files[keys[0]].path,(err,e)=>{
 			if(err) console.log(err);
@@ -455,11 +494,11 @@ app.post('/upload-audio/', (req, res) => {
 //VERIFICAR ESSA ROTA
 app.post('/api/repo/:name', (req, res) => {
 	const reponame = req.params.name
-  console.log("reponame:"+reponame)
-  command = '/bin/bash -c "/root/git/devops-tools/commons/create-repo.sh ' + reponame +'"'
-  console.log( 'criando repositorio ["/root/git/devops-tools/commons/create-repo.sh ' + reponame + '"]')
-  const { exec } = require('child_process');
-          exec(command, (err, stdout, stderr) => {
+	console.log("reponame:"+reponame)
+	command = '/bin/bash -c "/root/git/devops-tools/commons/create-repo.sh ' + reponame +'"'
+	console.log( 'criando repositorio ["/root/git/devops-tools/commons/create-repo.sh ' + reponame + '"]')
+	const { exec } = require('child_process');
+	exec(command, (err, stdout, stderr) => {
           console.log(stdout)
           res.json(stdout);
           res.end();
@@ -471,7 +510,6 @@ app.post('/api/repo/:name', (req, res) => {
 // ROTA PARA APAGAR UM ARQUIVO
 app.get('/deletefile/:filename', (req,res) => {
 	
-
 		const filename = req.params.filename
 		const path = "./fileupload/"
 
@@ -484,7 +522,7 @@ app.get('/deletefile/:filename', (req,res) => {
 			//collector.collect(err);
 			console.error(err)
 		}
-	console.log("Arquivo apagado "+req.params.filename)
+//	console.log("Arquivo apagado "+req.params.filename)
 	res.redirect('./../upload')
 })
 
@@ -507,12 +545,10 @@ app.get ('/rest/farms/list/',function (req,res) {
 });
 
 
-
 app.get ('/rest/roles/list/',function (req,res) {
 		res.json(roles);
         res.end();
 });
-
 
 
 app.get ('/rest/message/:ativo',function (req,res) {
@@ -527,7 +563,7 @@ app.get ('/rest/message/:ativo',function (req,res) {
         res.write(html);
         res.end();
 		socketclient.emit('message', {message : ativo , username : socketclient.username});
-});
+})
 
 
 
@@ -536,7 +572,7 @@ app.get ('/rest/chat/list/',function (req,res) {
 //        res.write(chatMessages.text);
 		res.json(chatMessages);
         res.end();
-});
+})
 
 
 
@@ -544,7 +580,7 @@ app.get ('/rest/chat/add/:username/:messageText',function (req,res) {
 		chat_add_message({username:req.params.username, message:req.params.messageText});
   		res.json(chatMessages);
         res.end();
-});
+})
 
 
 
@@ -553,19 +589,17 @@ app.get ('/rest/chat/del/:messageId',function (req,res) {
 		var chatMessages_filter = [];
 
 		for (i = 0; i < chatMessages.length; ++i) {
-	      if (chatMessages[i].id == req.params.messageId) {
-			console.log("DELETED CHAT MESSAGE[ " +i+ " ] = " + chatMessages[i].text + "");
-		   }
-		   else
-			   {
-				   chatMessages_filter.push(chatMessages[i]);
-			   }
+	    	if (chatMessages[i].id == req.params.messageId) {
+				console.log("DELETED CHAT MESSAGE[ " +i+ " ] = " + chatMessages[i].text + "");
+		    }
+		    else{
+				chatMessages_filter.push(chatMessages[i]);
+			}
 		}
 		chatMessages = chatMessages_filter;
 		res.json(chatMessages);
 		res.end();
-});
-
+})
 
 
 app.get ('/rest/nodes/',function (req,res) {
@@ -573,7 +607,6 @@ app.get ('/rest/nodes/',function (req,res) {
         res.json(nodes);
         res.end();
 });
-
 
 
 app.get ('/rest/hostconfig/:hostname',function (req,res) {
@@ -589,7 +622,7 @@ app.get ('/rest/hostconfig/:hostname',function (req,res) {
 					console.log("ACHEINADA("+hostname+")");
 		res.json({});
         res.end();
-});
+})
 
 
 app.post ('/rest/hostconfig/:hostname/autoupdate/:autoupdate',function (req,res) {
@@ -610,7 +643,7 @@ app.post ('/rest/hostconfig/:hostname/autoupdate/:autoupdate',function (req,res)
 
 	res.json({"exitcode":1});
     res.end();
-});
+})
 
 
 app.post ('/rest/hostconfig/:hostname/mainfunction/:mainfunction',function (req,res) {
@@ -631,7 +664,7 @@ app.post ('/rest/hostconfig/:hostname/mainfunction/:mainfunction',function (req,
 
 	res.json({"exitcode":1});
     res.end();
-});
+})
 
 
 app.get ('/rest/commands/',function (req,res) {
@@ -639,7 +672,7 @@ app.get ('/rest/commands/',function (req,res) {
         			res.json(commands);
 					res.end();
 					return;
-});
+})
 
 app.get ('/rest/commands/set/:id/:command',function (req,res) {
 
@@ -653,7 +686,7 @@ app.get ('/rest/commands/set/:id/:command',function (req,res) {
 
 		res.json({});
 		res.end();
-});
+})
 
 app.get ('/rest/commands/del/:command',function (req,res) {
 
@@ -677,7 +710,7 @@ app.get ('/rest/commands/del/:command',function (req,res) {
 		fs.writeFileSync(commands_json, JSON.stringify(commands));
 		res.json({});
 		res.end();
-});
+})
 
 
 app.get ('/rest/commands/add/:command',function (req,res) {
@@ -693,8 +726,7 @@ app.get ('/rest/commands/add/:command',function (req,res) {
 		fs.writeFileSync(commands_json, JSON.stringify(commands));
 		res.json({});
 		res.end();
-});
-
+})
 
 
 app.get ('/rest/commands/execute/:command',function (req,res) {
@@ -716,7 +748,7 @@ app.get ('/rest/commands/execute/:command',function (req,res) {
 		console.log("ERROR: TENTATIVA DE EXECUCAO DE COMANDO: ["+req.params.command + "]\n COMMANDS["+i+"] = "+commands );
 		res.json({});
 		res.end();
-});
+})
 
 app.get ('/rest/hostexec/:hostname/:command',function (req,res) {
 
@@ -741,7 +773,7 @@ app.get ('/rest/hostexec/:hostname/:command',function (req,res) {
 		}
 		console.log("ERROR: TENTATIVA DE EXECUCAO DE COMANDO: ["+req.params.command + "]\n COMMANDS["+i+"] = "+commands );
 		res.end();
-});
+})
 
 
 /*#########################################
@@ -886,8 +918,10 @@ io.on('connection', (socket) => {
 
 	socket.on('contactTo', (data) => {
         io.sockets.emit('contactTo', data);
-		if ((data.from != undefined) && (data.toContact != undefined) )
+		if ((data.from != undefined) && (data.toContact != undefined) ){
 			addMessageContactToPerson(data.from, data.toContact, data.message, data.time);
+			writePrivadoHistoryJson2Fs()
+		}
     })
 
     socket.on('beos', (data) => {
@@ -959,7 +993,7 @@ io.on('connection', (socket) => {
 const ioMetrics = prometheus.metrics(io, {
 	collectDefaultMetrics: true,
 	checkForNewNamespaces: false
-});
+})
 //const metrics = ioMetrics.register.metrics();
 
 
