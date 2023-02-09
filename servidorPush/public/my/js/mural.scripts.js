@@ -1,6 +1,6 @@
 // MURAL SCRIPTS 
 
-
+var contadorMuralMensagens = 1;
 
 function enviarMensagemEOUFoto(){
 	//console.log("to na enviarMensagemEOUFoto("+$("#message").val()+")")
@@ -56,6 +56,8 @@ $(function(){
 	var loggeduser = $("#loggeduser")
 	var container = $("#container")
 
+	
+
 	// Logo que a pagina carregar "document.ready()", pega a lista de usuários 
 	// e o historico do board para ser carregado na section "chatroom"
 	$( document ).ready(function() {
@@ -63,31 +65,35 @@ $(function(){
 		//qdo carregar a pagina já se apresente e faça o login
 		socket.emit('username', {username : loggeduser.text()});
 
+		carregaMaisAlguns(10);
+		console.log(contadorMuralMensagens)
+
 		$('div.container').on('scroll', function() {
 				if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
-					carregaMaisAlguns(20);
+					carregaMaisAlguns(contadorMuralMensagens);
+					contadorMuralMensagens+= 10
 				}
 			})
 
 		//carregando o historico de mensagens do Mural
-		$.ajax({
-			url: "ultimos10/"
-		}).then(function(data) {
-			data.forEach(item => { 
+		// $.ajax({
+		// 	url: "ultimos10/10"
+		// }).then(function(data) {
+		// 	data.forEach(item => { 
 				
-				var dt = new Date(item.time);
-				const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
+		// 		var dt = new Date(item.time);
+		// 		const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
 				
-				if (item.username == loggeduser.text()){
-					// console.log("carregando mensagens do usuario")
-					chatroom.append( "<p class='message'> <img class='miniAvatar' src='usersAvatar/"+item.username+"-user-icon.png' />  <font color='gray'>  " + hora + "</font> <b>[" + item.username + "]</b> " + item.message + "</p>") 
-				}
-				else{
-					// console.log("carregando mensagens de alguem")
-					chatroom.append( "<p class='message' style='text-align:right'>"+ item.message + " <b>[" + item.username + "]</b> <font color='gray'>  " + hora + "</font> " + " <img class='miniAvatar' src='usersAvatar/"+item.username+"-user-icon.png' /> </p> ") 
-				}
-			});
-   		});
+		// 		if (item.username == loggeduser.text()){
+		// 			// console.log("carregando mensagens do usuario")
+		// 			chatroom.append( "<p class='message'> <img class='miniAvatar' src='usersAvatar/"+item.username+"-user-icon.png' />  <font color='gray'>  " + hora + "</font> <b>[" + item.username + "]</b> " + item.message + "</p>") 
+		// 		}
+		// 		else{
+		// 			// console.log("carregando mensagens de alguem")
+		// 			chatroom.append( "<p class='message' style='text-align:right'>"+ item.message + " <b>[" + item.username + "]</b> <font color='gray'>  " + hora + "</font> " + " <img class='miniAvatar' src='usersAvatar/"+item.username+"-user-icon.png' /> </p> ") 
+		// 		}
+		// 	});
+   		// });
 
 		// Aqui estou pegando a lista dos usuários do konga
 		$.ajax({
@@ -159,9 +165,10 @@ $(function(){
 	})
 
 	
-	function carregaMaisAlguns(){
+	function carregaMaisAlguns(aposXItens){
+		console.log("chamando a carrega mais alguns "+aposXItens)
 		$.ajax({
-			url: "ultimos10/"
+			url: "ultimos10/"+aposXItens
 		}).then(function(data) {
 			data.forEach(item => { 
 				
@@ -177,7 +184,7 @@ $(function(){
 					chatroom.append( "<p class='message' style='text-align:right'>"+ item.message + " <b>[" + item.username + "]</b> <font color='gray'>  " + hora + "</font> " + " <img class='miniAvatar' src='usersAvatar/"+item.username+"-user-icon.png' /> </p> ") 
 				}
 			});
-		   });
+		});
 	}
 
 });

@@ -108,12 +108,12 @@ function loadMuralHistoryFs2Json(){
 	// chatMessages = JSON.parse(rawdata);
 	// console.log(chatMessages);
 
-	chatMessageController.ultimos10(valor,function(resp){
-		//	res.json(resp);
-		valor = valor + 10
-		console.log(resp)
-		chatMessages = resp
-	})
+	// chatMessageController.ultimos10(valor,function(resp){
+	// 	//	res.json(resp);
+	// 	valor = valor + 10
+	// 	console.log(resp)
+	// 	chatMessages = resp
+	// })
 	
 }
 
@@ -272,17 +272,22 @@ app.get('/mural', (req, res) => {
 	res.render('mural',{usuario:nome })
 })
 
-app.get('/ultimos10/', (req, res) => {
-	const aposX = req.params.aposX;
+app.get('/ultimos10/:apos', (req, res) => {
+	var aposX = req.params.apos;
+	console.log("quero chatMessages APOS ["+aposX+"] itens agora")
+	console.log("valor="+valor)
+	valor = parseInt(aposX)
+
+
 	chatMessageController.ultimos10(valor,function(resp){
 		//	res.json(resp);
-		valor = valor + 10
+		//valor = valor + 10
 		var array = []
-
-		resp.forEach(function(item){
-			array.push(item._doc)
-			console.log(item._doc)
-		})
+		if (resp)
+			resp.forEach(function(item){
+				array.push(item._doc)
+				//console.log(item._doc)
+			})
 		res.json(array)
 		res.end();
 		// chatMessages = resp
