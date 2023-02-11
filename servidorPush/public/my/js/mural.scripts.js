@@ -182,7 +182,7 @@ $(function(){
 						
 					}
 					else{
-						chatroom.append( "<div class='right'> <p class='message'>"+ item.message + " <b>[" + item.username + "]</b> <font color='gray'>  " + hora + "</font> " + " <img class='miniAvatar' src='usersAvatar/"+item.username+"-user-icon.png'/> </p> </div>") 
+						chatroom.append( "<div class='right'>   <p class='message'>"+ item.message + " <b>[" + item.username + "]</b> <font color='gray'>  " + hora + "</font> " + " <img class='miniAvatar' src='usersAvatar/"+item.username+"-user-icon.png'/> </p> </div>") 
 
 					}
 				});

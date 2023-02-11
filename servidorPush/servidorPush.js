@@ -374,12 +374,12 @@ app.post('/fileuploadMural/',  (req, res) => {
 
 		if (tipoArquivo == "mp4"){
 			var newpath = 'videoupload/' + files.filetoupload.name
-			var link = "<div class='videoBox'>  <video class='vdMural' controls> <source src='" + newpath + "' type='video/mp4'>  " + messageInAttach + "</video>  </div>"
+			var link = "<div class='videoBox'><video class='vdMural' controls> <source src='" + newpath + "' type='video/mp4'> </video>   </div><img class='votar' src='imagem_comum/sim.jpg'/><img class='votar' src='imagem_comum/nao.jpg'/>" + messageInAttach  
 		}
 		else{
 			if (tipoArquivo == "jpg" || tipoArquivo == "jpeg" || tipoArquivo == "png"){
 				var newpath = 'fileuploadMural/' + files.filetoupload.name
-				var link = "<div class='imageBox'> <img class='imgMural' src='" + newpath +"' alt='imagem' /> " + messageInAttach + " </div>"
+				var link = "<div class='imageBox'> <img class='imgMural' src='" + newpath +"' alt='imagem' />   </div><img class='votar' src='imagem_comum/sim.jpg'/><img class='votar' src='imagem_comum/nao.jpg'/> " + messageInAttach 
 			}
 		}
 
