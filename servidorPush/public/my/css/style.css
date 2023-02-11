@@ -140,30 +140,20 @@ input#username {
     font-family: 'Comfortaa', sans-serif;
 }
 
-.imageBox{
-    width: 100%;
-    height: auto;    
-    /* border: 5px dashed #f7a239; */
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    object-fit: cover;
-    border: 4px solid black;
-}
 
+.left {
+    left: 20%;
+}
+.rigth{
+    right: 20%;
+}
 .videoBox{
     position: relative;
     width: 150px;
     height: 200px;
-    min-width: fit-content;
- 
-    flex-wrap: wrap;
-
-    
+    /* min-width: fit-content; */
     display: flex;
-    align-items: center;
-    justify-content: center;
-    left: 40%;
+
 }
 .vdMural {
     position:absolute;
@@ -171,12 +161,29 @@ input#username {
 	/* width:99%; */
 	background:#000;
     border: 4px solid black;
+    
 }
-
-
+.right{
+    justify-content: right;
+    text-align: right;
+}
+.imageBox{
+    position: relative;
+    width: 100%;
+    height: 300px;    
+    display: flex;
+    justify-content: inherit;
+    /* justify-items: flex-end; */
+    /* flex-wrap: wrap; */
+    object-fit: cover;
+}
 .imgMural {
+    position:absolute;
     max-width: 100%;
     max-height: 100%;
+    border: 4px solid black;
+    float: right;
+
 }
 
 input#message {
@@ -213,6 +220,7 @@ header#headerMenu {
     display: grid;
     margin: 10px 10px 0px 10px;
 }
+
 
 .message:nth-child(even) {
     background-color: rgb(180, 214, 224);

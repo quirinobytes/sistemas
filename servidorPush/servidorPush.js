@@ -379,7 +379,7 @@ app.post('/fileuploadMural/',  (req, res) => {
 		else{
 			if (tipoArquivo == "jpg" || tipoArquivo == "jpeg" || tipoArquivo == "png"){
 				var newpath = 'fileuploadMural/' + files.filetoupload.name
-				var link = "<p class='message'> <div class='imageBox'> <img class='imgMural' src='" + newpath +"' alt='imagem' /> " + messageInAttach + " </div> </p>"
+				var link = "<div class='imageBox'> <img class='imgMural' src='" + newpath +"' alt='imagem' /> " + messageInAttach + " </div>"
 			}
 		}
 
