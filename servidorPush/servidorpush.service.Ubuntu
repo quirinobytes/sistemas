@@ -14,21 +14,21 @@ Description=CDSHELL - Servidor Push
 ExecStart=/usr/bin/node  /root/sistemas/servidorPush/servidorPush.js
 
 # Required on some systems
-  WorkingDirectory=/root/sistemas/servidorPush/
+WorkingDirectory=/root/sistemas/servidorPush/
 
 
 # Restart service after 10 seconds if node service crashes
- RestartSec=60
- Restart=always
+RestartSec=60
+Restart=always
 
 # Output to syslog
- StandardOutput=syslog
- StandardError=syslog
- SyslogIdentifier=servidorpush
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=servidorpush
 
 #Environment
- User=root
- Environment=NODE_ENV=production PORT=3000 NODE_MODULES=/lib/node_modules
+User=root
+Environment=NODE_ENV=production PORT=3000 NODE_MODULES=/lib/node_modules
 
 [Install]
 

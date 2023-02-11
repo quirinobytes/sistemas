@@ -351,29 +351,48 @@ app.post('/fileupload', (req, res) => {
 })
 
 
-app.post('/fileuploadMural/', (req, res) => {
-	var form = new formidable.IncomingForm();
+
+
+// recebe o post de enviar arquivos de FOTOS E VIDEOS, salva e grava a TAG HTML correta.
+app.post('/fileuploadMural/',  (req, res) => {
+
+	var options = { maxFileSize: '25mb' }
+	var form = new formidable.IncomingForm(options)
 
 	form.parse(req, function (err, fields, files) {
+		if (err) throw err;
+
 		if (!files.filetoupload.name) return;
-		var username = fields.usuario;
-		var messageInAttach = fields.messageInAttach;
-		//console.log("messageInAttach"+ fields.messageInAttach)
 		
+		filename = files.filetoupload.name
+		let results = filename.replace('\n', '').split('.')
+		let tipoArquivo = results[1].trim()
+
+		var username = fields.usuario
+		var time = fields.time
+		var messageInAttach = fields.messageInAttach
+
+		if (tipoArquivo == "mp4"){
+			var newpath = 'videoupload/' + files.filetoupload.name
+			var link = "<div class='videoBox'>  <video class='vdMural' controls> <source src='" + newpath + "' type='video/mp4'>  " + messageInAttach + "</video>  </div>"
+		}
+		else{
+			if (tipoArquivo == "jpg" || tipoArquivo == "jpeg" || tipoArquivo == "png"){
+				var newpath = 'fileuploadMural/' + files.filetoupload.name
+				var link = "<p class='message'> <div class='imageBox'> <img class='imgMural' src='" + newpath +"' alt='imagem' /> " + messageInAttach + " </div> </p>"
+			}
+		}
+
+		//console.log("messageInAttach"+ fields.messageInAttach)
 		var oldpath = files.filetoupload.path;
-		var newpath = './fileuploadMural/' + files.filetoupload.name;
+		
 		fs.rename(oldpath, newpath, function (err) {
 
-		if (err) throw err;
-			//prometheus metrics
-			//collector.collect(err || res);
-			//res.write('File uploaded and moved!');
-            
-			//Inserindo a <img> no canal de message para aparecer no Mural.
+			if (err) throw err;
 			
-			var link = "<p class='message'> <div class='imageBox'> <img class='imgMural' src='" + newpath +"' alt='imagem' />  " + messageInAttach + " </div> </p>"
-			chat_add_message({message : link, username:username })
-			io.sockets.emit('message', {message : link , username: username})
+			//Inserindo a <img> no canal de message para aparecer no Mural.
+			chat_add_message({message : link, username:username, time:time })
+			io.sockets.emit('message', {message : link , username: username,  time:time})
 
 			res.redirect('/mural')
 			res.end()
@@ -382,7 +401,7 @@ app.post('/fileuploadMural/', (req, res) => {
 })
 
 
-//para servir as imagens do fileuploadMural
+//para servir as imagens e videos do fileuploadMural
 app.get('/fileuploadMural/:file', function (req, res) {
 	var path = require('path');
 	var dir = ( './fileuploadMural');
@@ -475,6 +494,28 @@ app.post('/upload-audio/', (req, res) => {
 	});
 
 
+})
+
+
+
+app.get('/videoupload/:file', function (req, res) {
+	var path = require('path');
+	var dir = ( './videoupload/');
+    var file = req.params.file;
+   
+    var type = mime[path.extname(file).slice(1)] || 'video/mp4"';
+    var s = fs.createReadStream(dir+"/"+file);
+    s.on('open', function () {
+        res.set('Content-Type', type);
+        s.pipe(res);
+		
+		//res.redirect('/')
+		//res.end();
+    });
+    s.on('error', function () {
+        res.set('Content-Type', 'text/plain');
+        res.status(404).end('Not found');
+    });
 })
 
 

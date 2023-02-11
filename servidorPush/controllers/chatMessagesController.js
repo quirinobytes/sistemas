@@ -1,5 +1,5 @@
-const { query } = require('express');
-var ChatMessage = require ('../models/chatMessage');
+const { query } = require('express')
+var ChatMessage = require ("../models/chatMessage.js")
 
 
 exports.save = function (id,username,message,time,callback){
