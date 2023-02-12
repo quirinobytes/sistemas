@@ -274,6 +274,7 @@ app.get('/mural', (req, res) => {
 	res.render('mural',{usuario:nome })
 })
 
+
 app.get('/ultimos10/:apos', (req, res) => {
 	var aposX = req.params.apos;
 	// console.log("quero chatMessages APOS ["+aposX+"] itens agora")
