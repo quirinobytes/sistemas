@@ -35,7 +35,7 @@ function copyMessageToAddInPhotoIfExist(){
 	texto.val(str)
 }
 
-function auto_height(elem) {  /* javascript */
+function auto_height(elem) {  
     elem.style.height = "1px";
     elem.style.height = (elem.scrollHeight)+"px";
 }
@@ -59,7 +59,6 @@ function votarNao(identificador){
 		url: "./votaram/"+ identificador+"/nao"
 		}).then(function(retorno) {
 			console.log("ok")
-			
 		}).fail(function(retorno){
 			console.log("deu algum erro ao votar nao")	
 			console.log(retorno)
@@ -154,14 +153,16 @@ $(function(){
 	socket.on("message", (data) => {
 		//limpar o campo que indica que um usuário está digitando: User is typing a message...
 		feedback.html('');
-    	// console.log("to na socket.on(message=("+data.message+")");
+    	//console.log("to na socket.on(message=("+data.message+")");
     	var dt = new Date(data.time);
    		const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
 		  
 		    if (data.username == loggeduser.text())
-				chatroom.append("<p class='message'> <img class='miniAvatar' src='usersAvatar/"+data.username+"-user-icon.png'/> <font color='gray'>" + hora + "</font> <b>[" + data.username + "]</b> " + data.message +"-" + data.idenficador +"</p>") 
+				chatroom.prepend("<div class='left'>  <p class='message'> <img class='miniAvatar' src='usersAvatar/"+data.username+"-user-icon.png'/> <b>[" + data.username + "]</b> <font color='gray'> " + hora + "</font> " + data.message + "</p> </div>")
 	        else
-			    chatroom.append("<p class='message' style='text-align:right'>"+ data.message +"-" + data.idenficador + " <b>[" + data.username + "]</b> <font color='gray'>" + hora + "</font><img class='miniAvatar' src='usersAvatar/"+data.username+"-user-icon.png' /> </p> ") 
+				chatroom.prepend("<div class='right'> <p class='message'> <img class='miniAvatar' src='usersAvatar/"+data.username+"-user-icon.png'/> <b>[" + data.username + "]</b> <font color='gray'> " + hora + "</font>  "+ data.message + "</p> </div>" ) 
+				
+				
 
 		//fazer o scroll down a cada mensagem nova.
 		container.animate({"scrollTop": $('#chatroom')[0].scrollHeight}, "slow")
@@ -199,11 +200,12 @@ $(function(){
 
 		if (opcao == 'like'){
 			var votossim = $("#"+identificador+"_"+opcao)
+			// console.log(identificador+"."+opcao + "=" + qtde)
 			votossim[0].innerHTML = qtde
 		}
 		if (opcao == 'dislike'){
 			var votosnao = $("#"+identificador+"_"+opcao)
-			console.log(identificador+"."+opcao + "=" + qtde)
+			// console.log(identificador+"."+opcao + "=" + qtde)
 			votosnao[0].innerHTML = qtde
 
 		}
@@ -222,11 +224,11 @@ $(function(){
 					const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
 					
 					if (item.username == loggeduser.text()){
-						chatroom.append( "<div class='left'> <p class='message'> <img class='miniAvatar' src='usersAvatar/"+item.username+"-user-icon.png'/> <b>[" + item.username + "]</b> <font color='gray'> " + hora + "</font> " + item.message + "</p> </div>") 
+						chatroom.prepend( "<div class='left'> <p class='message'> <img class='miniAvatar' src='usersAvatar/"+item.username+"-user-icon.png'/> <b>[" + item.username + "]</b> <font color='gray'> " + hora + "</font> " + item.message + "</p> </div>") 
 						
 					}
 					else{
-						chatroom.append( "<div class='right'> <p class='message'> <img class='miniAvatar' src='usersAvatar/"+item.username+"-user-icon.png'/> <b>[" + item.username + "]</b> <font color='gray'> " + hora + "</font>  "+ item.message + "</p> </div>" ) 
+						chatroom.prepend( "<div class='right'> <p class='message'> <img class='miniAvatar' src='usersAvatar/"+item.username+"-user-icon.png'/> <b>[" + item.username + "]</b> <font color='gray'> " + hora + "</font>  "+ item.message + "</p> </div>" ) 
 
 					}
 				});

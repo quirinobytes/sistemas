@@ -13,7 +13,7 @@ function loadChatWith(username) {
 	var imgContactTo = $("#imgContactTo")
 	var cList  = $("#contactList")
 	var feedback = $("#feedback")
-		//Limpa o board chatroom para carregar as mensagens com o amigo que foi selecionado.
+		//Limpa o board divMessageTo para carregar as mensagens com o amigo que foi selecionado.
 		messageTo.empty();
 		feedback.empty();
 
@@ -42,9 +42,9 @@ function loadChatWith(username) {
 			// if (mensagem != undefined)
 			if (mensagem)
 				if (para == myname)
-					messageTo.append("<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>  " + item[0].time + "</font>  <img class='miniAvatar' src='usersAvatar/"+de+"-user-icon.png' alt='"+de+"'>  <br> "+ mensagem +" </p>") 
+					messageTo.prepend("<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>  " + item[0].time + "</font>  <img class='miniAvatar' src='usersAvatar/"+de+"-user-icon.png' alt='"+de+"'>  <br> "+ mensagem +" </p>") 
 		  	  	else
-		  			messageTo.append("<p class='messageTo'> <img class='miniAvatar' src='usersAvatar/"+de+"-user-icon.png' alt='"+de+"'> <font color='gray'>  " + item[0].time + "</font> <br>" + mensagem + "</p>") 
+		  			messageTo.prepend("<p class='messageTo'> <img class='miniAvatar' src='usersAvatar/"+de+"-user-icon.png' alt='"+de+"'> <font color='gray'>  " + item[0].time + "</font> <br>" + mensagem + "</p>") 
 
 		});
     });
@@ -86,6 +86,8 @@ $(function(){
 	  //var socket = io.connect('http://servidorpush.ddns.net:3000/', { secure: true, reconnect: true, rejectUnauthorized : false })
 	var socket = io.connect('/', { secure: true, reconnect: true, rejectUnauthorized : false })
 
+	var logged_users = {};
+
 	//buttons and inputs
 	var myname = $("#myname")
 	var message = $("#message")
@@ -97,14 +99,12 @@ $(function(){
 	//apagar isso, parece q nao usa
 	var contactTo = $("#contactTo")
 
-
 	var feedback = $("#feedback")
 	var loggeduser = $("#loggeduser")
 	var container = $("#container")
 	var cList  = $("#contactList")
 	var pararAudio = $("#pararAudio")
 	var gravarAudio = $("#gravarAudio")
-	var logged_users = {};
 	var downloadLink = $("#downloadLink")
 	var audioPrivado = $("#audioPrivado")
 	audioPrivadoSrc = $("#audioPrivadoSrc")
@@ -129,6 +129,7 @@ $(function(){
 				
 			usuarios_kong = obj_consumers.data;
 			// console.log(usuarios_kong);
+
 			//salvando na variavel global para usar no blinkLoggedUsers
 			globalContatosList = usuarios_kong;
 
@@ -147,7 +148,7 @@ $(function(){
 
 	})
 	
-	//Emit message
+	//Send message
 	send_message.click(function(){
 		var dt = new Date();
         const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
@@ -160,7 +161,7 @@ $(function(){
 	})
 
 
-	//Emit a username when click on send_username button.
+	//Register new username when click on send_username button.
 	send_username.click(function(){
 		socket.emit('username', {username : username.val()})
 	})
@@ -205,22 +206,24 @@ $(function(){
 
 	//Wait on new message on channel "contactTo"
 	socket.on('contactTo', (data) => {
-		
+
 		friendUsername=divContato.innerText
 		loggedUser = $("#myname")[0].innerText
 			
 		//colocar minhas mensagens com a pessoa e for mensagem para mim, no board.
 		if (data.toContact == friendUsername && data.from == loggedUser){
 				// console.log("to colocando minhas msg no board")
+				
 			if (data.from == loggedUser)
-				divMessageTo.append("<p class='messageTo'> <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'> <font color='gray'>  " + data.time + "</font> <br>" + data.message + "</p>")
+				divMessageTo.prepend("<p class='messageTo'> <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'> <font color='gray'>  " + data.time + "</font> <br>" + data.message + "</p>")
 			else
-				divMessageTo.append("<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>  " + data.time + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'>  <br> "+ data.message +" </p>");
+				divMessageTo.prepend("<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>  " + data.time + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'>  <br> "+ data.message +" </p>");
 		}
 		else{ 
 			//caso o board do seu contato nao esteja selecionado, e nao seja o seu board
 			if (data.toContact == loggedUser && data.from != divContato.innerText){
 				// console.log("aqui é a hora do vermelho?")
+				
 
 				//console.log(cList[0])
 				//console.log("tamanho= "+cList[0].children.length);
@@ -230,16 +233,20 @@ $(function(){
 				for (cont=0;cont<cList[0].children.length;cont++){
 					if (cList[0].children[cont].innerText == data.from ){
 						//console.log( "ACHEI: Alterando o div do: " + cList[0].children[cont].innerText);
-						$( cList[0].children[cont]).addClass("temMensagemNaoLida");
+						quemMandouMensagem = $( cList[0].children[cont])
+						quemMandouMensagem.fadeOut(500);
+						quemMandouMensagem.addClass("temMensagemNaoLida");
+						quemMandouMensagem.fadeIn(500);
 						$('#playSoundOnNewMessage')[0].play();
 					}
 				}
 			}
+			
 		}
 		//caso eu esteja com o board de mensagens do amigo selecionada, colocar as mensagens dele pra mim, e soa um bip
 		if (data.from == divContato.innerText && data.toContact == loggedUser ){
 			// alert("aqui rodou o ultimo if, que coloca as mensagens dos amigos")
-			divMessageTo.append("<p class='messageTo' style='text-align:right;margin-left:auto'>" + data.message +  "<b>[" + data.from + "]</b><font color='gray'>" + data.time + "</font><img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png'></p>");
+			divMessageTo.prepend("<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>  " + data.time + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'>  <br> "+ data.message +" </p>");
 			$('#playSoundOnNewMessage')[0].play();
 			feedback.empty();
 		}

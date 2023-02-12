@@ -206,7 +206,7 @@ input#filetoupload{
     border: 2px solid white;
     margin-top: 15px;
     padding: 14px;
-    border-radius: 25px;
+    border-radius: 35px;
     float: left;
 }
 .right{
@@ -401,4 +401,7 @@ section#titulo {
 .temMensagemNaoLida{
     color: red;
     font-weight: bold;
+    transition: background-color 1.5s;
+    background-color: blueviolet;
+
 }
