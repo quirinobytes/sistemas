@@ -41,10 +41,11 @@ function loadChatWith(username) {
 			mensagem = item[0].message
 			// if (mensagem != undefined)
 			if (mensagem)
-			  if (para != myname)
-			  		messageTo.append("<p class='message'> <img class='miniAvatar' src='usersAvatar/"+de+"-user-icon.png'> <font color='gray'>  " + item[0].time + "</font> <b>[" + de + "]</b> " + mensagem + "</p>") 
-		  	  else
-				  	messageTo.append("<p class='message' style='text-align:right'> "+ mensagem +" <b>[" + de + "]</b> <font color='gray'>  " + item[0].time + "</font>  <img class='miniAvatar' src='usersAvatar/"+de+"-user-icon.png'> </p>") 
+				if (para == myname)
+					messageTo.append("<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>  " + item[0].time + "</font>  <img class='miniAvatar' src='usersAvatar/"+de+"-user-icon.png' alt='"+de+"'>  <br> "+ mensagem +" </p>") 
+		  	  	else
+		  			messageTo.append("<p class='messageTo'> <img class='miniAvatar' src='usersAvatar/"+de+"-user-icon.png' alt='"+de+"'> <font color='gray'>  " + item[0].time + "</font> <br>" + mensagem + "</p>") 
+
 		});
     });
 } 
@@ -210,11 +211,11 @@ $(function(){
 			
 		//colocar minhas mensagens com a pessoa e for mensagem para mim, no board.
 		if (data.toContact == friendUsername && data.from == loggedUser){
-			// console.log("to colocando minhas msg no board")
+				// console.log("to colocando minhas msg no board")
 			if (data.from == loggedUser)
-				divMessageTo.append("<p class='message'><img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png'><font color='gray'>" + data.time + "</font> <b>[" + data.from + "]</b> " + data.message + "</p>");
+				divMessageTo.append("<p class='messageTo'> <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'> <font color='gray'>  " + data.time + "</font> <br>" + data.message + "</p>")
 			else
-				divMessageTo.append("<p class='message' style='text-align:right'>" + data.message + "<b>[" + data.from + "]</b> <font color='gray'>" + data.time + "</font> <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png'> </p>");
+				divMessageTo.append("<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>  " + data.time + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'>  <br> "+ data.message +" </p>");
 		}
 		else{ 
 			//caso o board do seu contato nao esteja selecionado, e nao seja o seu board
@@ -238,7 +239,7 @@ $(function(){
 		//caso eu esteja com o board de mensagens do amigo selecionada, colocar as mensagens dele pra mim, e soa um bip
 		if (data.from == divContato.innerText && data.toContact == loggedUser ){
 			// alert("aqui rodou o ultimo if, que coloca as mensagens dos amigos")
-			divMessageTo.append("<p class='message' style='text-align:right'>" + data.message +  "<b>[" + data.from + "]</b><font color='gray'>" + data.time + "</font><img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png'></p>");
+			divMessageTo.append("<p class='messageTo' style='text-align:right;margin-left:auto'>" + data.message +  "<b>[" + data.from + "]</b><font color='gray'>" + data.time + "</font><img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png'></p>");
 			$('#playSoundOnNewMessage')[0].play();
 			feedback.empty();
 		}
