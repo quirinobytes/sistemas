@@ -39,7 +39,32 @@ function auto_height(elem) {  /* javascript */
     elem.style.height = "1px";
     elem.style.height = (elem.scrollHeight)+"px";
 }
+function votarSim(identificador){
+	
+	//alert("Votei sim no: "+identificador)	
+	$.ajax({
+		url: "./votaram/"+ identificador+"/sim"
+		}).then(function(retorno) {
+			//alert("fez o voto sim e nao veio erro")
+			console.log("ok")
+		}).fail(function(retorno){
+			console.log("deu algum erro ao votar sim")	
+			console.log(retorno)
+		})
+}
 
+function votarNao(identificador){
+	//alert("Votei nao no: "+identificador)	
+	$.ajax({
+		url: "./votaram/"+ identificador+"/nao"
+		}).then(function(retorno) {
+			console.log("ok")
+			
+		}).fail(function(retorno){
+			console.log("deu algum erro ao votar nao")	
+			console.log(retorno)
+		})
+}
 
 $(function(){
    	//make connection direct on web server using relative hosts 
@@ -134,9 +159,9 @@ $(function(){
    		const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
 		  
 		    if (data.username == loggeduser.text())
-				chatroom.append("<p class='message'> <img class='miniAvatar' src='usersAvatar/"+data.username+"-user-icon.png'/> <font color='gray'>" + hora + "</font> <b>[" + data.username + "]</b> " + data.message + "</p>") 
+				chatroom.append("<p class='message'> <img class='miniAvatar' src='usersAvatar/"+data.username+"-user-icon.png'/> <font color='gray'>" + hora + "</font> <b>[" + data.username + "]</b> " + data.message +"-" + data.idenficador +"</p>") 
 	        else
-			    chatroom.append("<p class='message' style='text-align:right'>"+ data.message + " <b>[" + data.username + "]</b> <font color='gray'>" + hora + "</font><img class='miniAvatar' src='usersAvatar/"+data.username+"-user-icon.png' /> </p> ") 
+			    chatroom.append("<p class='message' style='text-align:right'>"+ data.message +"-" + data.idenficador + " <b>[" + data.username + "]</b> <font color='gray'>" + hora + "</font><img class='miniAvatar' src='usersAvatar/"+data.username+"-user-icon.png' /> </p> ") 
 
 		//fazer o scroll down a cada mensagem nova.
 		container.animate({"scrollTop": $('#chatroom')[0].scrollHeight}, "slow")
@@ -166,6 +191,25 @@ $(function(){
 		feedback.html("<p><i>" + data.username + " is typing a message..." + "</i></p>")
 	})
 
+	socket.on('votosnamidia', (votacao) => {
+		// {identificador:identificador,opcao:islike,qtde:total}
+		opcao = votacao.opcao
+		identificador = votacao.identificador
+		qtde = votacao.qtde
+
+		if (opcao == 'like'){
+			var votossim = $("#"+identificador+"_"+opcao)
+			votossim[0].innerHTML = qtde
+		}
+		if (opcao == 'dislike'){
+			var votosnao = $("#"+identificador+"_"+opcao)
+			console.log(identificador+"."+opcao + "=" + qtde)
+			votosnao[0].innerHTML = qtde
+
+		}
+	})
+
+	
 	
 	function carregaMaisAlguns(aposXItens){
 		$.ajax({
@@ -178,11 +222,11 @@ $(function(){
 					const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
 					
 					if (item.username == loggeduser.text()){
-						chatroom.append( "<div class='left'> <p class='message'> <img class='miniAvatar' src='usersAvatar/"+item.username+"-user-icon.png' />  <font color='gray'>  " + hora + "</font> <b>[" + item.username + "]</b> " + item.message + "</p></div> ") 
+						chatroom.append( "<div class='left'> <p class='message'> <img class='miniAvatar' src='usersAvatar/"+item.username+"-user-icon.png' />  <font color='gray'>  " + hora + "</font> <b>[" + item.username + "]</b> " + item.message + "</p></div>") 
 						
 					}
 					else{
-						chatroom.append( "<div class='right'>   <p class='message'>"+ item.message + " <b>[" + item.username + "]</b> <font color='gray'>  " + hora + "</font> " + " <img class='miniAvatar' src='usersAvatar/"+item.username+"-user-icon.png'/> </p> </div>") 
+						chatroom.append( "<div class='right'>   <p class='message'>"+ item.message + " <b>[" + item.username + "]</b> <font color='gray'>  " + hora + "</font> " + " <img class='miniAvatar' src='usersAvatar/"+item.username+"-user-icon.png'/> </p></div>" ) 
 
 					}
 				});

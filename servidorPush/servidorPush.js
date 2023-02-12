@@ -48,6 +48,8 @@ var convert = new Convert({
     stream: false
 })
 
+//import do uuid: Identificador unico para Medias(Fotos/Videos)
+const { v4: uuidv4 } = require('uuid');
 
 var fs = require('fs')
 var commands_json = './comandos.json'
@@ -157,9 +159,9 @@ function getUsernameFromHeadersAuthorization(req){
 	return user;
 }
 
-function chat_add_message({username,message,time}){
+function chat_add_message({username,message,time,identificador}){
 	if (time!="") dateTime = new Date();
-	newMessage = {id:chatMessageId,username:username,message:message,time:dateTime};
+	newMessage = {id:chatMessageId,username:username,message:message,time:dateTime, identificador:identificador};
 	chatMessageId++;
 	chatMessages.push(newMessage);
 
@@ -171,8 +173,8 @@ function chat_add_message({username,message,time}){
 	}
 
 	//chatmessages igual a Mural messages
-	writeMuralHistoryJson2Fs()
-	chatMessageController.save(chatMessageId,username,message,time,function(resp){
+	//writeMuralHistoryJson2Fs()
+	chatMessageController.save(chatMessageId,username,message,time,identificador,function(resp){
 	//	res.json(resp);
 	//console.log(resp)
 	})
@@ -351,7 +353,7 @@ app.post('/fileupload', (req, res) => {
 })
 
 
-
+const identificarUnico = uuidv4();
 
 // recebe o post de enviar arquivos de FOTOS E VIDEOS, salva e grava a TAG HTML correta.
 app.post('/fileuploadMural/',  (req, res) => {
@@ -371,15 +373,20 @@ app.post('/fileuploadMural/',  (req, res) => {
 		var username = fields.usuario
 		var time = fields.time
 		var messageInAttach = fields.messageInAttach
+		
+		var identificarUnico = uuidv4();
+		 identificarUnico = identificarUnico.replace(/-/gi, "_").trim();
+		 console.log(identificarUnico)
 
+		
 		if (tipoArquivo == "mp4"){
 			var newpath = 'videoupload/' + files.filetoupload.name
-			var link = "<div class='videoBox'><video class='vdMural' controls> <source src='" + newpath + "' type='video/mp4'> </video>   </div><img class='votar' src='imagem_comum/sim.jpg'/><img class='votar' src='imagem_comum/nao.jpg'/>" + messageInAttach  
+			var link = "<div class='videoBox'><video class='vdMural' controls> <source src='" + newpath + "' type='video/mp4'> </video> </div>  <div id='"+ identificarUnico +"_like'></div>   <img class='votar' onClick='votarSim(\""+ identificarUnico+"\")' src='imagem_comum/sim.jpg'  /><img class='votar' onClick='votarNao(\""+identificarUnico+"\")' src='imagem_comum/nao.jpg'/> <div id='"+identificarUnico+"_dislike'></div>" + messageInAttach  
 		}
 		else{
 			if (tipoArquivo == "jpg" || tipoArquivo == "jpeg" || tipoArquivo == "png"){
 				var newpath = 'fileuploadMural/' + files.filetoupload.name
-				var link = "<div class='imageBox'> <img class='imgMural' src='" + newpath +"' alt='imagem' />   </div><img class='votar' src='imagem_comum/sim.jpg'/><img class='votar' src='imagem_comum/nao.jpg'/> " + messageInAttach 
+				var link = "<div class='imageBox'> <img class='imgMural' src='" + newpath +"' alt='imagem' />   </div> <div id='"+ identificarUnico +"_like'></div><img class='votar' onClick='votarSim(\""+ identificarUnico+"\")' src='imagem_comum/sim.jpg'/><img class='votar' onClick='votarNao(\""+identificarUnico+"\")' src='imagem_comum/nao.jpg'/>  <div id='"+identificarUnico+"_dislike'></div> " + messageInAttach 
 			}
 		}
 
@@ -391,8 +398,8 @@ app.post('/fileuploadMural/',  (req, res) => {
 			if (err) throw err;
 			
 			//Inserindo a <img> no canal de message para aparecer no Mural.
-			chat_add_message({message : link, username:username, time:time })
-			io.sockets.emit('message', {message : link , username: username,  time:time})
+			chat_add_message({message : link, username:username, time:time, identificador:identificarUnico })
+			io.sockets.emit('message', {message : link , username: username,  time:time, identificador:identificarUnico})
 
 			res.redirect('/mural')
 			res.end()
@@ -517,6 +524,34 @@ app.get('/videoupload/:file', function (req, res) {
         res.status(404).end('Not found');
     });
 })
+
+
+app.get("/votaram/:identificador/:escolha", function(req, res){
+	var identificador = req.params.identificador
+	var escolha = req.params.escolha
+	//  console.log("votaram "+escolha+" na midia com uuid: "+ identificador)
+	if (identificador && escolha){
+		if (escolha == 'sim'){
+				chatMessageController.votaramSim(identificador,function(total){
+				res.status(200).end('votado Sim');
+
+				console.log({identificador:identificador,opcao:"like",qtde:total})
+
+				io.sockets.emit("votosnamidia",{identificador:identificador,opcao:"like",qtde:total})
+			})
+		}
+		if (escolha == 'nao'){
+				chatMessageController.votaramNao(identificador,function(total){
+				res.status(200).end('votado Nao');
+				console.log({identificador:identificador,opcao:"dislike",qtde:total})
+
+				io.sockets.emit("votosnamidia",{identificador:identificador,opcao:"dislike",qtde:total})
+
+			})
+		}
+	}
+})
+
 
 
 /////////////////////
@@ -912,9 +947,9 @@ io.on('connection', (socket) => {
 	  		time = new Date();
 
       //broadcast the new message
-      io.sockets.emit('message', {message: data.message, username: socket.username, time:time});
+      io.sockets.emit('message', {message: data.message, username: socket.username, time:time, identificador:data.identificador});
 
-	  chat_add_message({message:data.message, username:socket.username, time:time });
+	  chat_add_message({message:data.message, username:socket.username, time:time, identificador:data.identificador });
 
 	  //dependendo do texto enviado na mensagem, responder com determinadas ações:
 		if (data.message == "getnodes"){

@@ -23,6 +23,22 @@ var ChatMessagesSchema = new Schema({
     required: [true, 'Time is required'],
     default: Date.now
   },
+  identificador: {
+    type: String,
+    required: [false, 'Identificador das imagens e videos'],
+    trim: true
+  },
+  votossim: {
+    type: Number,
+    required: [false, 'Votos sim'],
+    default: 0
+  },
+  votosnao: {
+    type: Number,
+    required: [false, 'Votos nao'],
+    default: 0
+  }
+
 })
 
 const ChatMessages = mongoose.model('ChatMessage', ChatMessagesSchema)
