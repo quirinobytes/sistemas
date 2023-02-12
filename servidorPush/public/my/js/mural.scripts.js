@@ -222,11 +222,11 @@ $(function(){
 					const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
 					
 					if (item.username == loggeduser.text()){
-						chatroom.append( "<div class='left'> <p class='message'> <img class='miniAvatar' src='usersAvatar/"+item.username+"-user-icon.png' />  <font color='gray'>  " + hora + "</font> <b>[" + item.username + "]</b> " + item.message + "</p></div>") 
+						chatroom.append( "<div class='left'> <p class='message'> <img class='miniAvatar' src='usersAvatar/"+item.username+"-user-icon.png'/> <b>[" + item.username + "]</b> <font color='gray'> " + hora + "</font> " + item.message + "</p> </div>") 
 						
 					}
 					else{
-						chatroom.append( "<div class='right'>   <p class='message'>"+ item.message + " <b>[" + item.username + "]</b> <font color='gray'>  " + hora + "</font> " + " <img class='miniAvatar' src='usersAvatar/"+item.username+"-user-icon.png'/> </p></div>" ) 
+						chatroom.append( "<div class='right'> <p class='message'> <img class='miniAvatar' src='usersAvatar/"+item.username+"-user-icon.png'/> <b>[" + item.username + "]</b> <font color='gray'> " + hora + "</font>  "+ item.message + "</p> </div>" ) 
 
 					}
 				});

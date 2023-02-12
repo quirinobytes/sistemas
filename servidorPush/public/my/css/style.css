@@ -168,6 +168,12 @@ input#username {
     text-align: left;
     margin-left: 2%;
 }
+.divVotacao{
+    display:inline-flex;
+    justify-content:inherit;
+    font-size:xx-large;
+    margin-top: 3px;
+}
 .imageBox{
     position: relative;
     width: 100%;

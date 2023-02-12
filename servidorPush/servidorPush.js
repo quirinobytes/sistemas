@@ -381,12 +381,12 @@ app.post('/fileuploadMural/',  (req, res) => {
 		
 		if (tipoArquivo == "mp4"){
 			var newpath = 'videoupload/' + files.filetoupload.name
-			var link = "<div class='videoBox'><video class='vdMural' controls> <source src='" + newpath + "' type='video/mp4'> </video> </div>  <div id='"+ identificarUnico +"_like'></div>   <img class='votar' onClick='votarSim(\""+ identificarUnico+"\")' src='imagem_comum/sim.jpg'  /><img class='votar' onClick='votarNao(\""+identificarUnico+"\")' src='imagem_comum/nao.jpg'/> <div id='"+identificarUnico+"_dislike'></div>" + messageInAttach  
+			var link = "<div class='videoBox'><video class='vdMural' controls> <source src='" + newpath + "' type='video/mp4'> </video> </div>  <div class='divVotacao'>   &nbsp; &nbsp; <img class='votar' onClick='votarSim(\""+ identificarUnico+"\")' src='imagem_comum/sim.jpg'  /> <div id='"+ identificarUnico +"_like'> &nbsp; </div>&nbsp; &nbsp;  <img class='votar' onClick='votarNao(\""+identificarUnico+"\")' src='imagem_comum/nao.jpg'/> &nbsp; <div id='"+identificarUnico+"_dislike'></div> &nbsp; </div>" + messageInAttach  
 		}
 		else{
 			if (tipoArquivo == "jpg" || tipoArquivo == "jpeg" || tipoArquivo == "png"){
 				var newpath = 'fileuploadMural/' + files.filetoupload.name
-				var link = "<div class='imageBox'> <img class='imgMural' src='" + newpath +"' alt='imagem' />   </div> <div id='"+ identificarUnico +"_like'></div><img class='votar' onClick='votarSim(\""+ identificarUnico+"\")' src='imagem_comum/sim.jpg'/><img class='votar' onClick='votarNao(\""+identificarUnico+"\")' src='imagem_comum/nao.jpg'/>  <div id='"+identificarUnico+"_dislike'></div> " + messageInAttach 
+				var link = "<div class='imageBox'> <img class='imgMural' src='" + newpath +"' alt='imagem' />   </div> <div class='divVotacao'>   &nbsp; &nbsp; <img class='votar' onClick='votarSim(\""+ identificarUnico+"\")' src='imagem_comum/sim.jpg'/> <div id='"+ identificarUnico +"_like'> &nbsp; </div> &nbsp; &nbsp; <img class='votar' onClick='votarNao(\""+identificarUnico+"\")' src='imagem_comum/nao.jpg'/>  &nbsp; <div id='"+identificarUnico+"_dislike'></div> &nbsp; </div> " + messageInAttach 
 			}
 		}
 
