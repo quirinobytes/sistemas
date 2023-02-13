@@ -4,18 +4,16 @@
 var db = require('./config/db_config.js');
 var chatMessageModel = require('./models/chatMessage');
 var chatMessageController = require('./controllers/chatMessagesController');
+var privateMessageModel = require('./models/privateMessage');
+var privateMessageController = require('./controllers/privateMessagesController');
 
-
-
-//prometheus / sockket.io
+//prometheus / socket.io
 const prometheus = require ('socket.io-prometheus-metrics')
-
 
 //prometheus metrics
 const apiMetrics = require('prometheus-api-metrics')
 // const HttpMetricsCollector = require('prometheus-api-metrics').HttpMetricsCollector;
 // const collector = new HttpMetricsCollector();
-
 
 //const promBundle = require("express-prom-bundle");
 const Prometheus = require('prom-client')
@@ -144,8 +142,8 @@ function writePrivadoHistoryJson2Fs(){
 	})
 }
 
-loadMuralHistoryFs2Json()
-loadPrivadoHistoryFs2Json()
+//loadMuralHistoryFs2Json()
+//loadPrivadoHistoryFs2Json()
 
 // function that check for basic auth header and return the username base64 decoded.
 function getUsernameFromHeadersAuthorization(req){
@@ -178,7 +176,7 @@ function chat_add_message({username,message,time,identificador}){
 	//	res.json(resp);
 	//console.log(resp)
 	})
-	return chatMessages;
+	return //chatMessages;
 }
 
 function findValueByPrefix(object, prefix) {
@@ -191,26 +189,43 @@ function findValueByPrefix(object, prefix) {
   }
 
 
-function addMessageContactToPerson(de,para,mensagem,time){
+function addMessageContactToPerson({from:from,to:to,message:message,time:time, identificador:identificador}){
 	//se nao tiver carregado um board para falar com alguem, aqui pode ficar sem um para
-	if (!para)
-	 	return;
+	if (!to && !from && !message ){
+		console.log("veio faltando dados: para ou de ou mensagem ou time")
+		console.log(to+" | "+from+" | "+message + " | " + time)
+	 	return
+	}
 	if (!time)
-		dateTime = new Date();
+		dateTime = new Date(time)
 	else
-		dateTime = time;
+		dateTime = time
+
+	var id = uuidv4()
+	prefix = from + "_" + to
+	prefixinv = to + "_" + from
 	
-	prefix = de+"_"+para;
-	prefixinv = para+"_"+de;
+	id = to+id.replace(/-/gi, "_").trim()
 
-	destino = findValueByPrefix(privadoChat,prefix);
-	//console.log(destino);
-	//console.log(destino2);
-	destino2 = findValueByPrefix(privadoChat,prefixinv);
-	destino.push([{from:de,to:para,message:mensagem,time:dateTime}])
-	destino2.push([{from:de,to:para,message:mensagem,time:dateTime}])
+	privateMessageController.save(id,prefixinv,from,to,message,dateTime,identificador, function(resposta){
+		if (resposta.error) 	console.log(" Deu algum erro ao passou pela save 'prefixinv', resposta: "+resposta)
+	})
 
-	writePrivadoHistoryJson2Fs()
+	id = from+id.replace(/-/gi, "_").trim()
+	privateMessageController.save(id,prefix,from,to,message,dateTime,identificador, function(resposta){
+		if (resposta.error) 	console.log("Passou pela save 'prefix', resposta: "+resposta)
+	})
+
+
+	// destino = findValueByPrefix(privadoChat,prefix);
+	// destino = 
+	// //console.log(destino);
+	// //console.log(destino2);
+	// destino2 = findValueByPrefix(privadoChat,prefixinv);
+	// destino.push([{from:de,to:para,message:mensagem,time:dateTime}])
+	// destino2.push([{from:de,to:para,message:mensagem,time:dateTime}])
+
+	// writePrivadoHistoryJson2Fs()
 }
 
 //############################################################
@@ -236,10 +251,6 @@ app.use(express.static('public/jquery'))
 app.use(express.static('lib/css'))
 app.use(express.static('lib/js'))
 app.use(express.static('lib'))
-
-
-
-
 
 
 // create /metrics and add the prometheus middleware to all routes
@@ -294,7 +305,6 @@ app.get('/ultimos10/:apos', (req, res) => {
 
 
 
-
 //route /contact
 app.get ('/privado',function (req,res) {
 	nome = getUsernameFromHeadersAuthorization(req)
@@ -310,18 +320,31 @@ app.get ('/logged_users',function (req,res) {
 })
 
 
-app.get ('/rest/loadChatWith/:from/:to',function (req,res) {
+app.get ('/rest/loadChatWith/:from/:to/:apos',function (req,res) {
 	const from = req.params.from;
 	const to = req.params.to;
+	const aposNItens = req.params.apos;
+	const toAndFrom = to+"_"+from
 
 	nome = getUsernameFromHeadersAuthorization(req)
 	if (nome == '') {nome = "anonymous"}
 
 	//console.log("GET no /rest/loadChatWith/"+from+"/"+to);
-	prefix = from + "_" + to;
-	obj = findValueByPrefix(privadoChat,prefix)
-	// console.log(obj);
-	res.send(obj);
+	privateMessageController.ultimos10(toAndFrom, aposNItens, function(resp){
+		var array = []
+		if (resp)
+			resp.forEach(function(item){
+				array.push(item._doc)
+				console.log(item._doc)
+			})
+		res.json(array)
+		res.end();
+	})
+
+	// prefix = from + "_" + to;
+	// obj = findValueByPrefix(privadoChat,prefix)
+	// // console.log(obj);
+	// res.send(obj);
 })
 
 //route /upload
@@ -354,7 +377,7 @@ app.post('/fileupload', (req, res) => {
 })
 
 
-const identificarUnico = uuidv4();
+
 
 // recebe o post de enviar arquivos de FOTOS E VIDEOS, salva e grava a TAG HTML correta.
 app.post('/fileuploadMural/',  (req, res) => {
@@ -365,7 +388,7 @@ app.post('/fileuploadMural/',  (req, res) => {
 	form.parse(req, function (err, fields, files) {
 		if (err) throw err;
 
-		if (!files.filetoupload.name) return;
+		if (!files.filetoupload.name) return
 		
 		filename = files.filetoupload.name
 		let results = filename.replace('\n', '').split('.')
@@ -375,10 +398,9 @@ app.post('/fileuploadMural/',  (req, res) => {
 		var time = fields.time
 		var messageInAttach = fields.messageInAttach
 		
-		var identificarUnico = uuidv4();
-		 identificarUnico = identificarUnico.replace(/-/gi, "_").trim();
-		 console.log(identificarUnico)
-
+		var identificarUnico = uuidv4()
+		identificarUnico = identificarUnico.replace(/-/gi, "_").trim()
+		//  console.log(identificarUnico)
 		
 		if (tipoArquivo == "mp4"){
 			var newpath = 'videoupload/' + files.filetoupload.name
@@ -451,18 +473,20 @@ app.get('/audioupload/:file', function (req, res) {
     });
 })
 
-app.post('/upload-audio/', (req, res) => {
+app.post('/post-audio/', (req, res) => {
 
 	var form = new formidable.IncomingForm(req.formidable);
 
 	form.parse(req, function (err, fields, files) {
 
-		// console.log(fields)
+		 console.log(fields)
 
 		 if (!files) return;
 				
 		var name = fields.fname
 		var arquivo = files.file
+		var from = fields.from
+		var to = fields.to
 		// console.log("name: "+name)
 		// console.log("tamanho: "+ arquivo.size)
 		// console.log("nome: "+arquivo.name)
@@ -492,12 +516,22 @@ app.post('/upload-audio/', (req, res) => {
 					console.log(err)
 			})
 		})
-		io.sockets.emit('audio', {src: newpath})
+		//io.sockets.emit('audio', {src: newpath})
+
+		time = new Date()
+
+		io.sockets.emit("audioTo",{audiosrc:newpath,from:from,to:to,time:time})
+
+		var audiotag = "<audio preload='auto' src='"+newpath+"' controls='1'></audio>"
+		var message = "<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>" + time + "</font>  <img class='miniAvatar' src='usersAvatar/"+from+"-user-icon.png'>  <br> "+ audiotag + " </p>"
 		//var link = "<p class='message'> <div class='imageBox'> <img src='" + newpath +"' alt='imagem' />  " + messageInAttach + " </div> </p>"
+		var identificarUnico = uuidv4()
+		identificarUnico = identificarUnico.replace(/-/gi, "_").trim()
+		addMessageContactToPerson({from:from, to:to, message:message, time:time, identificador:identificarUnico});
 		
-		addMessageContactToPerson("rafael", "bahia", "<audio> <source src='/" + newpath + "' type='audio/ogg'> </audio>", new Date() )
+		// addMessageContactToPerson("rafael", "bahia", "<audio> <source src='/" + newpath + "' type='audio/ogg'> </audio>", new Date() )
 		//res.redirect('/')
-		// res.end()
+		res.end()
 	
 	});
 
@@ -983,10 +1017,11 @@ io.on('connection', (socket) => {
 
 	socket.on('contactTo', (data) => {
         io.sockets.emit('contactTo', data);
-		if ((data.from != undefined) && (data.toContact != undefined) ){
-			addMessageContactToPerson(data.from, data.toContact, data.message, data.time);
-			writePrivadoHistoryJson2Fs()
+		if ((data.from != undefined) && (data.toContact != undefined) && (data.message != undefined) ){
+			addMessageContactToPerson({from:data.from, to:data.toContact, message:data.message,time:data.time,identificador:data.identificador});
 		}
+		else
+			console.log("socket.on contactTo: faltou from, to, ou message")
     })
 
     socket.on('beos', (data) => {
@@ -1064,4 +1099,5 @@ const ioMetrics = prometheus.metrics(io, {
 
   // Faz uma chamada na inicialização da  sistemas/servidorPush/ <- ./version para anunciar a versão pro Getnodes.sh
   const { exec } = require('child_process');
+const { time } = require('console');
   exec("cd /root/shell/push ; ./version.js ", (err, stdout, stderr) => {});

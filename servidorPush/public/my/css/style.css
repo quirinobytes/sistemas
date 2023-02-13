@@ -193,7 +193,7 @@ input#message {
 }
 
 input#filetoupload{
-    color:transparent;
+    color:white;
 }
 
 
@@ -312,6 +312,10 @@ p.messageTo{
     text-align: left;
     margin: 10px;
     padding: 14px;
+}
+
+.selected{
+    background-color: rgb(16, 16, 80);
 }
 
 section {

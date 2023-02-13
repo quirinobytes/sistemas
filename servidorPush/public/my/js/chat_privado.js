@@ -1,12 +1,24 @@
 
 var globalContatosList = [];
 var globalAudio;
+var contadorAposNItensPrivateMensagens = 0
+var contadorAposNItensPrivateMensagensObj = {}
 
 
-function loadChatWith(username) {
+function loadChatWith(username, aposNItens) {
+	if (!contadorAposNItensPrivateMensagensObj.username)
+		contadorAposNItensPrivateMensagensObj.username = 0
+	else{
+		//Nao sei se tem q fazer isso, acho q sim
+		contadorAposNItensPrivateMensagensObj = {}
+		contadorAposNItensPrivateMensagensObj.username = aposNItens
+	}
+
+
+	$("."+username).addClass("selected")
 
 	var usr = $("#myname");
-	myname = usr[0].innerText ;
+	myname = usr[0].innerText;
 	loggedUser = usr[0].innerText ;
 
 	var messageTo = $("#divMessageTo")
@@ -28,23 +40,30 @@ function loadChatWith(username) {
 	// console.log ("aqui foi chamado a loadChatWith/"+loggedUser+"/"+username+"/");
 
 	divContato.innerHTML = username;
+	if (!contadorAposNItensPrivateMensagensObj.username)
+		contadorAposNItensPrivateMensagensObj.username = 0
 
 	$.ajax({
-			url: "./rest/loadChatWith/"+myname+"/"+username
+			url: "./rest/loadChatWith/"+myname+"/"+username+"/"+ contadorAposNItensPrivateMensagensObj.username
 	}).then(function(data) {
 
 		if (data)
 		data.forEach(item => { 
-			// console.log("ITEM:");
-			de = item[0].from
-			para = item[0].to
-			mensagem = item[0].message
+		    console.log("ITEM:");
+			console.log(item)
+			de = item.from
+			para = item.to
+			mensagem = item.message
+			hora = new Date(item.time)
+			hora = hora.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
+
 			// if (mensagem != undefined)
-			if (mensagem)
+			if (mensagem){
 				if (para == myname)
-					messageTo.prepend("<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>  " + item[0].time + "</font>  <img class='miniAvatar' src='usersAvatar/"+de+"-user-icon.png' alt='"+de+"'>  <br> "+ mensagem +" </p>") 
+					messageTo.append("<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>  " + hora + "</font>  <img class='miniAvatar' src='usersAvatar/"+de+"-user-icon.png' alt='"+de+"'>  <br> "+ mensagem +" </p>") 
 		  	  	else
-		  			messageTo.prepend("<p class='messageTo'> <img class='miniAvatar' src='usersAvatar/"+de+"-user-icon.png' alt='"+de+"'> <font color='gray'>  " + item[0].time + "</font> <br>" + mensagem + "</p>") 
+		  			messageTo.append("<p class='messageTo'> <img class='miniAvatar' src='usersAvatar/"+de+"-user-icon.png' alt='"+de+"'> <font color='gray'>  " + hora + "</font> <br>" + mensagem + "</p>") 
+			}
 
 		});
     });
@@ -123,6 +142,14 @@ $(function(){
 		
 		// Aqui estou pegando a lista dos usuários do "konga"
 		// o /consumers é um api gateway para dentro do konga na 8001, control plane port
+		loadConsumers()
+
+		//Appending HTML5 Audio Tag in HTML Body
+		$('').appendTo('body');
+
+	})
+	
+	function loadConsumers(){
 		$.ajax(
 			{ url: "./consumers"
 		}).then(function(obj_consumers) {
@@ -136,25 +163,21 @@ $(function(){
 			usuarios_kong.forEach(item => { 
 					//fazer isso para remover o nome do usuario logado e nao mostrar na lista de contatos, pois ele tmb esta na lista e nao faz sentido ele falar com ele.
 					if ( item.username != myname[0].innerText )
-						contactList.innerHTML += "<div id='contactLine'> <div id='contacts' onclick='loadChatWith(this.innerHTML);'>" + item.username + "</div> <div id='"+item.username+"_logged_user' ></div> </div>";
+						contactList.innerHTML += "<div id='contactLine' class='"+item.username+"'> <div id='contacts' onclick='loadChatWith(this.innerHTML);'>" + item.username + "</div> <div id='"+item.username+"_logged_user' ></div> </div>";
 			});
 
 		//por fim deixar os usuarios logados com a bolinha verde.
 		blinkLoggedUsers();
 		});
+	}
 
-	//Appending HTML5 Audio Tag in HTML Body
-	$('').appendTo('body');
-
-	})
-	
 	//Send message
 	send_message.click(function(){
 		var dt = new Date();
         const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
 		var logged_usr = myname[0].innerText
 	
-		socket.emit("contactTo", {message : message.val(),from:logged_usr,toContact:divContato.innerText,time:hora})
+		socket.emit("contactTo", {message : message.val(),from:logged_usr,toContact:divContato.innerText,time:new Date()})
 		//limpar o inputbox do message, depois que enviar mensagem
 		message.val('')
 		message.attr("rows","1")
@@ -190,17 +213,24 @@ $(function(){
 		usuarioDeslogado(name);
 		blinkLoggedUsers();
 	})
-	socket.on('audio', (media) => {
-		// console.log("src"+media.src);
-		if (media.src!=""){
-				var audio = $("#audioPrivado");      
-				$("#audioPrivadoSrc").attr("src", media.src);
-				/****************/
-				audio[0].pause();
-				audio[0].load();//suspends and restores all audio element
-			
+	socket.on('audioTo', (data) => {
+		
+
+
+		if (data.to == myname.text() && data.src!=""){
+				time = new Date()
+				// var audio = $("#audioPrivado");   
+				var audiotag = "<audio preload='auto' src='"+data.audiosrc+"' controls='1'></audio>"
+				var message = "<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>" + data.time + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png'>  <br> "+ audiotag + " </p>"
+				divMessageTo.append(message)
+
+				// $("#audioPrivadoSrc").attr("src", data.audiosrc);
+				// /****************/
+				// audio[0].pause();
+				// audio[0].load();//suspends and restores all audio element
+			      
 				//audio[0].play(); changed based on Sprachprofi's comment below
-				audio[0].oncanplaythrough = audio[0].play();
+				//audio[0].oncanplaythrough = audio[0].play();
 		}
 	})
 
@@ -246,32 +276,34 @@ $(function(){
 		//caso eu esteja com o board de mensagens do amigo selecionada, colocar as mensagens dele pra mim, e soa um bip
 		if (data.from == divContato.innerText && data.toContact == loggedUser ){
 			// alert("aqui rodou o ultimo if, que coloca as mensagens dos amigos")
-			divMessageTo.prepend("<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>  " + data.time + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'>  <br> "+ data.message +" </p>");
+			divMessageTo.append("<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>  " + data.time + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'>  <br> "+ data.message +" </p>");
 			$('#playSoundOnNewMessage')[0].play();
 			feedback.empty();
 		}
 	})
 	
 
-	gravarAudio.click(function(){
+	gravarAudio.click(function(from,){
 			navigator.mediaDevices.getUserMedia({ audio: true})
 			.then(stream => {
+				console.log("MYNAME="+divContato.innerText)
 				const options = {mimeType: 'audio/webm'};
 				mediaRecorder = new MediaRecorder(stream,options)
 				mediaRecorder.start()
 				chuck = []
 				
+				//aqui tá gravando o audio, enquantou ouver dado disponivel
 				mediaRecorder.addEventListener("dataavailable", e => {
 					chuck.push(e.data)
 				})
 		
 				mediaRecorder.addEventListener("stop", e => {
 					blob = new Blob(chuck,{ type: "audio/ogg"} )
-					const data = {
-						"name" : "audiofile.ogg",
-						"files":  blob,
-						"files.File": blob
-					  };
+					// const data = {
+					// 	"name" : "audiofile.ogg",
+					// 	"files":  blob,
+					// 	"files.File": blob
+					//   };
 					audio_url = URL.createObjectURL(blob)
 					audio = new Audio(audio_url)
 					audio.setAttribute("controls",1)
@@ -281,11 +313,15 @@ $(function(){
 					const formData = new FormData();
 					formData.append('fname', "blob.ogg");
 					formData.append('file', blob, "audio.ogg" );
+					formData.append('from',myname.text());
+					formData.append('to',divContato.innerText);
+					
+					
 
 
 					$.ajax(
 						{ 
-							url: "./upload-audio/",
+							url: "./post-audio/",
 							type: "POST",
 							processData: false,
 							contentType: false,
@@ -298,9 +334,12 @@ $(function(){
 						}).then(function(result) {
 							console.log(result);
 						});
-					//console.log(result)
-					//socket.emit("audio", {audio:audio, from:"rafael", to:"spitz"})
-					//divMessageTo.append(audio)
+						
+						
+						
+						// socket.emit("contactTo", data)
+					//socket.emit("audio", {audio:audio, from:"rafael", to:"spitz", time:})
+					divMessageTo.append(audio)
 				})
 			
 			})
