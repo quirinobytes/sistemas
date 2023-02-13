@@ -54,8 +54,8 @@ exports.votaramNao = function (identificador,callback){
 }
 
 // resgatar as proximas 20 mensagens a partir de "aposNItens" mensagens.
-exports.ultimos10 = function (aposNItens, callback){
-	var query = ChatMessage.find({}).sort({time:1}).limit(20).skip(aposNItens);
+exports.ultimosItens = function (aposNItens, callback){
+	var query = ChatMessage.find({}).sort({time:1}).limit(20000).skip(aposNItens);
 	query.exec(function(error, chatmessage){
 		if(!error){
 			callback(chatmessage);

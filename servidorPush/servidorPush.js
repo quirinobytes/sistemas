@@ -205,14 +205,14 @@ function addMessageContactToPerson({from:from,to:to,message:message,time:time, i
 	prefix = from + "_" + to
 	prefixinv = to + "_" + from
 	
-	id = to+id.replace(/-/gi, "_").trim()
+	idto = to+id
 
-	privateMessageController.save(id,prefixinv,from,to,message,dateTime,identificador, function(resposta){
+	privateMessageController.save(idto,prefixinv,from,to,message,dateTime,identificador, function(resposta){
 		if (resposta.error) 	console.log(" Deu algum erro ao passou pela save 'prefixinv', resposta: "+resposta)
 	})
 
-	id = from+id.replace(/-/gi, "_").trim()
-	privateMessageController.save(id,prefix,from,to,message,dateTime,identificador, function(resposta){
+	idfrom = from+id
+	privateMessageController.save(idfrom,prefix,from,to,message,dateTime,identificador, function(resposta){
 		if (resposta.error) 	console.log("Passou pela save 'prefix', resposta: "+resposta)
 	})
 
@@ -286,11 +286,11 @@ app.get('/mural', (req, res) => {
 })
 
 
-app.get('/ultimos10/:apos', (req, res) => {
+app.get('/ultimosItensChatMessage/:apos', (req, res) => {
 	var aposX = req.params.apos;
 	// console.log("quero chatMessages APOS ["+aposX+"] itens agora")
 
-	chatMessageController.ultimos10(parseInt(aposX),function(resp){
+	chatMessageController.ultimosItens(parseInt(aposX),function(resp){
 		//	res.json(resp);
 		var array = []
 		if (resp)
@@ -501,13 +501,6 @@ app.post('/post-audio/', (req, res) => {
 		//console.log("novo Nome: "+novoNome)
 		var newpath = './audioupload/' + novoNome + '.ogg'
 
-		// var newpath = './audioupload/' + arquivo.name + '.ogg';
-		// fs.writeFile(novoNome, arquivo, function (err) {
- 		// 	if (err) throw err;
-
-		// 	 console.log("GRAVOU")
-		// });
-	
 		//console.log(files)
 		let keys=Object.keys(files);
 		fs.readFile(files[keys[0]].path,(err,e)=>{
@@ -516,26 +509,19 @@ app.post('/post-audio/', (req, res) => {
 					console.log(err)
 			})
 		})
-		//io.sockets.emit('audio', {src: newpath})
 
-		time = new Date()
-
-		io.sockets.emit("audioTo",{audiosrc:newpath,from:from,to:to,time:time})
+		io.sockets.emit("audioTo",{audiosrc:newpath,from:from,to:to,time:new Date()})
 
 		var audiotag = "<audio preload='auto' src='"+newpath+"' controls='1'></audio>"
-		var message = "<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>" + time + "</font>  <img class='miniAvatar' src='usersAvatar/"+from+"-user-icon.png'>  <br> "+ audiotag + " </p>"
-		//var link = "<p class='message'> <div class='imageBox'> <img src='" + newpath +"' alt='imagem' />  " + messageInAttach + " </div> </p>"
+		var message = "<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>" + new Date() + "</font>  <img class='miniAvatar' src='usersAvatar/"+from+"-user-icon.png'>  <br> "+ audiotag + " </p>"
 		var identificarUnico = uuidv4()
 		identificarUnico = identificarUnico.replace(/-/gi, "_").trim()
-		addMessageContactToPerson({from:from, to:to, message:message, time:time, identificador:identificarUnico});
-		
-		// addMessageContactToPerson("rafael", "bahia", "<audio> <source src='/" + newpath + "' type='audio/ogg'> </audio>", new Date() )
-		//res.redirect('/')
+		addMessageContactToPerson({from:from, to:to, message:audiotag, time:new Date(), identificador:identificarUnico})
+        
+		res.status(200)		
 		res.end()
 	
 	});
-
-
 })
 
 
@@ -676,7 +662,8 @@ app.get ('/rest/chat/list/',function (req,res) {
 
 
 app.get ('/rest/chat/add/:username/:messageText',function (req,res) {
-		chat_add_message({username:req.params.username, message:req.params.messageText});
+	
+		chat_add_message({username:req.params.username, message:req.params.messageText, time:new Date(), identificador:uuidv4});
   		res.json(chatMessages);
         res.end();
 })
@@ -972,35 +959,30 @@ io.on('connection', (socket) => {
     //quando chegar [message], verifica se é igual a uma dessas data.message e responde no [message]
     socket.on('message', (data) => {
 
-		messagesTotal.inc({
-			add_user_message: data.username
-	  	}) 
+		//PROMETHEUS OBSERVABILITY
+		messagesTotal.inc({ add_user_message: data.username }) 
+
 	  	hostname = data.hostname
-	  	if (data.time!=undefined && data.time !="")
-	  		time = data.time;
-	  	else
-	  		time = new Date();
-
+	  	
       //broadcast the new message
-      io.sockets.emit('message', {message: data.message, username: socket.username, time:time, identificador:data.identificador});
+      io.sockets.emit('message', {message: data.message, username: socket.username, time:data.time, identificador:data.identificador});
 
-	  chat_add_message({message:data.message, username:socket.username, time:time, identificador:data.identificador });
+	  chat_add_message({message:data.message, username:socket.username, time:data.time, identificador:data.identificador });
 
 	  //dependendo do texto enviado na mensagem, responder com determinadas ações:
 		if (data.message == "getnodes"){
 			const { exec } = require('child_process');
 			exec('cd /root/shell ; /root/shell/linux/Getnodes.sh ', (err, stdout, stderr) => {
         		stdout = convert.toHtml(stdout)
-		    	socket.emit('message', { message : "getnodes: <hr>[ " + stdout + "]", username : "Bot@" + hostname, time:time });
+		    	socket.emit('message', { message : "getnodes: <hr>[ " + stdout + "]", username : "ChatBot@" + hostname, time:time });
 			})
-
 		}
 	  	if (data.message == "help"){
    			io.sockets.emit('message', {message : "Olá boa tarde, "+
                                              "tente umas das opções<br> "+
                                              "* deploy -> inicia um novo deploy <br>"+
                                              "* version -> exibe a versao do servidor <br>"+
-                                             "* date -> executa o comando data ", username : "Bot@" + hostname, time:time});
+                                             "* date -> executa o comando data ", username : "ChatBot@" + hostname, time:time});
 		}
         if (data.message == "ntp"){
 			  io.sockets.emit('command', {message : "ntp ntp.cais.rnp.br", username : socket.username, time:time});
@@ -1008,7 +990,7 @@ io.on('connection', (socket) => {
 		if (data.message == "version"){
 		    const { exec } = require('child_process');
      	    exec('cd /root/shell ; /root/shell/linux/cdshell -V', (err, stdout, stderr) => {
-               socket.emit('message', { message : "Versão CDSHELL do servidor: [ " + stdout + "]", username: "Bot", time:time  });
+               socket.emit('message', { message : "Versão CDSHELL do servidor: [ " + stdout + "]", username: "ChatBot", time:time  });
 	        });
 		}	
 		
@@ -1032,7 +1014,7 @@ io.on('connection', (socket) => {
 		console.log("channel command: "+data.message);
 		const { exec } = require('child_process');
      	    exec(data.message, (err, stdout, stderr) => {
-               io.sockets.emit('message', { message: "Saida do comando: [ " + stdout + "]", username: "Bot", time:new Date() });
+               io.sockets.emit('message', { message: "Saida do comando: [ " + stdout + "]", username: "ChatBot", time:new Date() });
 	        })
     })
 
@@ -1047,7 +1029,7 @@ io.on('connection', (socket) => {
 		   if (data.message == "CDSHELL"){
 			   const { exec } = require('child_process');
      		 	exec('cd /root/shell ; /root/shell/linux/cdshell -g', (err, stdout, stderr) => {
-        	   socket.emit('message', { message : stdout, username:"Bot", time: data.time });
+        	   socket.emit('message', { message : stdout, username:"ChatBot", time: data.time });
 	       });
 		   }
 		   if (data.message == "sistemas"){
@@ -1062,29 +1044,11 @@ io.on('connection', (socket) => {
 
 
     //listen on typing
-    socket.on('typing', (data) => {
-    	socket.broadcast.emit('typing', data)
-    })
-
- 	socket.on('hostexec', (data) => {
-        //broadcast the new message
-        io.sockets.emit('hostexec', {hostname : data.hostname, command: data.command});
-    })
-
-	socket.on('distribute_log', (data) => {
-        //broadcast the new message
-        io.sockets.emit('log.'+data.hostname, {saida:data.saida});
-		console.log(data);
-    })
-	socket.on("newlogin",(username) => {
-		io.sockets.emit('newlogin', username);
-		//console.log(data);
-
-	})
-	socket.on("audio",(media) => {
-		io.sockets.emit('audio', media);
-		console.log(media);
-	})
+    socket.on('typing', (data) => {	socket.broadcast.emit('typing', data);  })
+ 	socket.on('hostexec', (data) => { io.sockets.emit('hostexec', {hostname : data.hostname, command: data.command}); })
+	socket.on('distribute_log', (data) => { io.sockets.emit('log.'+data.hostname, {saida:data.saida}); })
+	socket.on("newlogin",(username) => { io.sockets.emit('newlogin', username); })
+	socket.on("audio",(media) => {io.sockets.emit('audio', media); })
 })
 
 
@@ -1099,5 +1063,5 @@ const ioMetrics = prometheus.metrics(io, {
 
   // Faz uma chamada na inicialização da  sistemas/servidorPush/ <- ./version para anunciar a versão pro Getnodes.sh
   const { exec } = require('child_process');
-const { time } = require('console');
+//   const { time } = require('console');
   exec("cd /root/shell/push ; ./version.js ", (err, stdout, stderr) => {});

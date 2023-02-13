@@ -93,6 +93,7 @@ $(function(){
 		console.log(contadorMuralMensagens)
 
 		$('div.container').on('scroll', function() {
+			$("#loader").attr("style","display:block")
 			if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
 				carregaMaisAlguns(contadorMuralMensagens);
 			}
@@ -215,20 +216,20 @@ $(function(){
 	
 	function carregaMaisAlguns(aposXItens){
 		$.ajax({
-			url: "ultimos10/"+aposXItens
+			url: "ultimosItensChatMessage/"+aposXItens
 		}).then(function(data) {
 			if (data.length > 0){
-				contadorMuralMensagens+= 10
+				contadorMuralMensagens+= 2000
 				data.forEach(item => { 
 					var dt = new Date(item.time);
 					const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
 					
 					if (item.username == loggeduser.text()){
-						chatroom.prepend( "<div class='left'> <p class='message'> <img class='miniAvatar' src='usersAvatar/"+item.username+"-user-icon.png'/> <b>[" + item.username + "]</b> <font color='gray'> " + hora + "</font> " + item.message + "</p> </div>") 
+						chatroom.append( "<div class='left'> <p class='message'> <img class='miniAvatar' src='usersAvatar/"+item.username+"-user-icon.png'/> <b>[" + item.username + "]</b> <font color='gray'> " + hora + "</font> " + item.message + "</p> </div>") 
 						
 					}
 					else{
-						chatroom.prepend( "<div class='right'> <p class='message'> <img class='miniAvatar' src='usersAvatar/"+item.username+"-user-icon.png'/> <b>[" + item.username + "]</b> <font color='gray'> " + hora + "</font>  "+ item.message + "</p> </div>" ) 
+						chatroom.append( "<div class='right'> <p class='message'> <img class='miniAvatar' src='usersAvatar/"+item.username+"-user-icon.png'/> <b>[" + item.username + "]</b> <font color='gray'> " + hora + "</font>  "+ item.message + "</p> </div>" ) 
 
 					}
 				});
@@ -236,6 +237,8 @@ $(function(){
 			else{
 				console.log("Nao tem mais nada pra vir")
 			}
+			$("#loader").attr("style","display:none")
+
 		});
 	}
 });

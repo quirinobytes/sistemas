@@ -3,7 +3,6 @@ var PrivateMessage = require ("../models/privateMessage.js")
 
 
 exports.save = function (id,toAndFrom,from,to,message,time,identificador,callback){
-	console.log("vai tentar salvar.....")
 	new PrivateMessage({
 	    'id': id,
 		'toAndFrom': toAndFrom,
@@ -14,11 +13,8 @@ exports.save = function (id,toAndFrom,from,to,message,time,identificador,callbac
 		'identificador':identificador
 	}).save(function(error, privatemessage){
 		if (error){
-			console.log(error+ 'ERRO: Não foi possível salvar a mensagem privada')
-
 			callback({error: 'ERRO: Não foi possível salvar a mensagem privada'});
 		}else{
-			console.log("MANUUU, foi salvo sim, estou na OK do save dentro da controller")
 			callback(privatemessage);
 		}
 	});
@@ -27,7 +23,7 @@ exports.save = function (id,toAndFrom,from,to,message,time,identificador,callbac
 exports.list = function (callback){
 	PrivateMessage.find({}, function(error, privatemessage) {
 		if (error){
-			callback ({error: "Não foi possível encontrar as Mensagens"});
+			callback ({error: "Não foi possível listar as mensagens privadas"});
 		}else{
 			callback(privatemessage);
 		}
