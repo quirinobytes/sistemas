@@ -245,9 +245,9 @@ $(function(){
 				// console.log("to colocando minhas msg no board")
 				
 			if (data.from == loggedUser)
-				divMessageTo.prepend("<p class='messageTo'> <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'> <font color='gray'>  " + data.time + "</font> <br>" + data.message + "</p>")
+				divMessageTo.append("<p class='messageTo'> <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'> <font color='gray'>  " + data.time + "</font> <br>" + data.message + "</p>")
 			else
-				divMessageTo.prepend("<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>  " + data.time + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'>  <br> "+ data.message +" </p>");
+				divMessageTo.append("<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>  " + data.time + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'>  <br> "+ data.message +" </p>");
 		}
 		else{ 
 			//caso o board do seu contato nao esteja selecionado, e nao seja o seu board

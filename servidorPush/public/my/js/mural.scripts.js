@@ -2,7 +2,12 @@
 
 var contadorMuralMensagens = 0;
 
+
+
+
+
 function enviarMensagemEOUFoto(){
+	$("#loader").attr("style","display:block")
 	//console.log("to na enviarMensagemEOUFoto("+$("#message").val()+")")
 	
 	if (! $("#message").val()){ // ver se tem mensagem no textearea
@@ -65,6 +70,8 @@ function votarNao(identificador){
 		})
 }
 
+
+
 $(function(){
    	//make connection direct on web server using relative hosts 
 	//var socket = io.connect('http://servidorpush.ddns.net:3000/', { secure: true, reconnect: true, rejectUnauthorized : false })
@@ -79,22 +86,27 @@ $(function(){
 	var feedback = $("#feedback")
 	var loggeduser = $("#loggeduser")
 	var container = $("#container")
-
+	var loader = $("#loader")
 	
 
+
+	
 	// Logo que a pagina carregar "document.ready()", pega a lista de usuários 
 	// e o historico do board para ser carregado na section "chatroom"
 	$( document ).ready(function() {
 
+
 		//qdo carregar a pagina já se apresente e faça o login
+
 		socket.emit('username', {username : loggeduser.text()});
 
 		carregaMaisAlguns(contadorMuralMensagens);
 		console.log(contadorMuralMensagens)
 
 		$('div.container').on('scroll', function() {
-			$("#loader").attr("style","display:block")
+			
 			if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
+				
 				carregaMaisAlguns(contadorMuralMensagens);
 			}
 		})
@@ -131,9 +143,14 @@ $(function(){
                 });
    			});
 
+
+		
 		//Appending HTML5 Audio Tag in HTML Body
 		$('').appendTo('body');
+
 	})
+
+
 
 	//Emit message
 	send_message.click(function(){
@@ -159,9 +176,9 @@ $(function(){
    		const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
 		  
 		    if (data.username == loggeduser.text())
-				chatroom.prepend("<div class='left'>  <p class='message'> <img class='miniAvatar' src='usersAvatar/"+data.username+"-user-icon.png'/> <b>[" + data.username + "]</b> <font color='gray'> " + hora + "</font> " + data.message + "</p> </div>")
+				chatroom.append("<div class='left'>  <p class='message'> <img class='miniAvatar' src='usersAvatar/"+data.username+"-user-icon.png'/> <b>[" + data.username + "]</b> <font color='gray'> " + hora + "</font> " + data.message + "</p> </div>")
 	        else
-				chatroom.prepend("<div class='right'> <p class='message'> <img class='miniAvatar' src='usersAvatar/"+data.username+"-user-icon.png'/> <b>[" + data.username + "]</b> <font color='gray'> " + hora + "</font>  "+ data.message + "</p> </div>" ) 
+				chatroom.append("<div class='right'> <p class='message'> <img class='miniAvatar' src='usersAvatar/"+data.username+"-user-icon.png'/> <b>[" + data.username + "]</b> <font color='gray'> " + hora + "</font>  "+ data.message + "</p> </div>" ) 
 				
 				
 
@@ -215,11 +232,13 @@ $(function(){
 	
 	
 	function carregaMaisAlguns(aposXItens){
+		
+
 		$.ajax({
 			url: "ultimosItensChatMessage/"+aposXItens
 		}).then(function(data) {
 			if (data.length > 0){
-				contadorMuralMensagens+= 2000
+				contadorMuralMensagens+= 20
 				data.forEach(item => { 
 					var dt = new Date(item.time);
 					const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
@@ -233,12 +252,26 @@ $(function(){
 
 					}
 				});
+				// $("#loader").attr("style","display:none")
 			}
 			else{
 				console.log("Nao tem mais nada pra vir")
+				// $("#loader").attr("style","display:none")
+
 			}
-			$("#loader").attr("style","display:none")
+			//$("#loader").attr("style","display:none")
 
 		});
+		
 	}
 });
+
+
+// print state changes
+document.addEventListener('readystatechange', () => {
+
+	if (document.readyState == 'complete') 
+	$("#loader").attr("style","display:none")
+
+});
+

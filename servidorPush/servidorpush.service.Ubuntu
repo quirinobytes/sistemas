@@ -11,7 +11,10 @@ After=network.service
 Description=CDSHELL - Servidor Push
 
 [Service]
-ExecStart=/usr/bin/node  /root/sistemas/servidorPush/servidorPush.js
+#ExecStart="cd /app && /usr/bin/node servidorPush.js"
+ExecStart="/root/sistemas/servidorPush/starter_servidorPush.sh"
+#ExecStop="/usr/bin/pm2 stop /app/servidorPush.js"
+#Restart="/usr/bin/pm2 restart /app/servidorPush.js"
 
 # Required on some systems
 WorkingDirectory=/root/sistemas/servidorPush/
@@ -26,9 +29,32 @@ StandardOutput=syslog
 StandardError=syslog
 SyslogIdentifier=servidorpush
 
+
+LimitNOFILE=infinity
+LimitNPROC=infinity
+LimitCORE=infinity
+
+# Comment TasksMax if your systemd version does not support it.
+# Only systemd 226 and above support this option.
+TasksMax=infinity
+
+# set delegate yes so that systemd does not reset the cgroups of docker containers
+Delegate=yes
+
+# kill only the docker process, not all processes in the cgroup
+KillMode=process
+OOMScoreAdjust=-500
+
+
+
 #Environment
 User=root
-Environment=NODE_ENV=production PORT=3000 NODE_MODULES=/lib/node_modules
+Environment=NODE_ENV=production
+Environment=PORT=3000
+Environment=NODE_MODULES=/lib/node_modules
+User=root
+Group=root
+
 
 [Install]
 

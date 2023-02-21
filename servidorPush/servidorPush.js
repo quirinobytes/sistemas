@@ -248,6 +248,7 @@ app.use(express.static('public'))
 app.use(express.static('public/js'))
 app.use(express.static('public/jquery'))
 
+
 app.use(express.static('lib/css'))
 app.use(express.static('lib/js'))
 app.use(express.static('lib'))
@@ -335,7 +336,7 @@ app.get ('/rest/loadChatWith/:from/:to/:apos',function (req,res) {
 		if (resp)
 			resp.forEach(function(item){
 				array.push(item._doc)
-				console.log(item._doc)
+				//console.log(item._doc)
 			})
 		res.json(array)
 		res.end();
@@ -974,7 +975,7 @@ io.on('connection', (socket) => {
 			const { exec } = require('child_process');
 			exec('cd /root/shell ; /root/shell/linux/Getnodes.sh ', (err, stdout, stderr) => {
         		stdout = convert.toHtml(stdout)
-		    	socket.emit('message', { message : "getnodes: <hr>[ " + stdout + "]", username : "ChatBot@" + hostname, time:time });
+		    	socket.emit('message', { message : "getnodes: <hr>[ " + stdout + "]", username : "ChatBot@" + hostname, time:data.time });
 			})
 		}
 	  	if (data.message == "help"){
@@ -982,15 +983,15 @@ io.on('connection', (socket) => {
                                              "tente umas das opções<br> "+
                                              "* deploy -> inicia um novo deploy <br>"+
                                              "* version -> exibe a versao do servidor <br>"+
-                                             "* date -> executa o comando data ", username : "ChatBot@" + hostname, time:time});
+                                             "* date -> executa o comando data ", username : "ChatBot@" + hostname, time:data.time});
 		}
         if (data.message == "ntp"){
-			  io.sockets.emit('command', {message : "ntp ntp.cais.rnp.br", username : socket.username, time:time});
+			  io.sockets.emit('command', {message : "ntp ntp.cais.rnp.br", username : socket.username, time:data.time});
       	}
 		if (data.message == "version"){
 		    const { exec } = require('child_process');
      	    exec('cd /root/shell ; /root/shell/linux/cdshell -V', (err, stdout, stderr) => {
-               socket.emit('message', { message : "Versão CDSHELL do servidor: [ " + stdout + "]", username: "ChatBot", time:time  });
+               socket.emit('message', { message : "Versão CDSHELL do servidor: [ " + stdout + "]", username: "ChatBot", time:data.time  });
 	        });
 		}	
 		
