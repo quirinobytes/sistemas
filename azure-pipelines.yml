@@ -11,7 +11,8 @@ pool:
 
 steps:
 - script: /root/shell/push/hostexec.js centos hostname
-  displayName: 'chat '
+- script: node $HOME/shell/push/release.js chatPVT
+  displayName: 'Release chatPVT'
 
 - script: |
     echo finalizado
