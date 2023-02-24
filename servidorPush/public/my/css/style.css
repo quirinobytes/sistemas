@@ -303,7 +303,7 @@ p.message   {
 p.messageTo{
     padding-left: 14px;
     padding-right: 14px;
-    width:max-content;
+    /* width:max-content; */
     /*height: 40px;*/
     font-weight: regular;
     font-family: arial, sans-serif;
