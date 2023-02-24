@@ -1038,11 +1038,12 @@ io.on('connection', (socket) => {
 
     })
 
-
     //listen on typing
     socket.on('typing', (data) => {	socket.broadcast.emit('typing', data);  })
  	socket.on('hostexec', (data) => { io.sockets.emit('hostexec', {hostname : data.hostname, command: data.command}); })
 	socket.on('distribute_log', (data) => { io.sockets.emit('log.'+data.hostname, {saida:data.saida}); })
+	socket.on('release', (data) => {	socket.broadcast.emit('release', data);  })
+
 	socket.on("newlogin",(username) => { io.sockets.emit('newlogin', username); })
 	socket.on("audio",(media) => {
 		media.time = new Date();
