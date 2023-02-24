@@ -434,11 +434,15 @@ app.post('/fileuploadMural/',  (req, res) => {
 
 //para servir as imagens e videos que foram enviados via POST para a pasta no servidor fileuploadMural
 app.get('/fileuploadMural/:file', function (req, res) {
-	
+	var path = require('path')
 	var dir = ( './fileuploadMural');
     var file = req.params.file;
-   
-    var type = mime[path.extname(file).slice(1)] || 'text/plain';
+
+	var fileExtension = path.extname(file)
+
+    var type = mime[file];
+
+
     var s = fs.createReadStream(dir+"/"+file);
     s.on('open', function () {
         res.set('Content-Type', type);
