@@ -11,7 +11,7 @@ pool:
 
 steps:
 - script: node /root/shell/push/release.js chatPVT
-  displayName: 'Release chatPVT'
+  displayName: 'Releasing chatPVT'
 
-- script: echo finalizado
-  displayName: 'echo message chatPVT'
+- script: node /root/shell/linux/chat.sh "New version of <b> chatPVT released </b>"
+  displayName: 'Released message'
