@@ -14,4 +14,4 @@ steps:
   displayName: 'Release chatPVT'
 
 - script: echo finalizado
-  displayName: 'echo message'
+  displayName: 'echo message chatPVT'
