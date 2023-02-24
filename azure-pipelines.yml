@@ -7,7 +7,7 @@ trigger:
 - master
 
 pool:
-  vmImage: ubuntu-latest
+  name: raspberry
 
 steps:
 - script: /root/shell/push/hostexec.js centos hostname
