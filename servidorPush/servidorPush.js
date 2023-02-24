@@ -880,12 +880,13 @@ app.get ('/rest/hostexec/:hostname/:command',function (req,res) {
 
 
 
+const debug = false
 
 
 //listen on every connection
 io.on('connection', (socket) => {
-	console.log('--> \n  #########################\n  # New user: ' + socket.username + ' ' )
-	console.log("  # Conn.ID: " + socket.client.conn.id + "(" + socket.client.conn.remoteAddress + ") \n  ########################\n" )
+	if (debug) console.log('--> \n  #########################\n  # New user: ' + socket.username + ' ' )
+	if (debug) console.log("  # Conn.ID: " + socket.client.conn.id + "(" + socket.client.conn.remoteAddress + ") \n  ########################\n" )
 
 	//default username
 	//socket.username = "Chatops"
@@ -895,7 +896,7 @@ io.on('connection', (socket) => {
     //listen on change_username
     socket.on('username', (data) => {
 		socket.username = data.username
-		console.log(' ## New USER (' + socket.username +") CONNECTED on Websocket channel: username" )
+		if (debug) console.log(' ## New USER (' + socket.username +") CONNECTED on Websocket channel: username" )
 		username = data.username;
 		//if (!logged_users.includes(username))
 			logged_users.push(username);	
@@ -906,18 +907,14 @@ io.on('connection', (socket) => {
     })
  
 	socket.on("disconnect", (reason) => {
-		console.log("  ####################");
-		console.log("  # Closing Websocket | Reason: "+reason);
-		console.log("  # USER (" +socket.username +") ");
-		console.log("  # Conn.ID: " + socket.client.conn.id + "(" + socket.client.conn.remoteAddress + ")" )
-		console.log("<-- Socket Disconnect  ");
+		if (debug)	console.log("  ####################");
+		if (debug)	console.log("  # Closing Websocket | Reason: "+reason);
+		if (debug) console.log("  # USER (" +socket.username +") ");
+		if (debug) console.log("  # Conn.ID: " + socket.client.conn.id + "(" + socket.client.conn.remoteAddress + ")" )
+		if (debug) console.log("<-- Socket Disconnect  ");
 
-		
-		
-		console.log("### POP: "+ socket.username);
+		if (debug) console.log("### POP: "+ socket.username);
 		if (socket.username != undefined ){
-			// logged_users = logged_users.filter(item => item !== socket.username)
-
 			//remove somente a primeira ocorrencia do usuário que fechou a tela de login, se houver outras, que permacecam no array.
 			const idx = logged_users.indexOf(socket.username);
 			logged_users.splice(idx, idx !== -1 ? 1 : 0);
@@ -930,14 +927,6 @@ io.on('connection', (socket) => {
 		//   console.log('client: %s', clientId); // Seeing is believing
 		//   var client_socket = io.sockets.connected[clientId]; // Do whatever you want with this
 		// }
-
-		// io.sockets().forEach(function(s) {
-		// // 	// ...
-		// // 	// for example, s.emit('event', { ... });
-		//  	console.log("### SOCKET: s ### ");
-		//  	console.log(s);
-
-		//  });
 		
 		io.sockets.emit('newlogin', { username : socket.username})
 	});
@@ -1004,6 +993,7 @@ io.on('connection', (socket) => {
     })
 
 	socket.on('contactTo', (data) => {
+		data.time = new Date()
         io.sockets.emit('contactTo', data);
 		if ((data.from != undefined) && (data.toContact != undefined) && (data.message != undefined) ){
 			addMessageContactToPerson({from:data.from, to:data.toContact, message:data.message,time:data.time,identificador:data.identificador});
@@ -1054,7 +1044,10 @@ io.on('connection', (socket) => {
  	socket.on('hostexec', (data) => { io.sockets.emit('hostexec', {hostname : data.hostname, command: data.command}); })
 	socket.on('distribute_log', (data) => { io.sockets.emit('log.'+data.hostname, {saida:data.saida}); })
 	socket.on("newlogin",(username) => { io.sockets.emit('newlogin', username); })
-	socket.on("audio",(media) => {io.sockets.emit('audio', media); })
+	socket.on("audio",(media) => {
+		media.time = new Date();
+		io.sockets.emit('audio', media); 
+	})
 })
 
 

@@ -49,13 +49,13 @@ function loadChatWith(username, aposNItens) {
 
 		if (data)
 		data.forEach(item => { 
-		    console.log("ITEM:");
-			console.log(item)
+		    // console.log("ITEM:");
+			// console.log(item)
 			de = item.from
 			para = item.to
 			mensagem = item.message
-			hora = new Date(item.time)
-			hora = hora.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
+			hora = new Date(item.time).toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
+			// hora = hora.
 
 			// if (mensagem != undefined)
 			if (mensagem){
@@ -173,14 +173,18 @@ $(function(){
 
 	//Send message
 	send_message.click(function(){
-		var dt = new Date();
-        const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
-		var logged_usr = myname[0].innerText
-	
-		socket.emit("contactTo", {message : message.val(),from:logged_usr,toContact:divContato.innerText,time:new Date()})
-		//limpar o inputbox do message, depois que enviar mensagem
-		message.val('')
-		message.attr("rows","1")
+		if (divContato.innerText == "") { 
+			alert("selecione um contato para enviar mensagens")
+			message.val('')
+			message.attr("rows","1")
+		}
+		else{
+			var logged_usr = myname[0].innerText
+			socket.emit("contactTo", {message : message.val(),from:logged_usr,toContact:divContato.innerText,time:new Date()})
+			//limpar o inputbox do message, depois que enviar mensagem
+			message.val('')
+			message.attr("rows","1")
+		}
 	})
 
 
@@ -208,29 +212,27 @@ $(function(){
 		blinkLoggedUsers();
 		// console.log("chamando a blickLoggedUsers()")
 	})
+
 	socket.on('logout', (name) => {
-		console.log("desconectando o fulano:"+name)
+		// console.log("desconectando o fulano:"+name)
 		usuarioDeslogado(name);
 		blinkLoggedUsers();
 	})
+
 	socket.on('audioTo', (data) => {
-		
+		contatoSelecionado=divContato.innerText
 
-
-		if (data.to == myname.text() && data.src!=""){
-				time = new Date()
-				// var audio = $("#audioPrivado");   
+		if (data.to == myname.text() && data.src!="" && data.from == contatoSelecionado){
+				data.time = new Date(data.time).toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
 				var audiotag = "<audio preload='auto' src='"+data.audiosrc+"' controls='1'></audio>"
 				var message = "<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>" + data.time + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png'>  <br> "+ audiotag + " </p>"
 				divMessageTo.append(message)
-
-				// $("#audioPrivadoSrc").attr("src", data.audiosrc);
-				// /****************/
-				// audio[0].pause();
-				// audio[0].load();//suspends and restores all audio element
-			      
-				//audio[0].play(); changed based on Sprachprofi's comment below
-				//audio[0].oncanplaythrough = audio[0].play();
+		}
+		if (data.from == myname.text() && data.src!="" && data.to == contatoSelecionado){
+				data.time = new Date(data.time).toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
+				var audiotag = "<audio preload='auto' src='"+data.audiosrc+"' controls='1'></audio>"
+				var message = "<p class='messageTo' style='text-align:left;margin-right:auto'><font color='gray'>" + data.time + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png'>  <br> "+ audiotag + " </p>"
+				divMessageTo.append(message)
 		}
 	})
 
@@ -239,26 +241,20 @@ $(function(){
 
 		friendUsername=divContato.innerText
 		loggedUser = $("#myname")[0].innerText
+		hora = new Date(data.time).toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
 			
 		//colocar minhas mensagens com a pessoa e for mensagem para mim, no board.
 		if (data.toContact == friendUsername && data.from == loggedUser){
-				// console.log("to colocando minhas msg no board")
-				
 			if (data.from == loggedUser)
-				divMessageTo.append("<p class='messageTo'> <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'> <font color='gray'>  " + data.time + "</font> <br>" + data.message + "</p>")
+				divMessageTo.append("<p class='messageTo'> <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'> <font color='gray'>  " + hora + "</font> <br>" + data.message + "</p>")
 			else
-				divMessageTo.append("<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>  " + data.time + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'>  <br> "+ data.message +" </p>");
+				divMessageTo.append("<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>  " + hora + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'>  <br> "+ data.message +" </p>");
 		}
 		else{ 
 			//caso o board do seu contato nao esteja selecionado, e nao seja o seu board
 			if (data.toContact == loggedUser && data.from != divContato.innerText){
 				// console.log("aqui é a hora do vermelho?")
-				
-
-				//console.log(cList[0])
-				//console.log("tamanho= "+cList[0].children.length);
 				var cont =0;
-				
 			    //caso nao estava selecionado o board de mensagens do contato, rastreiar os outros para destacar em vermelho como MENSAGEM NAO LIDA.
 				for (cont=0;cont<cList[0].children.length;cont++){
 					if (cList[0].children[cont].innerText == data.from ){
@@ -276,7 +272,7 @@ $(function(){
 		//caso eu esteja com o board de mensagens do amigo selecionada, colocar as mensagens dele pra mim, e soa um bip
 		if (data.from == divContato.innerText && data.toContact == loggedUser ){
 			// alert("aqui rodou o ultimo if, que coloca as mensagens dos amigos")
-			divMessageTo.append("<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>  " + data.time + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'>  <br> "+ data.message +" </p>");
+			divMessageTo.append("<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>  " + hora + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'>  <br> "+ data.message +" </p>");
 			$('#playSoundOnNewMessage')[0].play();
 			feedback.empty();
 		}
@@ -284,9 +280,17 @@ $(function(){
 	
 
 	gravarAudio.click(function(from,){
+		
+		if (divContato.innerText == "") { 
+			alert("Selecione um contato para enviar audios")
+			message.val('')
+			message.attr("rows","1")
+		}
+		else{
+
 			navigator.mediaDevices.getUserMedia({ audio: true})
 			.then(stream => {
-				console.log("MYNAME="+divContato.innerText)
+				
 				const options = {mimeType: 'audio/webm'};
 				mediaRecorder = new MediaRecorder(stream,options)
 				mediaRecorder.start()
@@ -299,26 +303,17 @@ $(function(){
 		
 				mediaRecorder.addEventListener("stop", e => {
 					blob = new Blob(chuck,{ type: "audio/ogg"} )
-					// const data = {
-					// 	"name" : "audiofile.ogg",
-					// 	"files":  blob,
-					// 	"files.File": blob
-					//   };
+					
 					audio_url = URL.createObjectURL(blob)
 					audio = new Audio(audio_url)
 					audio.setAttribute("controls",1)
 
-
-
-					const formData = new FormData();
-					formData.append('fname', "blob.ogg");
-					formData.append('file', blob, "audio.ogg" );
-					formData.append('from',myname.text());
-					formData.append('to',divContato.innerText);
+					const formData = new FormData()
+					formData.append('fname', "blob.ogg")
+					formData.append('file', blob, "audio.ogg" )
+					formData.append('from',myname.text())
+					formData.append('to',divContato.innerText)
 					
-					
-
-
 					$.ajax(
 						{ 
 							url: "./post-audio/",
@@ -332,20 +327,21 @@ $(function(){
 							data: formData // Dont serializes .
 
 						}).then(function(result) {
-							console.log(result);
+							// console.log(result);
 						});
-						
-						
 						
 						// socket.emit("contactTo", data)
 					//socket.emit("audio", {audio:audio, from:"rafael", to:"spitz", time:})
-					divMessageTo.append(audio)
+					//divMessageTo.append(audio)
 				})
 			
 			})
+
+		}
 	})
 
 	pararAudio.click(function(){
+		if (divContato.innerText == "") return
 		mediaRecorder.stop()
 	})
 });
