@@ -537,11 +537,14 @@ app.post('/post-audio/', (req, res) => {
 
 
 app.get('/videoupload/:file', function (req, res) {
+	var path = require('path')
 
 	var dir = ( './videoupload/');
     var file = req.params.file;
    
-    var type = mime[path.extname(file).slice(1)] || 'video/mp4"';
+	var fileExtension = path.extname(file)
+    var type = mime[file];
+
     var s = fs.createReadStream(dir+"/"+file);
     s.on('open', function () {
         res.set('Content-Type', type);
