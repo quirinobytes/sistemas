@@ -117,30 +117,30 @@ function loadMuralHistoryFs2Json(){
 	
 }
 
-function loadPrivadoHistoryFs2Json(){
-	rawdata = fs.readFileSync('privadoChat.json');
-	privadoChat = JSON.parse(rawdata);
-	// console.log(chatMessages);
-}
+// function loadPrivadoHistoryFs2Json(){
+// 	rawdata = fs.readFileSync('privadoChat.json');
+// 	privadoChat = JSON.parse(rawdata);
+// 	// console.log(chatMessages);
+// }
 
-function writeMuralHistoryJson2Fs(){
-		const data = JSON.stringify(chatMessages)
-		fs.writeFile('chatMessages.json', data, err => {
-		if (err) {
-			throw err
-		}
-		})
-}
+// function writeMuralHistoryJson2Fs(){
+// 		const data = JSON.stringify(chatMessages)
+// 		fs.writeFile('chatMessages.json', data, err => {
+// 		if (err) {
+// 			throw err
+// 		}
+// 		})
+// }
 
-function writePrivadoHistoryJson2Fs(){
-	const data = JSON.stringify(privadoChat)
-	fs.writeFile('privadoChat.json', data, err => {
-		if (err) {
-			throw err
-		}
-	// console.log('JSON data is saved.')
-	})
-}
+// function writePrivadoHistoryJson2Fs(){
+// 	const data = JSON.stringify(privadoChat)
+// 	fs.writeFile('privadoChat.json', data, err => {
+// 		if (err) {
+// 			throw err
+// 		}
+// 	// console.log('JSON data is saved.')
+// 	})
+// }
 
 //loadMuralHistoryFs2Json()
 //loadPrivadoHistoryFs2Json()
