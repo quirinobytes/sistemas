@@ -48,7 +48,7 @@ var convert = new Convert({
 
 //import do uuid: Identificador unico para Medias(Fotos/Videos)
 const { v4: uuidv4 } = require('uuid');
-
+var path = require('path')
 var fs = require('fs')
 var commands_json = './comandos.json'
 var commandsJsonFile = fs.readFileSync(commands_json)
@@ -382,8 +382,8 @@ app.post('/fileupload', (req, res) => {
 
 // recebe o post de enviar arquivos de FOTOS E VIDEOS, salva e grava a TAG HTML correta.
 app.post('/fileuploadMural/',  (req, res) => {
-
-	var options = { maxFileSize: '25mb' }
+	    // var path = require('path');
+	var options = { maxFileSize: '250mb' }
 	var form = new formidable.IncomingForm(options)
 
 	form.parse(req, function (err, fields, files) {
@@ -392,8 +392,8 @@ app.post('/fileuploadMural/',  (req, res) => {
 		if (!files.filetoupload.name) return
 		
 		filename = files.filetoupload.name
-		let results = filename.replace('\n', '').split('.')
-		let tipoArquivo = results[1].trim()
+		var fileExtension = path.extname(filename)
+		console.log("FILE TYPE: "+fileExtension)
 
 		var username = fields.usuario
 		var time = fields.time
@@ -403,12 +403,12 @@ app.post('/fileuploadMural/',  (req, res) => {
 		identificarUnico = identificarUnico.replace(/-/gi, "_").trim()
 		//  console.log(identificarUnico)
 		
-		if (tipoArquivo == "mp4"){
+		if (fileExtension == ".mp4"){
 			var newpath = 'videoupload/' + files.filetoupload.name
 			var link = "<div class='videoBox'><video class='vdMural' controls> <source src='" + newpath + "' type='video/mp4'> </video> </div>  <div class='divVotacao'>   &nbsp; &nbsp; <img class='votar' onClick='votarSim(\""+ identificarUnico+"\")' src='imagem_comum/sim.jpg'  /> <div id='"+ identificarUnico +"_like'> &nbsp; </div>&nbsp; &nbsp;  <img class='votar' onClick='votarNao(\""+identificarUnico+"\")' src='imagem_comum/nao.jpg'/> &nbsp; <div id='"+identificarUnico+"_dislike'></div> &nbsp; </div>" + messageInAttach  
 		}
 		else{
-			if (tipoArquivo == "jpg" || tipoArquivo == "jpeg" || tipoArquivo == "png"){
+			if (fileExtension == ".jpg" || fileExtension == ".jpeg" || fileExtension == ".png" || fileExtension == ".gif" || fileExtension == "" ){
 				var newpath = 'fileuploadMural/' + files.filetoupload.name
 				var link = "<div class='imageBox'> <img class='imgMural' src='" + newpath +"' alt='imagem' />   </div> <div class='divVotacao'>   &nbsp; &nbsp; <img class='votar' onClick='votarSim(\""+ identificarUnico+"\")' src='imagem_comum/sim.jpg'/> <div id='"+ identificarUnico +"_like'> &nbsp; </div> &nbsp; &nbsp; <img class='votar' onClick='votarNao(\""+identificarUnico+"\")' src='imagem_comum/nao.jpg'/>  &nbsp; <div id='"+identificarUnico+"_dislike'></div> &nbsp; </div> " + messageInAttach 
 			}
@@ -432,9 +432,9 @@ app.post('/fileuploadMural/',  (req, res) => {
 })
 
 
-//para servir as imagens e videos do fileuploadMural
+//para servir as imagens e videos que foram enviados via POST para a pasta no servidor fileuploadMural
 app.get('/fileuploadMural/:file', function (req, res) {
-	var path = require('path');
+	
 	var dir = ( './fileuploadMural');
     var file = req.params.file;
    
@@ -455,7 +455,7 @@ app.get('/fileuploadMural/:file', function (req, res) {
 
 
 app.get('/audioupload/:file', function (req, res) {
-	var path = require('path');
+
 	var dir = ( './audioupload/');
     var file = req.params.file;
    
@@ -528,7 +528,7 @@ app.post('/post-audio/', (req, res) => {
 
 
 app.get('/videoupload/:file', function (req, res) {
-	var path = require('path');
+
 	var dir = ( './videoupload/');
     var file = req.params.file;
    
