@@ -3,9 +3,6 @@
 var contadorMuralMensagens = 0;
 
 
-
-
-
 function enviarMensagemEOUFoto(){
 	$("#loader").attr("style","display:block")
 	//console.log("to na enviarMensagemEOUFoto("+$("#message").val()+")")
@@ -74,7 +71,6 @@ function votarNao(identificador){
 
 $(function(){
    	//make connection direct on web server using relative hosts 
-	//var socket = io.connect('http://servidorpush.ddns.net:3000/', { secure: true, reconnect: true, rejectUnauthorized : false })
 	var socket = io.connect('/', { secure: true, reconnect: true, rejectUnauthorized : false })
 
 	//buttons and inputs
@@ -88,50 +84,29 @@ $(function(){
 	var container = $("#container")
 	var loader = $("#loader")
 	
-
-
 	
 	// Logo que a pagina carregar "document.ready()", pega a lista de usuários 
 	// e o historico do board para ser carregado na section "chatroom"
 	$( document ).ready(function() {
-
 
 		//qdo carregar a pagina já se apresente e faça o login
 
 		socket.emit('username', {username : loggeduser.text()});
 
 		carregaMaisAlguns(contadorMuralMensagens);
-		console.log(contadorMuralMensagens)
+		console.log("contadorMuralMensagens="+contadorMuralMensagens)
 
 		$('div.container').on('scroll', function() {
 			
 			if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
-				
+				// console.log("CHAMANDO A contadorMuralMensagens= "+contadorMuralMensagens)
 				carregaMaisAlguns(contadorMuralMensagens);
 			}
+			
 		})
 
-		//carregando o historico de mensagens do Mural
-		// $.ajax({
-		// 	url: "ultimos10/10"
-		// }).then(function(data) {
-		// 	data.forEach(item => { 
-				
-		// 		var dt = new Date(item.time);
-		// 		const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
-				
-		// 		if (item.username == loggeduser.text()){
-		// 			// console.log("carregando mensagens do usuario")
-		// 			chatroom.append( "<p class='message'> <img class='miniAvatar' src='usersAvatar/"+item.username+"-user-icon.png' />  <font color='gray'>  " + hora + "</font> <b>[" + item.username + "]</b> " + item.message + "</p>") 
-		// 		}
-		// 		else{
-		// 			// console.log("carregando mensagens de alguem")
-		// 			chatroom.append( "<p class='message' style='text-align:right'>"+ item.message + " <b>[" + item.username + "]</b> <font color='gray'>  " + hora + "</font> " + " <img class='miniAvatar' src='usersAvatar/"+item.username+"-user-icon.png' /> </p> ") 
-		// 		}
-		// 	});
-   		// });
 
-		// Aqui estou pegando a lista dos usuários do konga
+		// Aqui estou pegando a lista de usuários "consumers" 
 		$.ajax({
 			url: "./consumers"
 			}).then(function(obj_consumers) {
@@ -143,31 +118,29 @@ $(function(){
                 });
    			});
 
-
-		
 		//Appending HTML5 Audio Tag in HTML Body
 		$('').appendTo('body');
 
 	})
 
 
-
-	//Emit message
+	// Send message
 	send_message.click(function(){
 		texto = message.val()
-		var dt = new Date();
-		const time = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
+		// var dt = new Date();
+		// const time = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
 		
 		//enviar a mensagem no canal 'message' somente se houver username e mensagem
-		if (username && texto)
-		socket.emit('message', {message: texto.trim(), username:username, time:dt})
+		if (username && texto){
+			socket.emit('message', {message: texto.trim(), username:username})
+		}
 		//limpar o inputbox do message, depois que enviar mensagem, e chamar a auto dimensionar o textarea
 		message.val('')
 		//redimenciar o textearea caso ele tenha ficado grande com o texto que o usuaŕio digitou no box.
 		message.attr("rows","1")
 	})
 
-	// Wait on new_message on channel "message"
+	// On new message
 	socket.on("message", (data) => {
 		//limpar o campo que indica que um usuário está digitando: User is typing a message...
 		feedback.html('');
@@ -195,17 +168,17 @@ $(function(){
 		contadorMuralMensagens++;
 	})
 
-	//Emit a username when click on send_username button.
+	//Send a username when click on send_username button.
 	send_username.click(function(){
 		socket.emit('username', {username : username.val()})
 	})
 
-	//Emit typing
+	//Send typing
 	message.bind("keypress", () => {
 		socket.emit('typing',{username:username.val()})
 	})
 
-	//Listen on typing
+	//On someone typing
 	socket.on('typing', (data) => {
 		feedback.html("<p><i>" + data.username + " is typing a message..." + "</i></p>")
 	})
@@ -228,18 +201,24 @@ $(function(){
 
 		}
 	})
-
-	
 	
 	function carregaMaisAlguns(aposXItens){
-		
-
 		$.ajax({
 			url: "ultimosItensChatMessage/"+aposXItens
 		}).then(function(data) {
 			if (data.length > 0){
-				contadorMuralMensagens+= 20
+				console.log("total de mensagens resgatadas do mongo= "+data.length)
+				contadorMuralMensagens+= data.length
+				console.log("total do contador contadorMuralMensagens = "+contadorMuralMensagens)
+
 				data.forEach(item => { 
+
+					if (item.identificador) {
+						console.log("###############")
+						console.log(item.identificador)
+						getVotosPorIdentificador(item.identificador)
+
+					}
 					var dt = new Date(item.time);
 					const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
 					
@@ -256,22 +235,44 @@ $(function(){
 			}
 			else{
 				console.log("Nao tem mais nada pra vir")
-				// $("#loader").attr("style","display:none")
+				console.log("total do contador contadorMuralMensagens = "+contadorMuralMensagens)
 
+				// $("#loader").attr("style","display:none")
 			}
 			//$("#loader").attr("style","display:none")
-
 		});
-		
 	}
 });
 
+function getVotosPorIdentificador(identificador){
+	$.ajax({
+		url: "./getVotosPorIdentificador/"+ identificador
+		}).then(function(retorno) {
 
-// print state changes
+			qtdesim = retorno.votossim
+			qtdenao = retorno.votosnao
+	
+			
+				var votossim = $("#"+identificador+"_like")
+				// console.log(identificador+"."+opcao + "=" + qtde)
+				votossim[0].innerHTML = qtdesim
+			
+			
+				var votosnao = $("#"+identificador+"_dislike")
+				// console.log(identificador+"."+opcao + "=" + qtde)
+				votosnao[0].innerHTML = qtdenao
+			
+			console.log("RETORNO para o identificador["+identificador+"] ="+retorno)
+		}).fail(function(retorno){
+			console.log("deu algum erro ao votar nao")	
+			console.log(retorno)
+		})
+	//alert(identificador)
+}
+
+// When page finish loads
 document.addEventListener('readystatechange', () => {
-
-	if (document.readyState == 'complete') 
-	$("#loader").attr("style","display:none")
-
+	if (document.readyState == 'complete')
+		$("#loader").attr("style","display:none")
 });
 

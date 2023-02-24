@@ -157,11 +157,11 @@ function getUsernameFromHeadersAuthorization(req){
 	return user;
 }
 
-function chat_add_message({username,message,time,identificador}){
-	if (time!="") dateTime = new Date();
-	newMessage = {id:chatMessageId,username:username,message:message,time:dateTime, identificador:identificador};
+function chat_add_message({username,message,identificador}){
+	dateTime = new Date();
+	// newMessage = {id:chatMessageId,username:username,message:message,time:dateTime, identificador:identificador};
 	chatMessageId++;
-	chatMessages.push(newMessage);
+	// chatMessages.push(newMessage);
 
 	if (username!==undefined) {
 	//incrementando o contador do metrics do prometheus
@@ -172,11 +172,13 @@ function chat_add_message({username,message,time,identificador}){
 
 	//chatmessages igual a Mural messages
 	//writeMuralHistoryJson2Fs()
-	chatMessageController.save(chatMessageId,username,message,time,identificador,function(resp){
+	chatMessageController.save(chatMessageId,username,message,dateTime,identificador,function(resp){
 	//	res.json(resp);
-	//console.log(resp)
+		console.log(resp)
+		if (resp) return true //chatMessages;
+		else return false
 	})
-	return //chatMessages;
+	
 }
 
 function findValueByPrefix(object, prefix) {
@@ -289,7 +291,7 @@ app.get('/mural', (req, res) => {
 
 app.get('/ultimosItensChatMessage/:apos', (req, res) => {
 	var aposX = req.params.apos;
-	// console.log("quero chatMessages APOS ["+aposX+"] itens agora")
+    console.log("quero chatMessages APOS ["+aposX+"] itens agora")
 
 	chatMessageController.ultimosItens(parseInt(aposX),function(resp){
 		//	res.json(resp);
@@ -297,7 +299,7 @@ app.get('/ultimosItensChatMessage/:apos', (req, res) => {
 		if (resp)
 			resp.forEach(function(item){
 				array.push(item._doc)
-				//console.log(item._doc)
+				console.log(item._doc)
 			})
 		res.json(array)
 		res.end();
@@ -305,6 +307,23 @@ app.get('/ultimosItensChatMessage/:apos', (req, res) => {
 })
 
 
+app.get('/getVotosPorIdentificador/:identificador', (req, res) => {
+	var identificador = req.params.identificador;
+	console.log("quero getVotosPorIdentificador IDENTIFICAR ["+identificador+"] agora")
+
+	chatMessageController.getVotosPorIdentificador(identificador,function(resp){
+		console.log(resp)
+		res.json(resp);
+		// var array = []
+		// if (resp)
+		// 	resp.forEach(function(item){
+		// 		array.push(item._doc)
+		// 		console.log(item._doc)
+		// 	})
+		// res.json(array)
+		res.end();
+	})
+})
 
 //route /contact
 app.get ('/privado',function (req,res) {
@@ -396,7 +415,8 @@ app.post('/fileuploadMural/',  (req, res) => {
 		console.log("FILE TYPE: "+fileExtension)
 
 		var username = fields.usuario
-		var time = fields.time
+		// var time = fields.time
+		var time = new Date()
 		var messageInAttach = fields.messageInAttach
 		
 		var identificarUnico = uuidv4()
@@ -422,7 +442,13 @@ app.post('/fileuploadMural/',  (req, res) => {
 			if (err) throw err;
 			
 			//Inserindo a <img> no canal de message para aparecer no Mural.
-			chat_add_message({message : link, username:username, time:time, identificador:identificarUnico })
+			if (chat_add_message({message : link, username:username, identificador:identificarUnico }) ){
+				console.log("salvou com sucesso")
+			}
+			else {
+				console.log("deu ruim ao salvar"+link)
+			}
+
 			io.sockets.emit('message', {message : link , username: username,  time:time, identificador:identificarUnico})
 
 			res.redirect('/mural')
@@ -676,7 +702,7 @@ app.get ('/rest/chat/list/',function (req,res) {
 
 app.get ('/rest/chat/add/:username/:messageText',function (req,res) {
 	
-		chat_add_message({username:req.params.username, message:req.params.messageText, time:new Date(), identificador:uuidv4});
+		chat_add_message({username:req.params.username, message:req.params.messageText, identificador:uuidv4});
   		res.json(chatMessages);
         res.end();
 })
@@ -965,11 +991,12 @@ io.on('connection', (socket) => {
 		messagesTotal.inc({ add_user_message: data.username }) 
 
 	  	hostname = data.hostname
+		time = new Date()
 	  	
       //broadcast the new message
-      io.sockets.emit('message', {message: data.message, username: socket.username, time:data.time, identificador:data.identificador});
+      io.sockets.emit('message', {message: data.message, username: socket.username, time:time, identificador:data.identificador});
 
-	  chat_add_message({message:data.message, username:socket.username, time:data.time, identificador:data.identificador });
+	  chat_add_message({message:data.message, username:socket.username, identificador:data.identificador });
 
 	  //dependendo do texto enviado na mensagem, responder com determinadas ações:
 		if (data.message == "getnodes"){

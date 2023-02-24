@@ -64,7 +64,6 @@ function loadChatWith(username, aposNItens) {
 		  	  	else
 		  			messageTo.append("<p class='messageTo'> <img class='miniAvatar' src='usersAvatar/"+de+"-user-icon.png' alt='"+de+"'> <font color='gray'>  " + hora + "</font> <br>" + mensagem + "</p>") 
 			}
-
 		});
     });
 } 
@@ -102,7 +101,6 @@ function blinkLoggedUsers(){
 
 $(function(){
    	//make connection direct on web server using relative hosts 
-	  //var socket = io.connect('http://servidorpush.ddns.net:3000/', { secure: true, reconnect: true, rejectUnauthorized : false })
 	var socket = io.connect('/', { secure: true, reconnect: true, rejectUnauthorized : false })
 
 	var logged_users = {};
@@ -210,7 +208,7 @@ $(function(){
 
 	socket.on('newlogin', (data) => {
 		blinkLoggedUsers();
-		// console.log("chamando a blickLoggedUsers()")
+		// console.log("chamando a blinkLoggedUsers()")
 	})
 
 	socket.on('logout', (name) => {
