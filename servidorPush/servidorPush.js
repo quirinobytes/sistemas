@@ -460,7 +460,7 @@ app.get('/audioupload/:file', function (req, res) {
     var file = req.params.file
    
     var type = mime[path.extname(file).slice(1)] || 'audio/ogg';
-	var type = path.extname(filename)
+	var type = path.extname(file)
 	console.log("### app.get('/audioupload/:file' ###  FILE TYPE: "+type)
 
 
