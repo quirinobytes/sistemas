@@ -14,4 +14,4 @@ steps:
   displayName: 'Releasing chatPVT'
 
 - script: /root/shell/linux/chat.sh "New version of <b> chatPVT released </b>"
-  displayName: 'Released message'
+  displayName: 'Released new version'
