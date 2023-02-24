@@ -11,17 +11,16 @@ After=network.service
 Description=CDSHELL - Servidor Push
 
 [Service]
-#ExecStart="cd /app && /usr/bin/node servidorPush.js"
 ExecStart="/root/sistemas/servidorPush/starter_servidorPush.sh"
-#ExecStop="/usr/bin/pm2 stop /app/servidorPush.js"
-#Restart="/usr/bin/pm2 restart /app/servidorPush.js"
+ExecStop="/root/sistemas/servidorPush/stoper_servidorPush.sh"
+Restart="/root/sistemas/servidorPush/restarter_servidorPush.sh"
 
 # Required on some systems
 WorkingDirectory=/root/sistemas/servidorPush/
 
 
 # Restart service after 10 seconds if node service crashes
-RestartSec=60
+RestartSec=1
 Restart=always
 
 # Output to syslog

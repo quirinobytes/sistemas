@@ -291,7 +291,7 @@ app.get('/mural', (req, res) => {
 
 app.get('/ultimosItensChatMessage/:apos', (req, res) => {
 	var aposX = req.params.apos;
-    console.log("quero chatMessages APOS ["+aposX+"] itens agora")
+    // console.log("quero chatMessages APOS ["+aposX+"] itens agora")
 
 	chatMessageController.ultimosItens(parseInt(aposX),function(resp){
 		//	res.json(resp);
@@ -309,18 +309,9 @@ app.get('/ultimosItensChatMessage/:apos', (req, res) => {
 
 app.get('/getVotosPorIdentificador/:identificador', (req, res) => {
 	var identificador = req.params.identificador;
-	console.log("quero getVotosPorIdentificador IDENTIFICAR ["+identificador+"] agora")
-
 	chatMessageController.getVotosPorIdentificador(identificador,function(resp){
-		console.log(resp)
+		// console.log(resp)
 		res.json(resp);
-		// var array = []
-		// if (resp)
-		// 	resp.forEach(function(item){
-		// 		array.push(item._doc)
-		// 		console.log(item._doc)
-		// 	})
-		// res.json(array)
 		res.end();
 	})
 })

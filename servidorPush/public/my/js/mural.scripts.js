@@ -153,10 +153,8 @@ $(function(){
 	        else
 				chatroom.append("<div class='right'> <p class='message'> <img class='miniAvatar' src='usersAvatar/"+data.username+"-user-icon.png'/> <b>[" + data.username + "]</b> <font color='gray'> " + hora + "</font>  "+ data.message + "</p> </div>" ) 
 				
-				
-
 		//fazer o scroll down a cada mensagem nova.
-		container.animate({"scrollTop": $('#chatroom')[0].scrollHeight}, "slow")
+		container.animate({"scrollTop": $('div#container')[0].scrollHeight}, "slow")
 		
 		//play sound when new message arrives but not in my chat.
 		if (data.username != loggeduser.text()){
@@ -184,7 +182,6 @@ $(function(){
 	})
 
 	socket.on('votosnamidia', (votacao) => {
-		// {identificador:identificador,opcao:islike,qtde:total}
 		opcao = votacao.opcao
 		identificador = votacao.identificador
 		qtde = votacao.qtde
@@ -198,7 +195,6 @@ $(function(){
 			var votosnao = $("#"+identificador+"_"+opcao)
 			// console.log(identificador+"."+opcao + "=" + qtde)
 			votosnao[0].innerHTML = qtde
-
 		}
 	})
 	
@@ -207,36 +203,24 @@ $(function(){
 			url: "ultimosItensChatMessage/"+aposXItens
 		}).then(function(data) {
 			if (data.length > 0){
-				console.log("total de mensagens resgatadas do mongo= "+data.length)
 				contadorMuralMensagens+= data.length
-				console.log("total do contador contadorMuralMensagens = "+contadorMuralMensagens)
 
 				data.forEach(item => { 
 
-					if (item.identificador) {
-						console.log("###############")
-						console.log(item.identificador)
-						getVotosPorIdentificador(item.identificador)
-
-					}
+					if (item.identificador != "") getVotosPorIdentificador(item.identificador)
 					var dt = new Date(item.time);
 					const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
-					
 					if (item.username == loggeduser.text()){
 						chatroom.append( "<div class='left'> <p class='message'> <img class='miniAvatar' src='usersAvatar/"+item.username+"-user-icon.png'/> <b>[" + item.username + "]</b> <font color='gray'> " + hora + "</font> " + item.message + "</p> </div>") 
-						
 					}
 					else{
 						chatroom.append( "<div class='right'> <p class='message'> <img class='miniAvatar' src='usersAvatar/"+item.username+"-user-icon.png'/> <b>[" + item.username + "]</b> <font color='gray'> " + hora + "</font>  "+ item.message + "</p> </div>" ) 
-
 					}
 				});
 				// $("#loader").attr("style","display:none")
 			}
 			else{
-				console.log("Nao tem mais nada pra vir")
-				console.log("total do contador contadorMuralMensagens = "+contadorMuralMensagens)
-
+				console.log("Nao tem mais mensagens para resgatar, ja está na ultima")
 				// $("#loader").attr("style","display:none")
 			}
 			//$("#loader").attr("style","display:none")

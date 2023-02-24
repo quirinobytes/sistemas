@@ -54,7 +54,7 @@ exports.votaramNao = function (identificador,callback){
 
 }
 
-// resgatar as proximas 20 mensagens a partir de "aposNItens" mensagens.
+// resgatar as proximas 10 mensagens a partir de "aposNItens" mensagens.
 exports.ultimosItens = function (aposNItens, callback){
 	var query = ChatMessage.find({}).sort({time:1}).limit(10).skip(aposNItens);
 	query.exec(function(error, chatmessage){
@@ -62,7 +62,7 @@ exports.ultimosItens = function (aposNItens, callback){
 			callback(chatmessage);
 		}
 		else{
-			callback({resposta: "Nao foi possivel resgatar mais ultimos10 mensagens a partir do item: "+aposNItens});
+			callback({resposta: "Nao foi possivel resgatar no maximo 10 mensagens a partir do item: "+aposNItens});
 		}
 	});
 }
@@ -79,19 +79,6 @@ exports.getVotosPorIdentificador = function (identificador, callback){
 		// });
 	})
 	.catch(err => {callback ({err: "Não foi possível localizar esse identificador para pegar o votos"}) })
-
-
-	
-	// //var query = ChatMessage.find({}).sort({time:1}).limit(20).skip(aposNItens);
-	// var query = ChatMessage.find({}).sort({time:1}).limit(20).skip(aposNItens);
-	// query.exec(function(error, chatmessage){
-	// 	if(!error){
-	// 		callback(chatmessage);
-	// 	}
-	// 	else{
-	// 		callback({resposta: "Nao foi possivel resgatar mais ultimos10 mensagens a partir do item: "+aposNItens});
-	// 	}
-	// });
 }
 
 exports.delete = function (id, callback){
