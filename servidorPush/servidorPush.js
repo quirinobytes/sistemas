@@ -382,7 +382,7 @@ app.post('/fileupload', (req, res) => {
 
 // recebe o post de enviar arquivos de FOTOS E VIDEOS, salva e grava a TAG HTML correta.
 app.post('/fileuploadMural/',  (req, res) => {
-	    // var path = require('path');
+	var path = require('path');
 	var options = { maxFileSize: '250mb' }
 	var form = new formidable.IncomingForm(options)
 
@@ -455,11 +455,16 @@ app.get('/fileuploadMural/:file', function (req, res) {
 
 
 app.get('/audioupload/:file', function (req, res) {
-
-	var dir = ( './audioupload/');
-    var file = req.params.file;
+	var path = require('path')
+	var dir = ( './audioupload/')
+    var file = req.params.file
    
     var type = mime[path.extname(file).slice(1)] || 'audio/ogg';
+	var type = path.extname(filename)
+	console.log("### app.get('/audioupload/:file' ###  FILE TYPE: "+type)
+
+
+
     var s = fs.createReadStream(dir+"/"+file);
     s.on('open', function () {
         res.set('Content-Type', type);
