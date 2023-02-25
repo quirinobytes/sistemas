@@ -112,7 +112,6 @@ function blinkLoggedUsers(){
 
 function limpaBoard(username) {
 	var messageTo = $("#divMessageTo")
-	alert("limpando o board do"+username)
 	contadorAposNItensPrivateMensagensObj.username = 0;
 	messageTo.empty();
 }
