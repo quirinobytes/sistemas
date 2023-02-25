@@ -102,49 +102,6 @@ var destino = {}
 var destino2 = {}
 
 
-
-function loadMuralHistoryFs2Json(){
-	// rawdata = fs.readFileSync('chatMessages.json');
-	// chatMessages = JSON.parse(rawdata);
-	// console.log(chatMessages);
-
-	// chatMessageController.ultimos10(valor,function(resp){
-	// 	//	res.json(resp);
-	// 	valor = valor + 10
-	// 	console.log(resp)
-	// 	chatMessages = resp
-	// })
-	
-}
-
-// function loadPrivadoHistoryFs2Json(){
-// 	rawdata = fs.readFileSync('privadoChat.json');
-// 	privadoChat = JSON.parse(rawdata);
-// 	// console.log(chatMessages);
-// }
-
-// function writeMuralHistoryJson2Fs(){
-// 		const data = JSON.stringify(chatMessages)
-// 		fs.writeFile('chatMessages.json', data, err => {
-// 		if (err) {
-// 			throw err
-// 		}
-// 		})
-// }
-
-// function writePrivadoHistoryJson2Fs(){
-// 	const data = JSON.stringify(privadoChat)
-// 	fs.writeFile('privadoChat.json', data, err => {
-// 		if (err) {
-// 			throw err
-// 		}
-// 	// console.log('JSON data is saved.')
-// 	})
-// }
-
-//loadMuralHistoryFs2Json()
-//loadPrivadoHistoryFs2Json()
-
 // function that check for basic auth header and return the username base64 decoded.
 function getUsernameFromHeadersAuthorization(req){
 	// verify auth credentials <- Aqui eu pego as credenciais para uso no kong
@@ -170,12 +127,8 @@ function chat_add_message({username,message,identificador}){
 	  })
 	}
 
-	//chatmessages igual a Mural messages
-	//writeMuralHistoryJson2Fs()
 	chatMessageController.save(chatMessageId,username,message,dateTime,identificador,function(resp){
-	//	res.json(resp);
-		console.log(resp)
-		if (resp) return true //chatMessages;
+		if (resp) return true 
 		else return false
 	})
 	
@@ -217,17 +170,6 @@ function addMessageContactToPerson({from:from,to:to,message:message,time:time, i
 	privateMessageController.save(idfrom,prefix,from,to,message,dateTime,identificador, function(resposta){
 		if (resposta.error) 	console.log("Passou pela save 'prefix', resposta: "+resposta)
 	})
-
-
-	// destino = findValueByPrefix(privadoChat,prefix);
-	// destino = 
-	// //console.log(destino);
-	// //console.log(destino2);
-	// destino2 = findValueByPrefix(privadoChat,prefixinv);
-	// destino.push([{from:de,to:para,message:mensagem,time:dateTime}])
-	// destino2.push([{from:de,to:para,message:mensagem,time:dateTime}])
-
-	// writePrivadoHistoryJson2Fs()
 }
 
 //############################################################
@@ -299,7 +241,6 @@ app.get('/ultimosItensChatMessage/:apos', (req, res) => {
 		if (resp)
 			resp.forEach(function(item){
 				array.push(item._doc)
-				console.log(item._doc)
 			})
 		res.json(array)
 		res.end();
@@ -360,7 +301,6 @@ app.get ('/rest/loadChatWith/:from/:to/:apos',function (req,res) {
 
 //route /upload
 app.get('/upload', (req, res) => {
-
 	nome = getUsernameFromHeadersAuthorization(req)
 	if (nome == '') nome = "anonymous"
 
@@ -403,7 +343,7 @@ app.post('/fileuploadMural/',  (req, res) => {
 		
 		filename = files.filetoupload.name
 		var fileExtension = path.extname(filename)
-		console.log("FILE TYPE: "+fileExtension)
+		// console.log("FILE TYPE: "+fileExtension)
 
 		var username = fields.usuario
 		// var time = fields.time
@@ -434,14 +374,12 @@ app.post('/fileuploadMural/',  (req, res) => {
 			
 			//Inserindo a <img> no canal de message para aparecer no Mural.
 			if (chat_add_message({message : link, username:username, identificador:identificarUnico }) ){
-				console.log("salvou com sucesso")
+			  // console.log("salvou com sucesso")
+			  io.sockets.emit('message', {message : link , username: username,  time:time, identificador:identificarUnico})
 			}
 			else {
 				console.log("deu ruim ao salvar"+link)
 			}
-
-			io.sockets.emit('message', {message : link , username: username,  time:time, identificador:identificarUnico})
-
 			res.redirect('/mural')
 			res.end()
 		});
@@ -456,17 +394,12 @@ app.get('/fileuploadMural/:file', function (req, res) {
     var file = req.params.file;
 
 	var fileExtension = path.extname(file)
-
     var type = mime[file];
-
 
     var s = fs.createReadStream(dir+"/"+file);
     s.on('open', function () {
         res.set('Content-Type', type);
         s.pipe(res);
-		
-		//res.redirect('/')
-		//res.end();
     });
     s.on('error', function () {
         res.set('Content-Type', 'text/plain');
@@ -482,17 +415,12 @@ app.get('/audioupload/:file', function (req, res) {
    
     var type = mime[path.extname(file).slice(1)] || 'audio/ogg';
 	var type = path.extname(file)
-	console.log("### app.get('/audioupload/:file' ###  FILE TYPE: "+type)
-
-
+	// console.log("### app.get('/audioupload/:file' ###  FILE TYPE: "+type)
 
     var s = fs.createReadStream(dir+"/"+file);
     s.on('open', function () {
         res.set('Content-Type', type);
         s.pipe(res);
-		
-		//res.redirect('/')
-		//res.end();
     });
     s.on('error', function () {
         res.set('Content-Type', 'text/plain');
@@ -501,34 +429,21 @@ app.get('/audioupload/:file', function (req, res) {
 })
 
 app.post('/post-audio/', (req, res) => {
-
 	var form = new formidable.IncomingForm(req.formidable);
-
 	form.parse(req, function (err, fields, files) {
-
-		 console.log(fields)
+		//  console.log(fields)
 
 		 if (!files) return;
-				
 		var name = fields.fname
 		var arquivo = files.file
 		var from = fields.from
 		var to = fields.to
-		// console.log("name: "+name)
-		// console.log("tamanho: "+ arquivo.size)
-		// console.log("nome: "+arquivo.name)
-		// console.log("tipo: "+arquivo.type) 
-		// console.log("path: "+arquivo.path) 
-		// console.log("FD: "+arquivo._writeStream.fd)
-
 
 		novoNome = arquivo.path
 		remover = "/tmp/"
 		novoNome = novoNome.substring(novoNome.indexOf(remover) + remover.length);
-		//console.log("novo Nome: "+novoNome)
 		var newpath = './audioupload/' + novoNome + '.ogg'
 
-		//console.log(files)
 		let keys=Object.keys(files);
 		fs.readFile(files[keys[0]].path,(err,e)=>{
 			if(err) console.log(err);
@@ -566,9 +481,6 @@ app.get('/videoupload/:file', function (req, res) {
     s.on('open', function () {
         res.set('Content-Type', type);
         s.pipe(res);
-		
-		//res.redirect('/')
-		//res.end();
     });
     s.on('error', function () {
         res.set('Content-Type', 'text/plain');
@@ -585,19 +497,13 @@ app.get("/votaram/:identificador/:escolha", function(req, res){
 		if (escolha == 'sim'){
 				chatMessageController.votaramSim(identificador,function(total){
 				res.status(200).end('votado Sim');
-
-				console.log({identificador:identificador,opcao:"like",qtde:total})
-
 				io.sockets.emit("votosnamidia",{identificador:identificador,opcao:"like",qtde:total})
 			})
 		}
 		if (escolha == 'nao'){
 				chatMessageController.votaramNao(identificador,function(total){
 				res.status(200).end('votado Nao');
-				console.log({identificador:identificador,opcao:"dislike",qtde:total})
-
 				io.sockets.emit("votosnamidia",{identificador:identificador,opcao:"dislike",qtde:total})
-
 			})
 		}
 	}

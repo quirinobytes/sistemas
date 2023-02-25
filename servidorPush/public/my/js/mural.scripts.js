@@ -89,20 +89,11 @@ $(function(){
 	// e o historico do board para ser carregado na section "chatroom"
 	$( document ).ready(function() {
 
-		//qdo carregar a pagina já se apresente e faça o login
-
 		socket.emit('username', {username : loggeduser.text()});
-
 		carregaMaisAlguns(contadorMuralMensagens);
-		console.log("contadorMuralMensagens="+contadorMuralMensagens)
 
 		$('div.container').on('scroll', function() {
-			
-			if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
-				// console.log("CHAMANDO A contadorMuralMensagens= "+contadorMuralMensagens)
-				carregaMaisAlguns(contadorMuralMensagens);
-			}
-			
+			if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) carregaMaisAlguns(contadorMuralMensagens)
 		})
 
 
@@ -154,7 +145,7 @@ $(function(){
 				chatroom.append("<div class='right'> <p class='message'> <img class='miniAvatar' src='usersAvatar/"+data.username+"-user-icon.png'/> <b>[" + data.username + "]</b> <font color='gray'> " + hora + "</font>  "+ data.message + "</p> </div>" ) 
 				
 		//fazer o scroll down a cada mensagem nova.
-		container.animate({"scrollTop": $('##chatroom')[0].scrollHeight}, "slow")
+		container.animate({"scrollTop": $('#chatroom')[0].scrollHeight}, "slow")
 		
 		//play sound when new message arrives but not in my chat.
 		if (data.username != loggeduser.text()){
@@ -207,7 +198,7 @@ $(function(){
 
 				data.forEach(item => { 
 
-					if (item.identificador != "") getVotosPorIdentificador(item.identificador)
+					if (item.identificador) getVotosPorIdentificador(item.identificador)
 					var dt = new Date(item.time);
 					const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
 					if (item.username == loggeduser.text()){
@@ -226,33 +217,27 @@ $(function(){
 			//$("#loader").attr("style","display:none")
 		});
 	}
-});
 
-function getVotosPorIdentificador(identificador){
-	$.ajax({
-		url: "./getVotosPorIdentificador/"+ identificador
-		}).then(function(retorno) {
-
-			qtdesim = retorno.votossim
-			qtdenao = retorno.votosnao
-	
-			
+	function getVotosPorIdentificador(identificador){
+		$.ajax({
+			url: "./getVotosPorIdentificador/"+ identificador
+			}).then(function(retorno) {
 				var votossim = $("#"+identificador+"_like")
-				console.log(identificador+"."+opcao + "=" + qtde)
-				votossim[0].innerHTML = qtdesim
-			
+				votossim[0].innerHTML = retorno.votossim
 			
 				var votosnao = $("#"+identificador+"_dislike")
-				console.log(identificador+"."+opcao + "=" + qtde)
-				votosnao[0].innerHTML = qtdenao
-			
-			console.log("RETORNO para o identificador["+identificador+"] ="+retorno)
-		}).fail(function(retorno){
-			console.log("deu algum erro ao votar nao")	
-			console.log(retorno)
-		})
-	//alert(identificador)
-}
+				votosnao[0].innerHTML = retorno.votosnao
+				// console.log("RETORNO para o identificador["+identificador+"] ="+retorno)
+			}).fail(function(retorno){
+				console.log("deu algum erro ao resgatar a contagem de votos para essa midia")	
+				// console.log(retorno)
+			})
+	}
+
+
+});
+
+
 
 // When page finish loads
 document.addEventListener('readystatechange', () => {

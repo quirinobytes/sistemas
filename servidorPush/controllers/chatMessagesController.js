@@ -11,9 +11,8 @@ exports.save = function (id,username,message,time,identificador,callback){
 		'identificador':identificador
 	}).save(function(error, chatmessage){
 		if (error){
-			callback({error: 'Não foi possível salvar'});
+			callback({error: 'Não foi possível salvar a mensagem id= '+id});
 		}else{
-			console.log("salvei a mensagem id= "+chatmessage.id)
 			callback(chatmessage);
 		}
 	});
@@ -70,13 +69,8 @@ exports.ultimosItens = function (aposNItens, callback){
 exports.getVotosPorIdentificador = function (identificador, callback){
 	ChatMessage.findOne({identificador: identificador})
 	.then(doc => {
-	//    console.log("VOTOS: "+doc.votossim+""+doc.votosnao)
 	   retorno = {identificador:doc.identificador,votossim:doc.votossim, votosnao:doc.votosnao}
 	   callback(retorno)
-		// ChatMessage.findByIdAndUpdate(doc._id, { $inc:{ votosnao: 1 }},function (err, docs) {
-		// 	if (err)  callback ({err: "Não foi possível incrementar os votos de nao para esse identificador"})
-		// 	else callback(doc.votosnao+1)
-		// });
 	})
 	.catch(err => {callback ({err: "Não foi possível localizar esse identificador para pegar o votos"}) })
 }
