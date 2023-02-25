@@ -5,11 +5,10 @@ var contadorAposNItensPrivateMensagens = 0
 var contadorAposNItensPrivateMensagensObj = {}
 
 
-function loadChatWith(username, aposNItens) {
-	
-	
+function loadChatWith(from, to, aposNItens) {
 
-	console.log("contadorAposNItensPrivateMensagensObj."+username+"= "+contadorAposNItensPrivateMensagensObj.username)
+	
+	console.log("contadorAposNItensPrivateMensagensObj."+to+"= "+contadorAposNItensPrivateMensagensObj.to)
 	// if (!contadorAposNItensPrivateMensagensObj.username){
 	// 	contadorAposNItensPrivateMensagensObj.username += 10
 	// 	console.log("ZEREI O CONTATOR DO "+username)
@@ -17,13 +16,13 @@ function loadChatWith(username, aposNItens) {
 	// else{
 		//Nao sei se tem q fazer isso, acho q sim
 		//contadorAposNItensPrivateMensagensObj = {}
-		console.log("CONTADOR CARREGANDO CORRETAMENTE: contadorAposNItensPrivateMensagensObj."+username+"= "+contadorAposNItensPrivateMensagensObj.username)
+		console.log("CONTADOR CARREGANDO CORRETAMENTE: contadorAposNItensPrivateMensagensObj."+to+"= "+contadorAposNItensPrivateMensagensObj.to)
 		// contadorAposNItensPrivateMensagensObj.username += aposNItens
 
 	// }
 
 
-	$("."+username).addClass("selected")
+	$("."+to).addClass("selected")
 
 	var usr = $("#myname");
 	myname = usr[0].innerText;
@@ -37,27 +36,27 @@ function loadChatWith(username, aposNItens) {
 		
 		feedback.empty();
 
-	imgContactTo.attr("src","usersAvatar/"+username+"-user-icon.png");
+	imgContactTo.attr("src","usersAvatar/"+to+"-user-icon.png");
 	
 	//Limpar a lista no div=contacts caso tenha mensagemNaoLida, agora no carregamento. 
 	for (cont=0;cont<cList[0].children.length;cont++){
-		if (cList[0].children[cont].innerText == username )
+		if (cList[0].children[cont].innerText == to )
 			$( cList[0].children[cont]).removeClass("temMensagemNaoLida");
 	}
 
 	// console.log ("aqui foi chamado a loadChatWith/"+loggedUser+"/"+username+"/");
 
-	divContato.innerHTML = username;
+	divContato.innerHTML = to;
 	// if (!contadorAposNItensPrivateMensagensObj.username >= 0)
 	// 	contadorAposNItensPrivateMensagensObj.username = 0
 
 	$.ajax({
-			url: "./rest/loadChatWith/"+myname+"/"+username+"/"+ contadorAposNItensPrivateMensagensObj.username
+			url: "./rest/loadChatWith/"+myname+"/"+to+"/"+ contadorAposNItensPrivateMensagensObj.to
 	}).then(function(data) {
 
 	if (data){
 
-		contadorAposNItensPrivateMensagensObj.username += data.length
+		contadorAposNItensPrivateMensagensObj.to += data.length
 
 		data.forEach(item => { 
 		    // console.log("ITEM:");
@@ -110,9 +109,9 @@ function blinkLoggedUsers(){
 	});
 }
 
-function limpaBoard(username) {
+function limpaBoard(to) {
 	var messageTo = $("#divMessageTo")
-	contadorAposNItensPrivateMensagensObj.username = 0;
+	contadorAposNItensPrivateMensagensObj.to = 0;
 	messageTo.empty();
 }
 
@@ -163,9 +162,10 @@ $(function(){
 
 		$('div.container').on('scroll', function() {
 			if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
-				console.log("APOS CARREGAR CORRETAMENTE: contadorAposNItensPrivateMensagensObj."+username+"= "+contadorAposNItensPrivateMensagensObj.username)
-				
-				loadChatWith(username, contadorAposNItensPrivateMensagensObj.username)
+				to = divContato.innerText
+				console.log("APOS CARREGAR CORRETAMENTE: contadorAposNItensPrivateMensagensObj."+to+"= "+contadorAposNItensPrivateMensagensObj.to)
+				// console.log("no div scrll toAndFrom="+toAndFrom)
+				loadChatWith(myname,to, contadorAposNItensPrivateMensagensObj.to)
 			}
 		})
 
@@ -188,10 +188,10 @@ $(function(){
 			usuarios_kong.forEach(item => { 
 					//fazer isso para remover o nome do usuario logado e nao mostrar na lista de contatos, pois ele tmb esta na lista e nao faz sentido ele falar com ele.
 					if ( item.username != myname[0].innerText ){
-						username = item.username
-						contadorAposNItensPrivateMensagensObj.username = 0
-						console.log("contadorAposNItensPrivateMensagensObj."+username+"="+contadorAposNItensPrivateMensagensObj.username)
-						contactList.innerHTML += "<div id='contactLine' class='"+item.username+"'> <div id='contacts' onclick='limpaBoard(\""+item.username+"\"); loadChatWith(this.innerHTML,"+contadorAposNItensPrivateMensagensObj.username+");'>" + item.username + "</div> <div id='"+item.username+"_logged_user' ></div> </div>";
+						to = item.username
+						contadorAposNItensPrivateMensagensObj.to = 0
+						console.log("contadorAposNItensPrivateMensagensObj."+to+"="+contadorAposNItensPrivateMensagensObj.to)
+						contactList.innerHTML += "<div id='contactLine' class='"+item.username+"'> <div id='contacts' onclick='limpaBoard(\""+item.username+"\"); loadChatWith(\""+ myname[0].innerText +"\",this.innerHTML,"+contadorAposNItensPrivateMensagensObj.to+");'>" + item.username + "</div> <div id='"+item.username+"_logged_user' ></div> </div>";
 					}
 			});
 
@@ -212,7 +212,7 @@ $(function(){
 		}
 		else{
 			var logged_usr = myname[0].innerText
-			socket.emit("contactTo", {message : message.val(),from:logged_usr,toContact:divContato.innerText,time:new Date()})
+			socket.emit("contactTo", {message : message.val(),from:logged_usr,toContact:divContato.innerText})
 			//limpar o inputbox do message, depois que enviar mensagem
 			message.val('')
 			message.attr("rows","1")

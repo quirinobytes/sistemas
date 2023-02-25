@@ -163,7 +163,10 @@ function addMessageContactToPerson({from:from,to:to,message:message,time:time, i
 	idto = to+id
 
 	privateMessageController.save(idto,prefixinv,from,to,message,dateTime,identificador, function(resposta){
-		if (resposta.error) 	console.log(" Deu algum erro ao passou pela save 'prefixinv', resposta: "+resposta)
+		if (resposta.error) 	{
+			console.log(" Deu algum erro ao passou pela save 'prefixinv', resposta: ")
+			console.log(resposta)
+		}
 	})
 
 	idfrom = from+id
@@ -930,7 +933,7 @@ io.on('connection', (socket) => {
 			addMessageContactToPerson({from:data.from, to:data.toContact, message:data.message,time:data.time,identificador:data.identificador});
 		}
 		else
-			console.log("socket.on contactTo: faltou from, to, ou message")
+			console.log("error on:contactTo = faltou from, to, ou message")
     })
 
     socket.on('beos', (data) => {
