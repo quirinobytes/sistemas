@@ -6,13 +6,21 @@ var contadorAposNItensPrivateMensagensObj = {}
 
 
 function loadChatWith(username, aposNItens) {
-	if (!contadorAposNItensPrivateMensagensObj.username)
-		contadorAposNItensPrivateMensagensObj.username = 0
-	else{
+	
+	
+
+	console.log("contadorAposNItensPrivateMensagensObj."+username+"= "+contadorAposNItensPrivateMensagensObj.username)
+	// if (!contadorAposNItensPrivateMensagensObj.username){
+	// 	contadorAposNItensPrivateMensagensObj.username += 10
+	// 	console.log("ZEREI O CONTATOR DO "+username)
+	// }
+	// else{
 		//Nao sei se tem q fazer isso, acho q sim
-		contadorAposNItensPrivateMensagensObj = {}
-		contadorAposNItensPrivateMensagensObj.username = aposNItens
-	}
+		//contadorAposNItensPrivateMensagensObj = {}
+		console.log("CONTADOR CARREGANDO CORRETAMENTE: contadorAposNItensPrivateMensagensObj."+username+"= "+contadorAposNItensPrivateMensagensObj.username)
+		// contadorAposNItensPrivateMensagensObj.username += aposNItens
+
+	// }
 
 
 	$("."+username).addClass("selected")
@@ -26,7 +34,7 @@ function loadChatWith(username, aposNItens) {
 	var cList  = $("#contactList")
 	var feedback = $("#feedback")
 		//Limpa o board divMessageTo para carregar as mensagens com o amigo que foi selecionado.
-		messageTo.empty();
+		
 		feedback.empty();
 
 	imgContactTo.attr("src","usersAvatar/"+username+"-user-icon.png");
@@ -40,17 +48,20 @@ function loadChatWith(username, aposNItens) {
 	// console.log ("aqui foi chamado a loadChatWith/"+loggedUser+"/"+username+"/");
 
 	divContato.innerHTML = username;
-	if (!contadorAposNItensPrivateMensagensObj.username)
-		contadorAposNItensPrivateMensagensObj.username = 0
+	// if (!contadorAposNItensPrivateMensagensObj.username >= 0)
+	// 	contadorAposNItensPrivateMensagensObj.username = 0
 
 	$.ajax({
 			url: "./rest/loadChatWith/"+myname+"/"+username+"/"+ contadorAposNItensPrivateMensagensObj.username
 	}).then(function(data) {
 
-		if (data)
+	if (data){
+
+		contadorAposNItensPrivateMensagensObj.username += data.length
+
 		data.forEach(item => { 
 		    // console.log("ITEM:");
-			// console.log(item)
+			console.log(item)
 			de = item.from
 			para = item.to
 			mensagem = item.message
@@ -65,6 +76,7 @@ function loadChatWith(username, aposNItens) {
 		  			messageTo.append("<p class='messageTo'> <img class='miniAvatar' src='usersAvatar/"+de+"-user-icon.png' alt='"+de+"'> <font color='gray'>  " + hora + "</font> <br>" + mensagem + "</p>") 
 			}
 		});
+	}
     });
 } 
 
@@ -98,6 +110,13 @@ function blinkLoggedUsers(){
 	});
 }
 
+function limpaBoard(username) {
+	var messageTo = $("#divMessageTo")
+	alert("limpando o board do"+username)
+	contadorAposNItensPrivateMensagensObj.username = 0;
+	messageTo.empty();
+}
+
 
 $(function(){
    	//make connection direct on web server using relative hosts 
@@ -112,6 +131,7 @@ $(function(){
 	var send_message = $("#send_message")
 	var send_username = $("#send_username")
 	var divMessageTo = $("#divMessageTo")
+	var contacts = $("#contacts")
 
 	//apagar isso, parece q nao usa
 	var contactTo = $("#contactTo")
@@ -142,6 +162,14 @@ $(function(){
 		// o /consumers é um api gateway para dentro do konga na 8001, control plane port
 		loadConsumers()
 
+		$('div.container').on('scroll', function() {
+			if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
+				console.log("APOS CARREGAR CORRETAMENTE: contadorAposNItensPrivateMensagensObj."+username+"= "+contadorAposNItensPrivateMensagensObj.username)
+				
+				loadChatWith(username, contadorAposNItensPrivateMensagensObj.username)
+			}
+		})
+
 		//Appending HTML5 Audio Tag in HTML Body
 		$('').appendTo('body');
 
@@ -160,14 +188,21 @@ $(function(){
 
 			usuarios_kong.forEach(item => { 
 					//fazer isso para remover o nome do usuario logado e nao mostrar na lista de contatos, pois ele tmb esta na lista e nao faz sentido ele falar com ele.
-					if ( item.username != myname[0].innerText )
-						contactList.innerHTML += "<div id='contactLine' class='"+item.username+"'> <div id='contacts' onclick='loadChatWith(this.innerHTML);'>" + item.username + "</div> <div id='"+item.username+"_logged_user' ></div> </div>";
+					if ( item.username != myname[0].innerText ){
+						username = item.username
+						contadorAposNItensPrivateMensagensObj.username = 0
+						console.log("contadorAposNItensPrivateMensagensObj."+username+"="+contadorAposNItensPrivateMensagensObj.username)
+						contactList.innerHTML += "<div id='contactLine' class='"+item.username+"'> <div id='contacts' onclick='limpaBoard(\""+item.username+"\"); loadChatWith(this.innerHTML,"+contadorAposNItensPrivateMensagensObj.username+");'>" + item.username + "</div> <div id='"+item.username+"_logged_user' ></div> </div>";
+					}
 			});
 
 		//por fim deixar os usuarios logados com a bolinha verde.
 		blinkLoggedUsers();
 		});
+
+
 	}
+
 
 	//Send message
 	send_message.click(function(){

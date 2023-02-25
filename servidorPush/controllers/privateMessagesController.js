@@ -55,15 +55,15 @@ exports.votaramNao = function (identificador,callback){
 
 }
 
-// resgatar as proximas 20 mensagens a partir de "aposNItens" mensagens.
+// resgatar as proximas 10 mensagens a partir de "aposNItens" mensagens.
 exports.ultimos10 = function (toAndFrom, aposNItens, callback){
-	var query = PrivateMessage.find({toAndFrom:toAndFrom}).sort({time:1}).limit(20).skip(aposNItens);
+	var query = PrivateMessage.find({toAndFrom:toAndFrom}).sort({time:1}).limit(10).skip(aposNItens);
 	query.exec(function(error, privatemessage){
 		if(!error){
 			callback(privatemessage);
 		}
 		else{
-			callback({resposta: "Nao foi possivel resgatar mais ultimos10 mensagens a partir do item: "+aposNItens});
+			callback({resposta: "Nao foi possivel resgatar mais 10 mensagens a partir do item: "+aposNItens});
 		}
 	});
 }
