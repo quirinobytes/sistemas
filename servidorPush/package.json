@@ -20,7 +20,7 @@
   "dependencies": {
     "ansi-to-html": "^0.7.2",
     "body-parser": "^1.18.3",
-    "ejs": "^2.6.1",
+    "ejs": "^3.1.7",
     "express": "^4.16.4",
     "express-ejs-layouts": "^2.5.0",
     "express-prom-bundle": "^6.5.0",
