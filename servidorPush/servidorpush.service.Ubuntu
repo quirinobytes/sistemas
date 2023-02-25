@@ -11,8 +11,8 @@ After=network.service
 Description=CDSHELL - Servidor Push
 
 [Service]
-ExecStart="/root/sistemas/servidorPush/starter_servidorPush.sh"
-ExecStop="/root/sistemas/servidorPush/stoper_servidorPush.sh"
+ExecStart=/root/sistemas/servidorPush/servidorPush.js
+ExecStop=/root/sistemas/servidorPush/stoper_servidorPush.sh
 
 # Required on some systems
 WorkingDirectory=/root/sistemas/servidorPush/

@@ -154,7 +154,7 @@ $(function(){
 				chatroom.append("<div class='right'> <p class='message'> <img class='miniAvatar' src='usersAvatar/"+data.username+"-user-icon.png'/> <b>[" + data.username + "]</b> <font color='gray'> " + hora + "</font>  "+ data.message + "</p> </div>" ) 
 				
 		//fazer o scroll down a cada mensagem nova.
-		container.animate({"scrollTop": $('div#container')[0].scrollHeight}, "slow")
+		container.animate({"scrollTop": $('##chatroom')[0].scrollHeight}, "slow")
 		
 		//play sound when new message arrives but not in my chat.
 		if (data.username != loggeduser.text()){
@@ -238,12 +238,12 @@ function getVotosPorIdentificador(identificador){
 	
 			
 				var votossim = $("#"+identificador+"_like")
-				// console.log(identificador+"."+opcao + "=" + qtde)
+				console.log(identificador+"."+opcao + "=" + qtde)
 				votossim[0].innerHTML = qtdesim
 			
 			
 				var votosnao = $("#"+identificador+"_dislike")
-				// console.log(identificador+"."+opcao + "=" + qtde)
+				console.log(identificador+"."+opcao + "=" + qtde)
 				votosnao[0].innerHTML = qtdenao
 			
 			console.log("RETORNO para o identificador["+identificador+"] ="+retorno)

@@ -158,16 +158,23 @@ input#username {
     border: 4px solid black;
     float: right;
 }
-.divVotacao{
+/* .divVotacao{
     display:inline-flex;
     justify-content:inherit;
     font-size:xx-large;
     margin-top: 3px;
+} */
+.divVotacao{
+    display:flex;
+    justify-content:center;
+    font-size:xx-large;
+    margin-top: 10px;
 }
 .imageBox{
     position: relative;
     width: 100%;
-    height: 300px;    
+    /* height: 300px;     */
+    min-height: 200px;
     display: flex;
     justify-content: inherit;
     /* justify-items: flex-end; */
@@ -201,7 +208,7 @@ input#filetoupload{
 .left{
     width: 52%;
     background-color: rgb(218, 219, 235);
-    justify-content: left;
+    justify-content: center;
     text-align: -webkit-left;
     border: 2px solid white;
     margin-top: 15px;
@@ -211,7 +218,7 @@ input#filetoupload{
 }
 .right{
     width: 52%;
-    justify-content: right;
+    justify-content: center;
     text-align: -webkit-right;
     background-color: rgb(210, 226, 241);
     margin-top: 15px;
