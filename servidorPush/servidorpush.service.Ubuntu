@@ -13,14 +13,13 @@ Description=CDSHELL - Servidor Push
 [Service]
 ExecStart="/root/sistemas/servidorPush/starter_servidorPush.sh"
 ExecStop="/root/sistemas/servidorPush/stoper_servidorPush.sh"
-Restart="/root/sistemas/servidorPush/restarter_servidorPush.sh"
 
 # Required on some systems
 WorkingDirectory=/root/sistemas/servidorPush/
 
 
 # Restart service after 10 seconds if node service crashes
-RestartSec=1
+RestartSec=60
 Restart=always
 
 # Output to syslog
