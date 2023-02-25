@@ -1,60 +1,24 @@
-
-############################
-#
-#  CDSHELL - Servidor Push - Systemd Service - Centos
-#
-##############################
-
-
 [Unit]
 After=network.service
-Description=ChatPVT
+Description= Servidor Push
 
 [Service]
-ExecStart="/root/sistemas/servidorPush/starter_servidorPush.sh"
-ExecStop="/root/sistemas/servidorPush/stoper_servidorPush.sh"
-Restart="/root/sistemas/servidorPush/restarter_servidorPush.sh"
+ExecStart=/root/sistemas/servidorPush/servidorPush.js
+ExecStop=/root/sistemas/servidorPush/stoper_servidorPush.centos.sh
 
 # Required on some systems
-WorkingDirectory=/root/sistemas/servidorPush/
+WorkingDirectory=/root/sistemas/servidorPush
 
-
-# Restart service after 10 seconds if node service crashes
-RestartSec=1
 Restart=always
-
-# Output to syslog
-StandardOutput=syslog
-StandardError=syslog
-SyslogIdentifier=servidorpush
-
-
-LimitNOFILE=infinity
-LimitNPROC=infinity
-LimitCORE=infinity
-
-# Comment TasksMax if your systemd version does not support it.
-# Only systemd 226 and above support this option.
-TasksMax=infinity
-
-# set delegate yes so that systemd does not reset the cgroups of docker containers
-Delegate=yes
-
-# kill only the docker process, not all processes in the cgroup
-KillMode=process
-OOMScoreAdjust=-500
-
-
-
-#Environment
-User=root
-Environment=NODE_ENV=production
-Environment=PORT=3000
-Environment=NODE_MODULES=/lib/node_modules
-User=root
-Group=root
-
+ # Restart service after 10 seconds if node service crashes
+  RestartSec=60
+   # Output to syslog
+   StandardOutput=syslog
+   StandardError=syslog
+   SyslogIdentifier=nodejs-servidorPush
+#User=root
+Group=wheel
+Environment=NODE_ENV=production PORT=3000 NODE_MODULES=/lib/node_modules
 
 [Install]
-
 WantedBy=multi-user.target

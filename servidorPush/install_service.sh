@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 # Config
 ERROR_FLAG=0
@@ -16,13 +16,13 @@ function flag_update (){
 
  if [ -e /etc/os-release ]; then
 
-            cat /etc/os-release | grep CentOS -q
+            cat /etc/os-release | grep -i Centos -q
             if [ $? == 0 ]; then
-                  echo -en "$green ** $atention RED HAT -$yellow like found $green ** $normal\n\n"
+                  echo -en "$green ** $atention Centos -$yellow like found $green ** $normal\n\n"
             	systemctl stop servidorpush
-			cp servidorpush.service.Redhat /etc/systemd/system/servidorpush.service -f
+			cp servidorpush.service.Centos /etc/systemd/system/servidorpush.service -f
 			systemctl daemon-reload
-			systemctl start servidorpush
+			#systemctl start servidorpush
 			exit 0
 		fi
 
@@ -61,24 +61,6 @@ function flag_update (){
 			systemctl start servidorpush
 			exit 0
             fi
-
-            cat /etc/os-release | grep Redhat -qi
-            if [ $? == 0 ]; then
-                  echo -en "$green ** $atention Redhat -$yellow like found $green ** $normal\n\n"
-			systemctl stop servidorpush || echo -en "$yellow Maybe the first install, try reinstall\n\n"
-			cp servidorpush.service.Redhat /etc/systemd/system/servidorpush.service  -f
-			systemctl daemon-reload
-			systemctl start servidorpush
-                  if [ $ERROR_FLAG == 0 ]; then
-			    echo -en "\n\n $alert $green Serviço $WHITE servidorpush $green instalado com sucesso !!! $normal\n\n"
-			else 
-			    echo -en "\n\n $alert $red (X) ERRO - Serviço $WHITE servidorpush $red não instalado !!! $normal\n\n"
-			fi
-			exit $ERROR_FLAG
-
-            fi
-
-
 
 
 		echo -en "TEM arquivo /etc/os-release  mas FLAVOR desconhecido\n\n"

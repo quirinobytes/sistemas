@@ -11,9 +11,8 @@ After=network.service
 Description=ChatPVT
 
 [Service]
-ExecStart="/root/sistemas/servidorPush/starter_servidorPush.sh"
-ExecStop="/root/sistemas/servidorPush/stoper_servidorPush.sh"
-Restart="/root/sistemas/servidorPush/restarter_servidorPush.sh"
+ExecStart=/root/sistemas/servidorPush/starter_servidorPush.sh
+ExecStop=/root/sistemas/servidorPush/stoper_servidorPush.sh
 
 # Required on some systems
 WorkingDirectory=/root/sistemas/servidorPush/
