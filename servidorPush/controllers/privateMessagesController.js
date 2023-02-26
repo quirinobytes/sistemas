@@ -57,7 +57,6 @@ exports.votaramNao = function (identificador,callback){
 
 // resgatar as proximas 10 mensagens a partir de "aposNItens" mensagens.
 exports.ultimos10 = function (toAndFrom, aposNItens, callback){
-	console.log("toAndFrom="+toAndFrom)
 	var query = PrivateMessage.find({toAndFrom:toAndFrom}).sort({time:1}).limit(10).skip(aposNItens);
 	query.exec(function(error, privatemessage){
 		if(!error){
