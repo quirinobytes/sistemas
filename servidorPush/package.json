@@ -33,6 +33,7 @@
     "socket.io": "^2.0.4",
     "socket.io-prometheus-metrics": "^1.0.6",
     "uuid": "^9.0.0",
-    "mongoose": "^6.9.1"
+    "mongoose": "^6.9.1",
+    "image-hash": "^5.3.0"
   }
 }

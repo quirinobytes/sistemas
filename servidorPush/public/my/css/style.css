@@ -73,6 +73,7 @@ button#send_message {
     font-size: large;
     text-align: right;
     padding: 10px;
+    display: flex;
 }
 #contactLine:hover {
     background-color: rgb(11, 11, 124) !important;
@@ -239,7 +240,7 @@ input#filetoupload{
     background: #4cf80d;
     border-radius: 70% ;
     border: 2px solid rgb(16, 139, 20);
-    margin: -20px 0px 0px -10px;
+    margin:28px 0px 0px -20px;
     height: 18px;
     width: 18px;
 }
@@ -277,6 +278,15 @@ header#headerMenu {
     border-radius: 100%;
     border: 1px black solid;
 }
+
+.avatarContactList{
+    height: 45px;
+    width:  45px;
+    border-radius: 100%;
+    border: 1px black solid;
+    margin-right: 5px;
+}
+
 
 .navbar{
     border-radius: 12px;

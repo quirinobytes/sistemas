@@ -2,14 +2,27 @@
 var globalContatosList = [];
 var globalAudio;
 var contadorAposNItensPrivateMensagens = 0
-var contadorAposNItensPrivateMensagensObj = {}
+// var contadorAposNItensPrivateMensagensObj = {}
+// var contadorAposNItensPrivateMensagensObj = {}
+var contadorAposNItensPrivateMensagensObj = new Map([
+	["username", 500],
+	["bananas", 300],
+	["oranges", 200]
+  ]);
 
+function incContadorAposNItensPrivateMensagensObj(user){
+	console.log("##INC##")
+	console.log("USER="+user)
+
+	console.log("RESULT="+contadorAposNItensPrivateMensagensObj.get(user))
+
+}
 
 function loadChatWith(username, aposNItens) {
 	
 	
 
-	console.log("contadorAposNItensPrivateMensagensObj."+username+"= "+contadorAposNItensPrivateMensagensObj.username)
+	console.log("contadorAposNItensPrivateMensagensObj."+username+"= "+contadorAposNItensPrivateMensagensObj.get(username))
 	// if (!contadorAposNItensPrivateMensagensObj.username){
 	// 	contadorAposNItensPrivateMensagensObj.username += 10
 	// 	console.log("ZEREI O CONTATOR DO "+username)
@@ -17,7 +30,7 @@ function loadChatWith(username, aposNItens) {
 	// else{
 		//Nao sei se tem q fazer isso, acho q sim
 		//contadorAposNItensPrivateMensagensObj = {}
-		console.log("CONTADOR CARREGANDO CORRETAMENTE: contadorAposNItensPrivateMensagensObj."+username+"= "+contadorAposNItensPrivateMensagensObj.username)
+		console.log("CONTADOR CARREGANDO CORRETAMENTE: contadorAposNItensPrivateMensagensObj."+username+"= "+contadorAposNItensPrivateMensagensObj.get(username))
 		// contadorAposNItensPrivateMensagensObj.username += aposNItens
 
 	// }
@@ -52,12 +65,12 @@ function loadChatWith(username, aposNItens) {
 	// 	contadorAposNItensPrivateMensagensObj.username = 0
 
 	$.ajax({
-			url: "./rest/loadChatWith/"+myname+"/"+username+"/"+ contadorAposNItensPrivateMensagensObj.username
+			url: "./rest/loadChatWith/"+myname+"/"+username+"/"+ contadorAposNItensPrivateMensagensObj.get(username)
 	}).then(function(data) {
 
 	if (data){
 
-		contadorAposNItensPrivateMensagensObj.username += data.length
+		contadorAposNItensPrivateMensagensObj.set(username, contadorAposNItensPrivateMensagensObj.get(username) + data.length)
 
 		data.forEach(item => { 
 		    // console.log("ITEM:");
@@ -113,7 +126,10 @@ function blinkLoggedUsers(){
 function limpaBoard(username) {
 	var messageTo = $("#divMessageTo")
 	//alert("limpando o board do"+username)
-	contadorAposNItensPrivateMensagensObj.username = 0;
+	contadorAposNItensPrivateMensagensObj.set(username,0);
+	console.log("### CHILDREN: ")
+	console.log($("#contactLine").children())
+	// .removeClass("selected")
 	messageTo.empty();
 }
 
@@ -163,10 +179,11 @@ $(function(){
 		loadConsumers()
 
 		$('div.container').on('scroll', function() {
+			to = divContato.innerHTML
 			if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
-				console.log("APOS CARREGAR CORRETAMENTE: contadorAposNItensPrivateMensagensObj."+username+"= "+contadorAposNItensPrivateMensagensObj.username)
+				console.log("APOS CARREGAR CORRETAMENTE: contadorAposNItensPrivateMensagensObj["+to+"]= "+contadorAposNItensPrivateMensagensObj[to])
 				
-				loadChatWith(username, contadorAposNItensPrivateMensagensObj.username)
+				loadChatWith(to, contadorAposNItensPrivateMensagensObj[to])
 			}
 		})
 
@@ -190,9 +207,10 @@ $(function(){
 					//fazer isso para remover o nome do usuario logado e nao mostrar na lista de contatos, pois ele tmb esta na lista e nao faz sentido ele falar com ele.
 					if ( item.username != myname[0].innerText ){
 						username = item.username
-						contadorAposNItensPrivateMensagensObj.username = 0
-						console.log("contadorAposNItensPrivateMensagensObj."+username+"="+contadorAposNItensPrivateMensagensObj.username)
-						contactList.innerHTML += "<div id='contactLine' class='"+item.username+"'> <div id='contacts' onclick='limpaBoard(\""+item.username+"\"); loadChatWith(this.innerHTML,"+contadorAposNItensPrivateMensagensObj.username+");'>" + item.username + "</div> <div id='"+item.username+"_logged_user' ></div> </div>";
+						contadorAposNItensPrivateMensagensObj.set(username,0)
+						console.log("contadorAposNItensPrivateMensagensObj.get("+username+")="+contadorAposNItensPrivateMensagensObj.get(username))
+						contactList.innerHTML += "<div onclick='limpaBoard(\""+item.username+"\"); loadChatWith(\""+item.username+"\","+contadorAposNItensPrivateMensagensObj.get(username)+");'>   <div id='contactLine' class='"+item.username+"'>  <img class='avatarContactList' src='usersAvatar/"+item.username+"-user-icon.png' alt='"+item.username+"'> <div id='contacts' >" + item.username + "</div> <div id='"+item.username+"_logged_user' ></div> </div> </div>";
+						// contactList.innerHTML += "<div id='contactLine' class='"+item.username+"'> <div id='contacts' onclick='limpaBoard(\""+item.username+"\"); loadChatWith(this.innerHTML,"+contadorAposNItensPrivateMensagensObj.username+");'>" + item.username + "</div> <div id='"+item.username+"_logged_user' ></div><img class='miniAvatar' src='usersAvatar/"+item.username+"-user-icon.png' alt='"+item.username+"'> </div>";
 					}
 			});
 
@@ -271,13 +289,20 @@ $(function(){
 
 	//Wait on new message on channel "contactTo"
 	socket.on('contactTo', (data) => {
-
+		to = data.toContact
 		friendUsername=divContato.innerText
 		loggedUser = $("#myname")[0].innerText
 		hora = new Date(data.time).toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
 			
 		//colocar minhas mensagens com a pessoa e for mensagem para mim, no board.
 		if (data.toContact == friendUsername && data.from == loggedUser){
+			
+			// contadorAposNItensPrivateMensagensObj[to] += 1
+			contadorAposNItensPrivateMensagensObj.set(to, contadorAposNItensPrivateMensagensObj.get(to) + 1)
+
+			console.log("#sockert.on## contadorAposNItensPrivateMensagensObj[to]="+contadorAposNItensPrivateMensagensObj[to])
+
+
 			if (data.from == loggedUser)
 				divMessageTo.append("<p class='messageTo'> <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'> <font color='gray'>  " + hora + "</font> <br>" + data.message + "</p>")
 			else
@@ -308,6 +333,14 @@ $(function(){
 			divMessageTo.append("<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>  " + hora + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'>  <br> "+ data.message +" </p>");
 			$('#playSoundOnNewMessage')[0].play();
 			feedback.empty();
+			// incContadorAposNItensPrivateMensagensObj(data.from)
+			contadorAposNItensPrivateMensagensObj.set(data.from, contadorAposNItensPrivateMensagensObj.get(data.from) + 1)
+
+			// to = data.from
+			// contadorAposNItensPrivateMensagensObj.to += 1
+			// console.log('to='+to)
+			// console.log("#sockert.on## contadorAposNItensPrivateMensagensObj.to="+contadorAposNItensPrivateMensagensObj.to)
+
 		}
 	})
 	

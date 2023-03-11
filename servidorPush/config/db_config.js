@@ -2,7 +2,7 @@
 
 const mongoose = require('mongoose')
 
-//mongoose.set('strictQuery', false);
+//mongoose.set('strictQuery', false)
 
 mongoose.Promise = global.Promise;
 
@@ -23,12 +23,12 @@ var options = {
 
 mongoose.connect(strConnection, options, function (err,res ){
  if (err){
-	 console.log('Não foi possivel conectar a: '+ strConnection+"\n erro:");
+	 console.log('Não foi possivel conectar a: '+ strConnection+"\n erro:")
    console.log(err)
  }
   else
- 	  console.log('° Conectado a: ' + strConnection);
-});
+ 	  console.log('° Conectado a: ' + strConnection)
+})
 
 
 module.exports = { mongoose }
