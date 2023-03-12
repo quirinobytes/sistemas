@@ -3,8 +3,8 @@ var ChatMessageModel = require ("../models/chatMessageModel.js")
 
 
 exports.save = function ({id,username,message,time,identificador,filepath}, callback){
-	console.log("filepath = ") 
-	console.log(filepath)
+	// console.log("filepath = ") 
+	// console.log(filepath)
 	new ChatMessageModel({
 		'id': id,
 		'username': username,
@@ -37,7 +37,7 @@ exports.pesquisar = function ({identificador }, callback){
 	
 		ChatMessageModel.findOne({identificador:identificador})
 		.then(doc => {
-			 console.log("doc encontrado"+doc)
+			//  console.log("doc encontrado"+doc)
 			 callback(doc)
 	    })
 		.catch(err => {callback ({error: "Não foi possível localizar esse documento pelo identificador"}) })

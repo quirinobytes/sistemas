@@ -523,8 +523,8 @@ app.get("/votaram/:identificador/:escolha", function(req, res){
 					res.status(200).end("Sucesso: votado NAO identificador["+identificador+"]")
 					io.sockets.emit("votosnamidia",{identificador:identificador, opcao:"dislike", qtde:total})
 
-					if(total%10) {
-						// console.log("vou começar a evitar identificador["+identificador+"] total="+total)
+					if(total%10==0) {
+						console.log("vou começar a evitar identificador["+identificador+"] total="+total)
 						evitarNoMural(identificador)
 					} 
 				})
@@ -535,30 +535,48 @@ app.get("/votaram/:identificador/:escolha", function(req, res){
 function evitarNoMural(identificador){
 	chatMessageController.pesquisar({identificador:identificador}, function (data){
 		if (data.error){
-			console.log("Erro: deu ruim ao pesquisar o identificador para evita-lo")
-			console.log(data.error)
+			// console.log("Erro: deu ruim ao pesquisar o identificador para evita-lo")
+			// console.log(data.error)
 			return false
 		}
 		else {
-			doc = evite.searchEviteByIdentificador({identificador})
-			if (doc.error)
-				evite.save({identificador:data.identificador,votosnao:data.votosnao, filepath:data.filepath, from:data.username }, function (callback){
-					if (callback.error){
-						console.log("Error: Nao foi possivel evitar o identificador["+identificador+"] na evitarNoMural()")
-						console.log(callback.error)
-						return false
-					}
-					else {
-						console.log("Sucesso: salvo evite para o identificador["+identificador+"]")
-					}
+			evite.searchEviteByIdentificador(identificador, function(doc){
+				if (doc.error){ //if error, signigica que nao achou, deve salva-lo com ranking=1
 
-				})
-			else
-			evite.incremente({identificador:data.identificador}, function (callback){
+					evite.save({identificador:data.identificador,votosnao:data.votosnao, ranking: 1, filepath:data.filepath, from:data.username }, function (callback){
+						if (callback.error){
+							// console.log("Error: Nao foi possivel salvar o evite do identificador["+identificador+"] na evitarNoMural()")
+							// console.log(callback.error)
+							return false
+						}
+						else {
+							// console.log("Sucesso: salvo evite para o identificador["+identificador+"]")
+							// console.log("callback = ") 
+							//console.log(callback)
+						}
+	
+					})
+					
+				}
+				else{
+					// console.log("SALVANDO o incremente para o identificador")
+
+					evite.incRanking({identificador:data.identificador}, function (callback){	
+						// console.log("callback = ") 
+						// console.log(callback)
+						// console.log("SALVO o incremente para o identificador")
+
+						
+					})
+
+				}
 				
-			})
+				
+			}
+			)
+			
 
-		}
+			}
 	})
 }
 

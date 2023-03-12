@@ -27,7 +27,7 @@ console.log(hash.digest('hex'))
 
 
 
-exports.save = function ({identificador:identificador, filepath:filepath, votosnao:votosnao, from:from }, callback){
+exports.save = function ({identificador:identificador, filepath:filepath, ranking: ranking, votosnao:votosnao, from:from }, callback){
 	var buff
 	var path = process.cwd()
 	path = path + "/" + filepath.toString()
@@ -42,7 +42,8 @@ exports.save = function ({identificador:identificador, filepath:filepath, votosn
 				"identificador": identificador,
 				'from': from,
 				"hash": hash,
-				"votosnao": votosnao
+				"votosnao": votosnao,
+				"ranking": ranking
 			}).save(function(error, data){
 				if (error){
 					console.log("error = ") 
@@ -67,28 +68,28 @@ exports.list = function (callback){
 	})
 }
 
-exports.searchEviteByIdentificador = function (identificador,callback){
+exports.searchEviteByIdentificador = function (identificador, callback){
 	EviteModel.findOne({identificador: identificador})
 	.then(doc => { callback(doc) })
-	.catch(error => {callback ({error: "Não foi possível localizar esse identificador para incrementar"}) })
+	.catch(error => {callback ({error: "Não foi possível localizar esse identificador"}) })
 }
 
-exports.incEviteDezVezes = function (identificador,callback){
+exports.incRanking = function ({identificador:identificador}, callback){
 	EviteModel.findOne({identificador: identificador})
 	.then(doc => {
-		EviteModel.findByIdAndUpdate(doc._id, { $inc:{ eviteDezVezes: 1 }},function (error, docs) {
+		EviteModel.findByIdAndUpdate(doc._id, { $inc:{ ranking: 1 }}, function (error, docs) {
 			if (error) callback ({error: "Não foi possível incrementar os eviteDezVezes para esse identificador"})
-			else callback(docs.eviteDezVezes+1)
+			else callback(docs)
 		})
 	})
-	.catch(error => {callback ({error: "Não foi possível localizar esse identificador para incrementar"}) })
+	.catch(error => {callback ({error: "Não foi possível localizar esse identificador para incrementar: "+ identificador}) })
 }
 
 exports.votaramNao = function (identificador,callback){
 	EviteModel.findOne({identificador: identificador})
 	  .then(doc => {
 		// console.log(doc._id)
-		  EviteModel.findByIdAndUpdate(doc._id, { $inc:{ votosnao: 1 }},function (err, docs) {
+		  EviteModel.findByIdAndUpdate(doc._id, { $inc:{ votosnao: 1 }}, function (err, docs) {
 			  if (err)  callback ({err: "Não foi possível incrementar os votos de nao para esse identificador"})
 			  else callback(doc.votosnao+1)
 		  })

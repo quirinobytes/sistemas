@@ -20,6 +20,10 @@ var EviteModelSchema = new Schema({
   votosnao: {
     type: Number,
     required: [true, 'Qtde de Votosnao'],
+  },
+  ranking: {
+    type: Number,
+    required: [false, 'Ranking'],
   }
 
 })
