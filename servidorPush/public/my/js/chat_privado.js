@@ -209,7 +209,7 @@ $(function(){
 						username = item.username
 						contadorAposNItensPrivateMensagensObj.set(username,0)
 						console.log("contadorAposNItensPrivateMensagensObj.get("+username+")="+contadorAposNItensPrivateMensagensObj.get(username))
-						contactList.innerHTML += "<div onclick='limpaBoard(\""+item.username+"\"); loadChatWith(\""+item.username+"\","+contadorAposNItensPrivateMensagensObj.get(username)+");'>   <div id='contactLine' class='"+item.username+"'>  <img class='avatarContactList' src='usersAvatar/"+item.username+"-user-icon.png' alt='"+item.username+"'> <div id='contacts' >" + item.username + "</div> <div id='"+item.username+"_logged_user' ></div> </div> </div>";
+						contactList.innerHTML += "<div onclick='limpaBoard(\""+item.username+"\"); loadChatWith(\""+item.username+"\","+contadorAposNItensPrivateMensagensObj.get(username)+");'>   <div id='contactLine' class='"+item.username+"'>  <img class='avatarContactList' src='usersAvatar/"+item.username+"-user-icon.png' alt='"+item.username+"'> <div id='"+item.username+"_logged_user' ></div> &nbsp; <div id='contacts' >" + item.username + "</div> </div> </div>";
 						// contactList.innerHTML += "<div id='contactLine' class='"+item.username+"'> <div id='contacts' onclick='limpaBoard(\""+item.username+"\"); loadChatWith(this.innerHTML,"+contadorAposNItensPrivateMensagensObj.username+");'>" + item.username + "</div> <div id='"+item.username+"_logged_user' ></div><img class='miniAvatar' src='usersAvatar/"+item.username+"-user-icon.png' alt='"+item.username+"'> </div>";
 					}
 			});

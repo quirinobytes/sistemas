@@ -238,11 +238,12 @@ input#filetoupload{
 
 .logged_user {
     background: #4cf80d;
-    border-radius: 70% ;
-    border: 2px solid rgb(16, 139, 20);
-    margin:28px 0px 0px -20px;
-    height: 18px;
-    width: 18px;
+    border-radius: 70%;
+    border: 1px solid rgb(16, 139, 20);
+    margin: -6px 0px 0px -56px;
+    height: 57px;
+    width: 57px;
+    padding: 10px;
 }
 /* 
 h1 {
@@ -285,6 +286,7 @@ header#headerMenu {
     border-radius: 100%;
     border: 1px black solid;
     margin-right: 5px;
+    position: sticky;
 }
 
 
