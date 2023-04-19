@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: evolua
+  labels:
+    app: evolua
+    service: evolua
+spec:
+  ports:
+  - port: 3000
+    name: http
+  selector:
+    app: evolua
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: evolua-v1
+  labels:
+    app: evolua
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: evolua
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: evolua
+        version: v1
+    spec:
+      containers:
+      - name: evolua
+        image: docker.io/quirinobytes/evolua
+        resources:
+          requests:
+            cpu: "100m"
+        imagePullPolicy: IfNotPresent #Always
+        ports:
+        - containerPort: 3000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: evolua-v2
+  labels:
+    app: evolua
+    version: v2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: evolua
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: evolua
+        version: v2
+    spec:
+      containers:
+      - name: evolua
+        image: docker.io/quirinobytes/evolua
+        resources:
+          requests:
+            cpu: "200m"
+        imagePullPolicy: IfNotPresent #Always
+        ports:
+        - containerPort: 3000
