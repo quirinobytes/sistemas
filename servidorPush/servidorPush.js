@@ -170,8 +170,12 @@ function addMessageContactToPerson({from:from,to:to,message:message,time:time, i
 
 	privateMessageController.save(idto,prefixinv,from,to,message,dateTime,identificador, function(resposta){
 		if (resposta.error) 	{
-			console.log(" Deu algum erro ao passou pela save 'prefixinv', resposta: ")
+			
+			console.log("[Error] Deu algum erro ao passar pela privateMessageController.save('idto,prefixinv,from,to,message,dateTime,identificador')\nResposta: ")
 			console.log(resposta)
+
+			console.log("\n\n idto,prefixinv,from,to,message,dateTime,identificador = ") 
+			console.log(idto,prefixinv,from,to,message,dateTime,identificador)
 			return false
 		}
 		else return true
