@@ -153,7 +153,7 @@ function findValueByPrefix(object, prefix) {
 function addMessageContactToPerson({from:from,to:to,message:message,time:time, identificador:identificador}){
 	//se nao tiver carregado um board para falar com alguem, aqui pode ficar sem um para
 	if (!to && !from && !message ){
-		console.log("veio faltando dados: para ou de ou mensagem ou time")
+		console.log("[Error] Veio faltando dados na mensagem privada! \nOu o to: | ou o from: | ou o message:")
 		console.log(to+" | "+from+" | "+message + " | " + time)
 	 	return
 	}
@@ -165,21 +165,17 @@ function addMessageContactToPerson({from:from,to:to,message:message,time:time, i
 	var id = uuidv4()
 	prefix = from + "_" + to
 	prefixinv = to + "_" + from
-	
 	idto = to+id
 
 	privateMessageController.save(idto,prefixinv,from,to,message,dateTime,identificador, function(resposta){
-		if (resposta.error) 	{
-			
+		if (resposta.error)	{
 			console.log("[Error] Deu algum erro ao passar pela privateMessageController.save('idto,prefixinv,from,to,message,dateTime,identificador')\nResposta: ")
 			console.log(resposta)
-
 			console.log("\n\n idto,prefixinv,from,to,message,dateTime,identificador = ") 
 			console.log(idto,prefixinv,from,to,message,dateTime,identificador)
 			return false
 		}
 		else return true
-
 	})
 
 	idfrom = from+id

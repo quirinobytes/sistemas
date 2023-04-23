@@ -1,9 +1,9 @@
 #!/bin/bash
 
 #################################################
-# Bash script - Modelo					#
+# Bash script - Modelo                          #
 # Use como modelo para criar seus scripts bash. #
-# v_1.0.1							#
+# v_1.0                                         #
 #################################################
 
 
