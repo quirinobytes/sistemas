@@ -5,9 +5,9 @@ const fs = require('fs')
 const { imageHash } = require('image-hash');
 
 
-fs.readFile("/root/chatPVT.key", function (error,data){
+fs.readFile("/evolua.key", function (error,data){
 	if(error) 
-		console.log("[ERROR] Nao foi possivel ler a key para gerar o Hash das midias")
+		console.log("❌[ERROR] Nao foi possivel ler a key para gerar o Hash das midias")
 	else{
 		const key = data.toString('binary').split('::', 2);
 		//console.log("key = ") 
@@ -22,7 +22,7 @@ for (let i = 5; i < 9; i++) {
     hash.update(byte + i)
 }
 
-console.log("✔ [INFO] Using HASH= "+hash.digest('hex'))
+console.log("☑[CONFIG] Chave para HASH das midias configurada: "+hash.digest('hex'))
 
 
 

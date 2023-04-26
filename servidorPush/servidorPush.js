@@ -120,7 +120,7 @@ function chat_add_message({username,message,identificador,filepath}){
 		messagesTotal.inc({add_user_message: username})
 	}
 	else{
-		console.log("Necessário refazer o login do usuário")
+		console.log("☢ [WARNING] Necessário refazer o login do usuário")
 		return false
 		//o certo aqui era fazer erro 400, ou um reautenticate
 	}
@@ -130,7 +130,7 @@ function chat_add_message({username,message,identificador,filepath}){
 
 	chatMessageController.save({id:chatMessageId,username:username,message,time,identificador,filepath}, function(data){
 		if (data.error) {
-			console.log({error:" Erro ao salvar mensagem id["+chatMessageId+"] no Mural"})
+			console.log({error:" ❌ [ERROR] Erro ao salvar mensagem id["+chatMessageId+"] no Mural"})
 			return false
 		}
 		else {
@@ -153,7 +153,7 @@ function findValueByPrefix(object, prefix) {
 function addMessageContactToPerson({from:from,to:to,message:message,time:time, identificador:identificador}){
 	//se nao tiver carregado um board para falar com alguem, aqui pode ficar sem um para
 	if (!to && !from && !message ){
-		console.log("[Error] Veio faltando dados na mensagem privada! \nOu o to: | ou o from: | ou o message:")
+		console.log("❌ [ERROR] Veio faltando dados na mensagem privada! \nOu o to: | ou o from: | ou o message:")
 		console.log(to+" | "+from+" | "+message + " | " + time)
 	 	return
 	}
@@ -169,7 +169,7 @@ function addMessageContactToPerson({from:from,to:to,message:message,time:time, i
 
 	privateMessageController.save(idto,prefixinv,from,to,message,dateTime,identificador, function(resposta){
 		if (resposta.error)	{
-			console.log("[Error] Deu algum erro ao passar pela privateMessageController.save('idto,prefixinv,from,to,message,dateTime,identificador')\nResposta: ")
+			console.log("❌ [ERROR] Deu algum erro ao passar pela privateMessageController.save('idto,prefixinv,from,to,message,dateTime,identificador')\nResposta: ")
 			console.log(resposta)
 			console.log("\n\n idto,prefixinv,from,to,message,dateTime,identificador = ") 
 			console.log(idto,prefixinv,from,to,message,dateTime,identificador)
@@ -181,8 +181,8 @@ function addMessageContactToPerson({from:from,to:to,message:message,time:time, i
 	idfrom = from+id
 	privateMessageController.save(idfrom,prefix,from,to,message,dateTime,identificador, function(resposta){
 		if (resposta.error) {
-			console.log("Error: falha ao salvar privateMessage")
-			console.log("Error: resposta.error = "+resposta.error) 
+			console.log("❌ [ERROR]: falha ao salvar privateMessage")
+			console.log("❌ [ERROR]: resposta.error = "+resposta.error) 
 			console.log(resposta)
 		}
 	})
@@ -265,13 +265,13 @@ app.get('/ultimosItensChatMessage/:apos', (req, res) => {
     // console.log("quero chatMessages APOS ["+aposX+"] itens agora")
 
 	chatMessageController.ultimosItens(parseInt(aposX),function(resp){
-		console.log("[INFO] Retorno dos ultimosItens resp=")
-		console.log("resp = ") 
-		console.log(resp)
+		// console.log("[INFO] Retorno dos ultimosItens resp=")
+		// console.log("resp = ") 
+		// console.log(resp)
 		//	res.json(resp)
 		var array = []
 		if (resp.resposta) 
-			console.log("Deu ruim na obtencao de chatmessages no mural")
+			console.log("❌ [ERROR] Deu ruim na obtencao de chatmessages no mural")
 		else
 			if (resp)
 				resp.forEach(function(item){
@@ -350,9 +350,9 @@ app.post('/fileupload', (req, res) => {
 	form.parse(req, function (err, fields, files) {
 		var oldpath = files.filetoupload.path;
 		var newpath = './fileupload/' + files.filetoupload.name;
-		fs.rename(oldpath, newpath, function (err) {
-
-		if (err) throw err;
+		
+		fs.copyFile(oldpath, newpath, function (err) {
+			if (err) throw err;
 			//prometheus metrics
 			//collector.collect(err || res)
 			//res.write('File uploaded and moved!')
@@ -402,9 +402,10 @@ app.post('/fileuploadMural/',  (req, res) => {
 
 		//console.log("messageInAttach"+ fields.messageInAttach)
 		var oldpath = files.filetoupload.path;
-		
-		fs.rename(oldpath, newpath, function (err) {
 
+
+
+		fs.copyFile(oldpath, newpath, function (err) {
 			if (err) throw err
 			
 			if (chat_add_message({message:link, username:username, identificador:identificarUnico, filepath:newpath }) ){
@@ -417,7 +418,23 @@ app.post('/fileuploadMural/',  (req, res) => {
 			}
 			res.redirect('/mural')
 			res.end()
-		})
+        });
+		
+		// fs.rename(oldpath, newpath, function (err) {
+
+		// 	if (err) throw err
+			
+		// 	if (chat_add_message({message:link, username:username, identificador:identificarUnico, filepath:newpath }) ){
+		// 		// console.log("salvou com sucesso")
+		// 		//Inserindo a <img> no canal de message para aparecer no Mural.
+		// 	  io.sockets.emit('message', {message:link, username:username,  time:time, identificador:identificarUnico})
+		// 	}
+		// 	else {
+		// 		//console.log(" mensagem"+link)
+		// 	}
+		// 	res.redirect('/mural')
+		// 	res.end()
+		// })
 	})
 })
 
@@ -854,7 +871,7 @@ app.get ('/rest/commands/execute/:command',function (req,res) {
 			return;
 		   }
 		}
-		console.log("ERROR: TENTATIVA DE EXECUCAO DE COMANDO: ["+req.params.command + "]\n COMMANDS["+i+"] = "+commands )
+		console.log("☣☠ [ALERT]: Tentativa de execução de comando NAO AUTORIZADO: ["+req.params.command + "]\n COMMANDS["+i+"] = "+commands )
 		res.json({})
 		res.end()
 })
@@ -880,7 +897,7 @@ app.get ('/rest/hostexec/:hostname/:command',function (req,res) {
 			return;
 		   }
 		}
-		console.log("ERROR: TENTATIVA DE EXECUCAO DE COMANDO: ["+req.params.command + "]\n COMMANDS["+i+"] = "+commands )
+		console.log("❌ [ERROR]: TENTATIVA DE EXECUCAO DE COMANDO: ["+req.params.command + "]\n COMMANDS["+i+"] = "+commands )
 		res.end()
 })
 
