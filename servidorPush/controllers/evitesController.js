@@ -22,7 +22,7 @@ for (let i = 5; i < 9; i++) {
     hash.update(byte + i)
 }
 
-console.log("☑[CONFIG] Chave para HASH das midias configurada: "+hash.digest('hex'))
+console.log("☑ [CONFIG] Chave para HASH das midias configurada com sha256: "+hash.digest('hex'))
 
 
 

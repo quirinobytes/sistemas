@@ -11,6 +11,15 @@ spec:
   - ReadWriteOnce
   hostPath:
     path: /k8s/evolua/videoupload
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - node1-kube
+ 
 ---
 
 apiVersion: v1
