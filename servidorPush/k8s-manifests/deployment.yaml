@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: evolua
+  labels:
+    app: evolua
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: evolua
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: evolua
+        version: v1
+    spec:
+      containers:
+      - name: evolua
+#        image: docker.io/quirinobytes/evolua@sha256:597a4b2d29bbd79f0b26d3bf00fd98519491654cb17e64ae20ec3454854d551b
+        image: docker.io/quirinobytes/evolua@sha256:92a52b743ac0808ad5f02e455c14212c56cbeeca49e224a1ec599a97a644aa9c
+        resources:
+          requests:
+            cpu: "100m"
+        imagePullPolicy: IfNotPresent #Always
+        ports:
+        - containerPort: 3000
+        env:
+        - name: MONGO_SERVER
+          value: "mongodb-dev.default.svc.cluster.local"
+#          value: "192.168.15.2"
+        - name: MONGO_SERVER_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: mongoserver
+              key: username
+        - name: MONGO_SERVER_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mongoserver
+              key: password
+        - name: MONGO_SERVER_ROLE
+          value: "admin"
+        - name: ME_CONFIG_MONGODB_ENABLE_ADMIN
+          value: "true"
+

@@ -52,7 +52,7 @@ var convert = new Convert({
 const { v4: uuidv4 } = require('uuid')
 var path = require('path')
 var fs = require('fs')
-var commands_json = './comandos.json'
+var commands_json = 'config/comandos.json'
 var commandsJsonFile = fs.readFileSync(commands_json)
 var commands = JSON.parse(commandsJsonFile)
 //var commands = [{ command: "ping 8.8.8.8 -c1"},{command: "/root/shell/push/deploy.js deploy"},{command:"/root/shell/push/command.js 'wall rafael'"},{command:"hostname"}];
@@ -252,14 +252,20 @@ app.get('/ultimosItensChatMessage/:apos', (req, res) => {
     // console.log("quero chatMessages APOS ["+aposX+"] itens agora")
 
 	chatMessageController.ultimosItens(parseInt(aposX),function(resp){
+		console.log("[INFO] Retorno dos ultimosItens resp=")
+		console.log("resp = ") 
+		console.log(resp)
 		//	res.json(resp)
 		var array = []
-		if (resp)
-			resp.forEach(function(item){
-				array.push(item._doc)
-			})
-		res.json(array)
-		res.end()
+		if (resp.resposta) 
+			console.log("Deu ruim na obtencao de chatmessages no mural")
+		else
+			if (resp)
+				resp.forEach(function(item){
+					array.push(item._doc)
+				})
+			res.json(array)
+			res.end()
 	})
 })
 

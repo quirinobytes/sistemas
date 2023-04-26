@@ -7,11 +7,11 @@ const { imageHash } = require('image-hash');
 
 fs.readFile("/root/chatPVT.key", function (error,data){
 	if(error) 
-		console.log("nao foi possivel ler a key para gerar o Hash das midias")
+		console.log("[ERROR] Nao foi possivel ler a key para gerar o Hash das midias")
 	else{
 		const key = data.toString('binary').split('::', 2);
-		console.log("key = ") 
-		console.log(key)
+		//console.log("key = ") 
+		//console.log(key)
 	}
 })
 
@@ -21,7 +21,8 @@ const hash = crypto.createHash('sha256')
 for (let i = 5; i < 9; i++) {
     hash.update(byte + i)
 }
-console.log(hash.digest('hex'))
+
+console.log("✔ [INFO] Using HASH= "+hash.digest('hex'))
 
 
 

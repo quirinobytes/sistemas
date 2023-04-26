@@ -1,18 +1,24 @@
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: evolua-ingress
-  annotations:
-    ingress.kubernetes.io/rewrite-target: /
 spec:
+  ingressClassName: nginx
   rules:
-  - http:
+  - host: evolua.antidrone.com.br
+    http:
       paths:
-        - path: /mural
-          backend:
-            serviceName: evolua-service
-            servicePort: 3000
-        - path: /banana
-          backend:
-            serviceName: evolua-service
-            servicePort: 80
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: evolua-service
+            port:
+              number: 3000
+#      - path: /coffee
+#        pathType: Prefix
+#        backend:
+#          service:
+#            name: evolua-service
+#            port:
+#              number: 80

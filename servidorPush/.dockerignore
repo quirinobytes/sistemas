@@ -1,0 +1,8 @@
+.vscode
+k8s-manifests/*
+service.SistemaOperacional/*
+audioupload/*
+videoupload/*
+fileupload/*
+fileuploadMural/*
+node_modules/*
