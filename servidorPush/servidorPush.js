@@ -246,6 +246,19 @@ app.get('/mural', (req, res) => {
 	res.render('mural',{usuario:nome })
 })
 
+const favicon = require('serve-favicon');
+app.use(favicon(__dirname + '/public/imagem_comum/favicon.ico'));
+
+// app.get('/favicon.ico', (req, res) => {
+// 	PATH="public/imagem_comum/favicon.ico"
+// 	fs.readFile(PATH,function(err,data){
+// 		res.contentType(type="image/x-icon")
+// 		res.write(data)
+// 	})
+// 	res.end
+// })
+
+
 
 app.get('/ultimosItensChatMessage/:apos', (req, res) => {
 	var aposX = req.params.apos;

@@ -29,8 +29,7 @@ spec:
         - containerPort: 3000
         env:
         - name: MONGO_SERVER
-          value: "mongodb-dev.default.svc.cluster.local"
-#          value: "192.168.15.2"
+          value: "mongodb.evolua.svc.cluster.local"
         - name: MONGO_SERVER_USERNAME
           valueFrom:
             secretKeyRef:
