@@ -19,8 +19,7 @@ spec:
     spec:
       containers:
       - name: evolua
-#        image: docker.io/quirinobytes/evolua@sha256:597a4b2d29bbd79f0b26d3bf00fd98519491654cb17e64ae20ec3454854d551b
-        image: docker.io/quirinobytes/evolua@sha256:92a52b743ac0808ad5f02e455c14212c56cbeeca49e224a1ec599a97a644aa9c
+        image: docker.io/quirinobytes/evolua@sha256:69affe828abc8dd255868f1d99bf1515a445e23b98b997deab644eda2157e815
         resources:
           requests:
             cpu: "100m"
@@ -29,7 +28,7 @@ spec:
         - containerPort: 3000
         env:
         - name: MONGO_SERVER
-          value: "mongodb.evolua.svc.cluster.local"
+          value: "mongodb-dev.default.svc.cluster.local"
         - name: MONGO_SERVER_USERNAME
           valueFrom:
             secretKeyRef:
@@ -44,4 +43,27 @@ spec:
           value: "admin"
         - name: ME_CONFIG_MONGODB_ENABLE_ADMIN
           value: "true"
+        volumeMounts:
+        - mountPath: /usr/src/app/audioupload
+          name: evolua-audioupload-pv
+        - mountPath: /usr/src/app/fileuploadMural
+          name: evolua-fileuploadmural-pv
+        - mountPath: /usr/src/app/videoupload
+          name: evolua-videoupload-pv
+        - mountPath: /usr/src/app/fileupload
+          name: evolua-fileupload-pv
+      volumes:
+      - name: evolua-audioupload-pv
+        persistentVolumeClaim:
+          claimName: evolua-audioupload-pvc
+      - name: evolua-fileupload-pv
+        persistentVolumeClaim:
+          claimName: evolua-fileupload-pvc
+      - name: evolua-fileuploadmural-pv
+        persistentVolumeClaim:
+          claimName: evolua-fileuploadmural-pvc
+      - name: evolua-videoupload-pv
+        persistentVolumeClaim:
+          claimName: evolua-videoupload-pvc
+
 

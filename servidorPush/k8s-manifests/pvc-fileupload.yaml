@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: evolua-fileupload-pv
+spec:
+  #storageClassName: manual
+  storageClassName: local-storage
+  capacity:
+    storage: 2Gi
+  accessModes:
+  - ReadWriteOnce
+  hostPath:
+    path: /k8s/evolua/fileupload
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: evolua-fileupload-pvc
+spec:
+  storageClassName: local-storage
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+
