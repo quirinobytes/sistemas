@@ -4,3 +4,4 @@ audioupload/
 videoupload/
 postgres_Backup/
 k8s-manifests/secret
+#node_modules/
