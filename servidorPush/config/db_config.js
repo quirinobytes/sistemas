@@ -59,7 +59,7 @@ console.log('⌛[WAIT] Mongodb: conectando ao servidor ...')
 
 mongoose.connect(strConnection, options, function (err,res ){
  if (err){
-	 console.log('❌ [ERROR] Não foi possivel conectar ao servidor mongodb '+ strConnection+"\n erro:")
+	 console.log('❌ [ERROR] Não foi possivel conectar ao servidor mongodb '+ strConnection+"\nDescrição do erro: ")
    console.log(err)
  }
   else

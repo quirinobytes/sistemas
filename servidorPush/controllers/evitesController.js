@@ -17,15 +17,10 @@ fs.readFile("/evolua.key", function (error,data){
 
 let byte = crypto.randomBytes(8);
 const hash = crypto.createHash('sha256')
-
 for (let i = 5; i < 9; i++) {
     hash.update(byte + i)
 }
-
-console.log("☑ [CONFIG] Chave para HASH das midias configurada com sha256: "+hash.digest('hex'))
-
-
-
+console.log("☑ [CONFIG] Chave para HASH das midias configurada com [sha256:"+hash.digest('hex')+"]")
 
 
 exports.save = function ({identificador:identificador, filepath:filepath, ranking: ranking, votosnao:votosnao, from:from }, callback){
@@ -35,7 +30,7 @@ exports.save = function ({identificador:identificador, filepath:filepath, rankin
 
 	imageHash(path, 16, true, (error, hash) => {
 		if (error) {
-			console.log("Erro: Deu erro ao tentar gerar o hash da imagem na imageHash()")
+			console.log("❌[ERROR] Deu erro ao tentar gerar o hash da imagem na imageHash()")
 			throw error;
 		}
 		else {
@@ -49,7 +44,7 @@ exports.save = function ({identificador:identificador, filepath:filepath, rankin
 				if (error){
 					console.log("error = ") 
 					console.log(error)
-					callback({error: 'ERRO: Não foi possível salvar esse evite'})
+					callback({error: '❌[ERROR] Não foi possível salvar esse evite'})
 				}else{
 					callback(data)
 				}
@@ -62,7 +57,7 @@ exports.save = function ({identificador:identificador, filepath:filepath, rankin
 exports.list = function (callback){
 	EviteModel.find({}, function(error, evite) {
 		if (error){
-			callback ({error:"Não foi possível listar as mensagens privadas"})
+			callback ({error:"❌[ERROR] Não foi possível listar as mensagens privadas"})
 		}else{
 			callback(evite)
 		}
@@ -72,18 +67,18 @@ exports.list = function (callback){
 exports.searchEviteByIdentificador = function (identificador, callback){
 	EviteModel.findOne({identificador: identificador})
 	.then(doc => { callback(doc) })
-	.catch(error => {callback ({error: "Não foi possível localizar esse identificador"}) })
+	.catch(error => {callback ({error: "❌[ERROR] Não foi possível localizar esse identificador"}) })
 }
 
 exports.incRanking = function ({identificador:identificador}, callback){
 	EviteModel.findOne({identificador: identificador})
 	.then(doc => {
 		EviteModel.findByIdAndUpdate(doc._id, { $inc:{ ranking: 1 }}, function (error, docs) {
-			if (error) callback ({error: "Não foi possível incrementar os eviteDezVezes para esse identificador"})
+			if (error) callback ({error: "❌[ERROR] Não foi possível incrementar os eviteDezVezes para esse identificador"})
 			else callback(docs)
 		})
 	})
-	.catch(error => {callback ({error: "Não foi possível localizar esse identificador para incrementar: "+ identificador}) })
+	.catch(error => {callback ({error: "❌[ERROR] Não foi possível localizar esse identificador para incrementar: "+ identificador}) })
 }
 
 exports.votaramNao = function (identificador,callback){
@@ -91,11 +86,11 @@ exports.votaramNao = function (identificador,callback){
 	  .then(doc => {
 		// console.log(doc._id)
 		  EviteModel.findByIdAndUpdate(doc._id, { $inc:{ votosnao: 1 }}, function (err, docs) {
-			  if (err)  callback ({err: "Não foi possível incrementar os votos de nao para esse identificador"})
+			  if (err)  callback ({err: "❌[ERROR] Não foi possível incrementar os votos de nao para esse identificador"})
 			  else callback(doc.votosnao+1)
 		  })
 	  })
-	  .catch(err => {callback ({err: "Não foi possível localizar esse identificador para incrementar"}) })
+	  .catch(err => {callback ({err: "❌[ERROR] Não foi possível localizar esse identificador para incrementar"}) })
 
 }
 
@@ -104,7 +99,7 @@ exports.pioresVotos = function (time, aposNItens, callback){
 	var query = EviteModel.find({time: {$gte : new ISODate("2023-01-01T20:15:31Z") }}).sort({votosnao:1}).limit(10).skip(aposNItens)
 	query.exec(function(error, evitemodel){
 		if(error){
-			callback({error: "Nao foi possivel resgatar mais 10 mensagens a partir do item: ["+aposNItens+"]"})
+			callback({error: "❌[ERROR] Nao foi possivel resgatar mais 10 mensagens a partir do item: ["+aposNItens+"]"})
 		}
 		else{
 			callback(evitemodel)
@@ -115,12 +110,12 @@ exports.pioresVotos = function (time, aposNItens, callback){
 exports.delete = function (id, callback){
 	EviteModel.findById(id, function(error, evitemodel){
 		if (error){
-			callback({error: "Não foi possivel excluir a mensagem"})
+			callback({error: "❌[ERROR] Não foi possivel excluir a mensagem"})
 		}
 		else{
 			EviteModel.remove({_id: id},function(error){
 				if(error){
-					callback({error: "Erro excluindo mensagem id:["+id+"]"})
+					callback({error: "❌[ERROR] Erro excluindo mensagem id:["+id+"]"})
 				}
 			})
 		}

@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: evolua
-        image: docker.io/quirinobytes/evolua@ 
+        image: docker.io/quirinobytes/evolua@sha256:53ec2d843427fd44f486f329763b5accc964a0fce528399bc1a584a05047082d
         resources:
           requests:
             cpu: "100m"

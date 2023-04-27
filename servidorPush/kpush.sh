@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/bin/bash 
 
-export NAMESPACE=evolua
+NAMESPACE=evolua
 
 function printTable(){
   L1=""
@@ -14,6 +14,7 @@ function printTable(){
         L3=$(echo -en "$L3-")
   done
 
+  listras.sh
   echo -en "      $WHITE$yellow$L1\n"
   echo -en "  ✴   | $blue$1$yellow |  ✴ \n"  
   echo -en "      $L3$normal\n"
@@ -24,16 +25,16 @@ cp /evolua.key .
 docker build . -t quirinobytes/evolua
 rm evolua.key
 printTable "Pushing ..."
-#docker push quirinobytes/evolua | tee /tmp/dockerpush.txt
+docker push quirinobytes/evolua | tee /tmp/dockerpush.txt
 
 printTable "Applying..."
 NEW_VERSION=$(cat /tmp/dockerpush.txt | grep "latest: digest" | awk '{print $3}')
-NEW_VERSION=" "
+
 if [ "$NEW_VERSION" == "" ]; then
   echo -en "$red❌[ERROR]$normal Valor do HASH da imagem veio vazio.\n"
   exit 1
 fi
-echo -en "$WHITE Atualizando o HASH [$NEW_VERSION] no deployment.yaml $normal\n"
+echo -en "${WHITE}Atualizando o HASH [$NEW_VERSION] no deployment.yaml $normal\n"
 sed -i "s/evolua@.*$/evolua@$NEW_VERSION/g" k8s-manifests/deployment.yaml
 cd k8s-manifests
 kaf.sh | realce.awk configured | tee /tmp/kaf.txt
@@ -51,23 +52,30 @@ fi
 
 printTable "Pulling..."
 while(true); do 
-      k_get.sh pods | tee > /tmp/pods.txt
-      cat /tmp/pods.txt | grep $NAMESPACE | awk '{ printf "$1\t $3"}' | grep -e 'ContainerCreating|InvalidImageName'
+      echo to procurando
+      k_get.sh pods > /tmp/pods.txt
+      cat /tmp/pods.txt | grep $NAMESPACE | grep -iE 'ContainerCreating|InvalidImageName'
+
       if [ $? == 0 ]; then
-            NOVO_POD=$(cat /tmp/pods.txt | grep $NAMESPACE | grep -e 'ContainerCreating|InvalidImageName' | awk '
-                  BEGIN{  ALERT="\033[44;33;1m";  YELLOW="\033[33m";  NORMAL="\033[0;0m"; }
-                  {print "Pod: " YELLOW $1" \t ->   "NORMAL "[" ALERT " "$3 NORMAL "]"}
-            ')
+            echo ACHEI UM ContainerCreating u InvalidImageName
+            NOVO_POD=$(cat /tmp/pods.txt | grep -E 'ContainerCreating|InvalidImageName' | awk '{print $1}' )
+#| awk '
+ #                 BEGIN{  ALERT="\033[44;33;1m";  YELLOW="\033[33m";  NORMAL="\033[0;0m"; }
+  #                {print "Pod: " YELLOW $1" \t    "NORMAL "[" ALERT " "$3 NORMAL "]"}
+   #         ')
             echo -en "$yellow Aguardando o pod entrar em estado: [Running] ...$normal\n"
+            echo NOVO_POD=$NOVO_POD
+
             while(true); do
-                  k_get.sh pods | tee > /tmp/pods.txt
-                  cat /tmp/pods.txt | grep $NOVO_POD | grep -e 'Running|InvalidImageName'
+                  k_get.sh pods | tee /tmp/pods.txt
+                  cat /tmp/pods.txt | grep $NOVO_POD | grep -E 'Running|InvalidImageName'
 
                   if [ $? == 0 ]; then
 ##                      rm /tmp/pods.txt
                         listras.sh
-                        STATUS=$(kubectl get pod $NOVO_POD)
-                        if [ $STATUS =~ 'Running' ]; then 
+                        STATUS=$(kubectl get pods $NOVO_POD -n $NAMESPACE --no-headers=true | awk '{print $3}')
+                        echo STATUS=$STATUS
+                        if [[ "$STATUS" =~ 'Running' ]]; then 
 
                               echo -en "\n\t[SUCCESS] Novo container$WHITE [$NOVO_POD]$normal criado com$green sucesso!$normal\n\n"
                               listras.sh
@@ -75,7 +83,7 @@ while(true); do
                               printTable "[🏆] Released -> K8S!"
                               echo
                               exit 0
-                        elif [ $STATUS =~ 'InvalidImageName' ]; then
+                        elif [[ "$STATUS" =~ 'InvalidImageName' ]]; then
                               listras.sh
                               echo
                               printTable "[ERROR] Pod status: InvalidImageName"
