@@ -129,8 +129,10 @@ proxy:
   type: LoadBalancer
   # If you want to specify annotations for the proxy service, uncomment the following
   # line, add additional or adjust as needed, and remove the curly braces after 'annotations:'.
-  annotations: {}
+  annotations:
   #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
+    metallb.universe.tf/loadBalancerIPs: 192.168.15.99
+#    metallb.universe.tf/loadBalancerIPs: "*"
 
   http:
     # Enable plaintext HTTP listen for the proxy
@@ -177,7 +179,7 @@ proxy:
   # to expose Kong outside the k8s cluster.
   ingress:
     # Enable/disable exposure using ingress.
-    enabled: true
+    enabled: false
     hosts:
       - kongadmin.web-dev.intelipost.com.br
     # TLS section. Unlike other ingresses, this follows the format at
@@ -265,7 +267,7 @@ migrations:
 # created in k8s.  It uses CRDs for more fine grained control over routing and
 # for Kong specific configuration.
 ingressController:
-  enabled: true
+  enabled: false
   image:
     repository: kong/kubernetes-ingress-controller
     tag: 0.8.0
@@ -571,7 +573,7 @@ manager:
 
   ingress:
     # Enable/disable exposure using ingress.
-    enabled: true
+    enabled: false
     # TLS secret name.
     # tls: kong-proxy.example.com-tls
     # Ingress hostname

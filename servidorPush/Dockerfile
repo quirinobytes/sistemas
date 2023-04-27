@@ -7,6 +7,8 @@ WORKDIR /usr/src/app
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
 # where available (npm@5+)
 COPY package*.json ./
+
+#copiando a chave das midias
 COPY evolua.key /evolua.key
 
 RUN npm install

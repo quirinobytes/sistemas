@@ -6,7 +6,7 @@ metadata:
     app: evolua
     service: evolua-service
   annotations:
-#    metallb.universe.tf/loadBalancerIPs: 192.168.15.51
+    metallb.universe.tf/loadBalancerIPs: 192.168.15.66
 spec:
   ports:
   - port: 3000

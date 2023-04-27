@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+const debug = true
+
 //mongo config
 var db = require('./config/db_config.js')
 var chatMessageModel = require('./models/chatMessageModel')
@@ -21,7 +23,7 @@ const apiMetrics = require('prometheus-api-metrics')
 const Prometheus = require('prom-client')
 const messagesTotal = new Prometheus.Counter({
 	name: 'messages_total',
-	help: 'Total number of user\'s messages',
+	help: 'Total number of user\'s Mural messages',
 	labelNames: ['add_user_message']
 })
 
@@ -121,16 +123,16 @@ function chat_add_message({username,message,identificador,filepath}){
 	}
 	else{
 		console.log("☢ [WARNING] Necessário refazer o login do usuário")
+		
+		
 		return false
 		//o certo aqui era fazer erro 400, ou um reautenticate
 	}
 
-	console.log("filepath = ") 
-	console.log(filepath)
-
+	
 	chatMessageController.save({id:chatMessageId,username:username,message,time,identificador,filepath}, function(data){
 		if (data.error) {
-			console.log({error:" ❌ [ERROR] Erro ao salvar mensagem id["+chatMessageId+"] no Mural"})
+			console.log({error:" ❌ [ERROR] Erro ao salvar mensagem id["+chatMessageId+"] na database do Mural"})
 			return false
 		}
 		else {
@@ -257,8 +259,6 @@ app.use(favicon(__dirname + '/public/imagem_comum/favicon.ico'));
 // 	})
 // 	res.end
 // })
-
-
 
 app.get('/ultimosItensChatMessage/:apos', (req, res) => {
 	var aposX = req.params.apos;
@@ -398,6 +398,12 @@ app.post('/fileuploadMural/',  (req, res) => {
 				var newpath = 'fileuploadMural/' + files.filetoupload.name
 				var link = "<div class='imageBox'> <img class='imgMural' src='" + newpath +"' alt='imagem' />   </div> <div class='divVotacao'>   &nbsp; &nbsp; <img class='votar' onClick='votarSim(\""+ identificarUnico+"\")' src='imagem_comum/sim.jpg'/> <div id='"+ identificarUnico +"_like'> &nbsp; </div> &nbsp; &nbsp; <img class='votar' onClick='votarNao(\""+identificarUnico+"\")' src='imagem_comum/nao.jpg'/>  &nbsp; <div id='"+identificarUnico+"_dislike'></div> &nbsp; </div> " + messageInAttach 
 			}
+			else{
+				console.log("❌[ERROR] Tipo de arquivo não permitido: ["+fileExtension+"]")
+				res.redirect('/mural')
+				res.end()
+				return false
+			}
 		}
 
 		//console.log("messageInAttach"+ fields.messageInAttach)
@@ -406,7 +412,10 @@ app.post('/fileuploadMural/',  (req, res) => {
 
 
 		fs.copyFile(oldpath, newpath, function (err) {
-			if (err) throw err
+			if (err) {
+				console.log("❌ [ERROR] Erro ao salvar arquivo recebido. oldpath= ["+oldpath+"] -> newpath= ["+ newpath +"]")
+				throw err
+			}
 			
 			if (chat_add_message({message:link, username:username, identificador:identificarUnico, filepath:newpath }) ){
 				// console.log("salvou com sucesso")
@@ -641,12 +650,14 @@ app.get('/deletefile/:filename', (req,res) => {
 
 		try {
 			fs.unlinkSync(path+filename)
-			console.log("Arquivo apagado="+filename)
+			console.log("☢ [INFO] Arquivo apagado com sucesso: ["+path+filename+"]")
 			//collector.collect(res)
 		} catch(err) {
 			//prometheus metrics
 			//collector.collect(err)
 			console.error(err)
+			console.log("❌[ERROR] Falha ao tentar apagar o arquivo ["+filename+"] na pasta: "+path)
+			
 		}
 //	console.log("Arquivo apagado "+req.params.filename)
 	res.redirect('./../upload')
@@ -881,7 +892,7 @@ app.get ('/rest/hostexec/:hostname/:command',function (req,res) {
 		var command = req.params.command;
 		var hostname = req.params.hostname;
 
-		console.log("Command: " + command)
+		console.log("[INFO] Command: " + command)
 		for (i = 0; i < commands.length; ++i) {
 	      if (commands[i].command == req.params.command) {
 				const { exec } = require('child_process')
@@ -897,7 +908,7 @@ app.get ('/rest/hostexec/:hostname/:command',function (req,res) {
 			return;
 		   }
 		}
-		console.log("❌ [ERROR]: TENTATIVA DE EXECUCAO DE COMANDO: ["+req.params.command + "]\n COMMANDS["+i+"] = "+commands )
+		console.log("☣☠ [ALERT]: Tentativa de execução de comando NAO AUTORIZADO:  ["+req.params.command + "]\n COMMANDS["+i+"] = "+commands )
 		res.end()
 })
 
@@ -914,7 +925,6 @@ app.get ('/rest/hostexec/:hostname/:command',function (req,res) {
 
 
 
-const debug = false
 
 
 //listen on every connection
@@ -924,7 +934,7 @@ io.on('connection', (socket) => {
 
 	//default username
 	//socket.username = "Chatops"
-	socket.hostname = "toca das baratas";
+	socket.hostname = "container.docker";
 	
 
     //listen on change_username
@@ -1004,23 +1014,23 @@ io.on('connection', (socket) => {
 			const { exec } = require('child_process')
 			exec('cd /root/shell ; /root/shell/linux/Getnodes.sh ', (err, stdout, stderr) => {
         		stdout = convert.toHtml(stdout)
-		    	socket.emit('message', { message : "getnodes: <hr>[ " + stdout + "]", username : "ChatBot@" + hostname, time:data.time })
+		    	socket.emit('message', { message : "getnodes: <hr>[ " + stdout + "]", username : "evolua.bot", time:time })
 			})
 		}
 	  	if (data.message == "help"){
-   			io.sockets.emit('message', {message : "Olá boa tarde, "+
-                                             "tente umas das opções<br> "+
-                                             "* deploy -> inicia um novo deploy <br>"+
-                                             "* version -> exibe a versao do servidor <br>"+
-                                             "* date -> executa o comando data ", username : "ChatBot@" + hostname, time:data.time})
+   			io.sockets.emit('message', {message : "<br>Olá boa tarde, "+
+                                             "estou preparado para atender os comandos: <br> "+
+                                             "* deploy  -> inicia o deploy cdshell <br>"+
+                                             "* version -> exibe a versao do cdshell <br>"+
+                                             "* date    -> retorna a data ", username : "evolua.bot" , time:time})
 		}
         if (data.message == "ntp"){
-			  io.sockets.emit('command', {message : "ntp ntp.cais.rnp.br", username : socket.username, time:data.time})
+			  io.sockets.emit('command', {message : "ntp ntp.cais.rnp.br", username : socket.username, time:time})
       	}
 		if (data.message == "version"){
 		    const { exec } = require('child_process')
      	    exec('cd /root/shell ; /root/shell/linux/cdshell -V', (err, stdout, stderr) => {
-               socket.emit('message', { message : "Versão CDSHELL do servidor: [ " + stdout + "]", username: "ChatBot", time:data.time  })
+               socket.emit('message', { message : "<br> Versão do CDSHELL no servidor: [" + stdout + "]", username: "evolua.bot", time:time  })
 	        })
 		}	
 		
