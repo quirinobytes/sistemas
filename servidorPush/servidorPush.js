@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const debug = true
+const debug = false
 
 //mongo config
 var db = require('./config/db_config.js')
