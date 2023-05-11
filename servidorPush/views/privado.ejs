@@ -32,6 +32,7 @@
               <div id='divContato'></div>
               <div id='feedback'></div>
             </div>
+            <input type="hidden" id="connect-to-peer">
           </div>
           </header>
       </section>
@@ -39,8 +40,11 @@
     <section id="contactRoom">
         <div id="contactList">
         </div>
+        
         <section id="divMessageTo">
+          
         </section>
+        <video class="remote-video" autoplay></video>
     </section>
     <section id="input_zone">
       <textarea name='message' id="message" rows="1" class="auto_height vertical-align" onkeypress="auto_height(this)"  tabindex="0" autofocus="autofocus" onkeyup="checkForEnterKey(this.value)"></textarea>
@@ -49,8 +53,11 @@
       <hr>
       <button id="gravarAudio"> Gravar Audio</button>
       <button id="pararAudio"> Parar Audio</button>
+      <button id="getWebcallid"> Webcall </button>
       <div id="ok">
       </div>
    </section>
+   
+   
 
   </body>

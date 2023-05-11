@@ -145,6 +145,7 @@ $(function(){
 	var message = $("#message")
 	var username = $("#username")
 	var send_message = $("#send_message")
+	var getWebcallid = $("#getWebcallid")
 	var send_username = $("#send_username")
 	var divMessageTo = $("#divMessageTo")
 	var contacts = $("#contacts")
@@ -220,6 +221,213 @@ $(function(){
 
 
 	}
+
+
+	function getWebcallid(){
+	
+		
+
+	}
+
+	getWebcallid.click(function(){
+		// $.ajax(
+		// 	{ 
+		// 	url: "https://ubuntu:1443/a",
+		// 	crossDomain: true
+		// }).then(function(obj_consumers) {
+				
+		// 	id = obj_consumers;
+		// 	// console.log(usuarios_kong);
+			
+		// 	divMessageTo.append(id)
+		//	alert("oi")
+			
+
+
+		// });
+		var peerId
+		let videoEl = document.querySelector('.remote-video');
+		let peerIdEl = document.querySelector('#connect-to-peer');
+
+
+		let renderVideo = (stream) => {
+			videoEl.srcObject = stream;
+		  };
+		  
+		  // Register with the peer server
+		  let peer = new Peer({
+			host: 'ubuntu',
+			port: 1443,
+			path: '/peerjs/myapp',
+			secure: true
+		  });
+		  peer.on('open', (peerId) => {
+			peerId = peerId
+			console.log(peerId);
+			var logged_usr = myname[0].innerText
+			socket.emit("live", {message : peerId ,from:logged_usr,toContact:divContato.innerText,time:new Date()})
+			//logMessage(id);
+			peerIdEl.value = peerId
+		  });
+		  peer.on('error', (error) => {
+			console.error(error);
+		  });
+		  
+		  // Handle incoming data connection
+		  peer.on('connection', (conn) => {
+			console.log('incoming peer connection!');
+			conn.on('data', (data) => {
+				console.log(`received: ${data}`);
+			});
+			conn.on('open', () => {
+			  conn.send('hello!');
+			});
+		  });
+		  
+		  // Handle incoming voice/video connection
+		  peer.on('call', (call) => {
+			navigator.mediaDevices.getUserMedia({video: true, audio: true})
+			  .then((stream) => {
+				call.answer(stream); // Answer the call with an A/V stream.
+				call.on('stream', renderVideo);
+			  })
+			  .catch((err) => {
+				console.error('Failed to get local stream', err);
+			  });
+		  });
+
+			// let peerId = peerIdEl.value;
+			
+			//logMessage(`Connecting to ${peerId}...`);
+			
+			let conn = peer.connect(peerId);
+			// conn.on('data', (data) => {
+			//   logMessage(`received: ${data}`);
+			// });
+			conn.on('open', () => {
+			  conn.send('hi!');
+			});
+			
+			navigator.mediaDevices.getUserMedia({video: true, audio: true})
+			  .then((stream) => {
+				let call = peer.call(peerId, stream);
+				call.on('stream', renderVideo);
+			  })
+			  .catch((err) => {
+				logMessage('Failed to get local stream', err);
+			  });
+		 
+		 
+	})
+
+//Wait on new message on channel "contactTo"
+socket.on('live', (data) => {
+	to = data.toContact
+	friendUsername=divContato.innerText
+	loggedUser = $("#myname")[0].innerText
+
+	//GATAO no divMessageTo, o certo seria trocar tudo por peerIdEL
+	let peerIdEl = document.querySelector('#connect-to-peer');
+	let videoEl = document.querySelector('.remote-video');
+	
+	
+	console.log(data.message)
+	peerIdEl.innerText = data.message
+
+
+		let peerId = data.message;
+		
+		//logMessage(`Connecting to ${peerId}...`);
+
+		let peer = new Peer({
+			host: 'ubuntu',
+			port: 1443,
+			path: '/peerjs/myapp',
+			secure: true
+		  });
+
+		let renderVideo = (stream) => {
+			videoEl.srcObject = stream;
+		};
+		  
+		
+		let conn = peer.connect(peerId);
+		conn.on('data', (data) => {
+		  console.log(`received: ${data}`);
+		});
+		conn.on('open', () => {
+		  conn.send('hi!');
+		});
+		
+		navigator.mediaDevices.getUserMedia({video: true, audio: true})
+		  .then((stream) => {
+			let call = peer.call(peerId, stream);
+			call.on('stream', renderVideo);
+		  })
+		  .catch((err) => {
+			console.log('Failed to get local stream', err);
+		  });
+	
+
+
+
+
+
+	hora = new Date(data.time).toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
+		
+	//colocar minhas mensagens com a pessoa e for mensagem para mim, no board.
+	if (data.toContact == friendUsername && data.from == loggedUser){
+		
+		// contadorAposNItensPrivateMensagensObj[to] += 1
+		contadorAposNItensPrivateMensagensObj.set(to, contadorAposNItensPrivateMensagensObj.get(to) + 1)
+
+		console.log("#sockert.on## contadorAposNItensPrivateMensagensObj[to]="+contadorAposNItensPrivateMensagensObj[to])
+
+
+		if (data.from == loggedUser)
+			divMessageTo.append("<p class='messageTo'> <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'> <font color='gray'>  " + hora + "</font> <br>" + data.message + "</p>")
+		else
+			divMessageTo.append("<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>  " + hora + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'>  <br> "+ data.message +" </p>");
+	}
+	else{ 
+		//caso o board do seu contato nao esteja selecionado, e nao seja o seu board
+		if (data.toContact == loggedUser && data.from != divContato.innerText){
+			// console.log("aqui é a hora do vermelho?")
+			var cont =0;
+			//caso nao estava selecionado o board de mensagens do contato, rastreiar os outros para destacar em vermelho como MENSAGEM NAO LIDA.
+			for (cont=0;cont<cList[0].children.length;cont++){
+				if (cList[0].children[cont].innerText == data.from ){
+					//console.log( "ACHEI: Alterando o div do: " + cList[0].children[cont].innerText);
+					quemMandouMensagem = $( cList[0].children[cont])
+					quemMandouMensagem.fadeOut(500);
+					quemMandouMensagem.addClass("temMensagemNaoLida");
+					quemMandouMensagem.fadeIn(500);
+					$('#playSoundOnNewMessage')[0].play();
+				}
+			}
+		}
+		
+	}
+	//caso eu esteja com o board de mensagens do amigo selecionada, colocar as mensagens dele pra mim, e soa um bip
+	if (data.from == divContato.innerText && data.toContact == loggedUser ){
+		// alert("aqui rodou o ultimo if, que coloca as mensagens dos amigos")
+		divMessageTo.append("<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>  " + hora + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'>  <br> "+ data.message +" </p>");
+		$('#playSoundOnNewMessage')[0].play();
+		feedback.empty();
+		// incContadorAposNItensPrivateMensagensObj(data.from)
+		contadorAposNItensPrivateMensagensObj.set(data.from, contadorAposNItensPrivateMensagensObj.get(data.from) + 1)
+
+		// to = data.from
+		// contadorAposNItensPrivateMensagensObj.to += 1
+		// console.log('to='+to)
+		// console.log("#sockert.on## contadorAposNItensPrivateMensagensObj.to="+contadorAposNItensPrivateMensagensObj.to)
+
+	}
+})
+
+
+
+
 
 
 	//Send message

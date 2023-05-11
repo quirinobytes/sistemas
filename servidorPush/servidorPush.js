@@ -192,6 +192,7 @@ function addMessageContactToPerson({from:from,to:to,message:message,time:time, i
 
 //############################################################
 
+
 //Listen on port 3000
 server = app.listen(3000)
 
@@ -240,6 +241,8 @@ app.use(apiMetrics({
 		    }
 	}
   }))
+
+
 
 //route /
 app.get('/mural', (req, res) => {
@@ -297,6 +300,11 @@ app.get ('/privado',function (req,res) {
 	nome = getUsernameFromHeadersAuthorization(req)
 	if (nome == '') {nome = "anonymous"}
 	//console.log("user:"+nome)
+
+	res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
+	res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+	res.header('Access-Control-Allow-Credentials', true);
+
 	res.render('privado',{usuario:nome })
 })
 
@@ -1049,6 +1057,10 @@ io.on('connection', (socket) => {
 
     socket.on('beos', (data) => {
         io.sockets.emit('beos', {message : data.message, username : socket.username, time:data.time})
+    })
+
+	socket.on('live', (data) => {
+        io.sockets.emit('live', {message : data.message, username : socket.username, time:data.time})
     })
 
 	socket.on('command', (data) => {
