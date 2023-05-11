@@ -131,6 +131,19 @@ function limpaBoard(username) {
 	console.log($("#contactLine").children())
 	// .removeClass("selected")
 	messageTo.empty();
+
+
+
+	let videoEl = document.querySelector('.remote-video');
+	$('.remote-video').get(0).pause();
+    $('.remote-video').get(0).currentTime = 0;
+	$('.remote-video').empty();
+	//$('.remote-video').remove();
+
+	var divWebrtc = $("#divWebrtc")
+	console.log("UUUUOI"+divWebrtc)
+	divWebrtc.append("<video class='remote-video' autoplay=''></video>")
+
 }
 
 
@@ -193,6 +206,8 @@ $(function(){
 
 	})
 	
+
+	//toda vez q clica no friend, carrega a loadconsumers
 	function loadConsumers(){
 		$.ajax(
 			{ url: "./consumers"
@@ -217,6 +232,7 @@ $(function(){
 
 		//por fim deixar os usuarios logados com a bolinha verde.
 		blinkLoggedUsers();
+
 		});
 
 
@@ -230,21 +246,7 @@ $(function(){
 	}
 
 	getWebcallid.click(function(){
-		// $.ajax(
-		// 	{ 
-		// 	url: "https://ubuntu:1443/a",
-		// 	crossDomain: true
-		// }).then(function(obj_consumers) {
-				
-		// 	id = obj_consumers;
-		// 	// console.log(usuarios_kong);
-			
-		// 	divMessageTo.append(id)
-		//	alert("oi")
-			
-
-
-		// });
+	
 		var peerId
 		let videoEl = document.querySelector('.remote-video');
 		let peerIdEl = document.querySelector('#connect-to-peer');
@@ -320,7 +322,7 @@ $(function(){
 		 
 	})
 
-//Wait on new message on channel "contactTo"
+//Wait on new message on channel "live"
 socket.on('live', (data) => {
 	to = data.toContact
 	friendUsername=divContato.innerText
@@ -331,14 +333,16 @@ socket.on('live', (data) => {
 	let videoEl = document.querySelector('.remote-video');
 	
 	
-	console.log(data.message)
+	console.log("##WEBRTC## [data] = ")
+	console.log(data)
+	
 	peerIdEl.innerText = data.message
 
 
 		let peerId = data.message;
-		
 		//logMessage(`Connecting to ${peerId}...`);
 
+		//onde está meu peerserver
 		let peer = new Peer({
 			host: 'ubuntu',
 			port: 1443,

@@ -1060,7 +1060,7 @@ io.on('connection', (socket) => {
     })
 
 	socket.on('live', (data) => {
-        io.sockets.emit('live', {message : data.message, username : socket.username, time:data.time})
+        io.sockets.emit('live', data)
     })
 
 	socket.on('command', (data) => {
