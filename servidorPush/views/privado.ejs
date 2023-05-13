@@ -28,9 +28,19 @@
             </div>
             <h3> Privado </h3> 
             <div style="text-align:right;align-items:center;">
-              <img id="imgContactTo" class="nav-auth-img" src="usersAvatar/-user-icon.png"/>
-              <div id='divContato'></div>
-              <div id='feedback'></div>
+              <section id="input_zone">
+                <button id="gravarAudio"> Gravar Audio</button>
+                <button id="pararAudio"> Parar Audio</button>
+                <button id="startWebcallGetRoomid"> Webcall </button>
+                <img id="imgContactTo" class="nav-auth-img" src="usersAvatar/-user-icon.png"/>
+                <div id='divContato'></div>
+                <div id="webcallhide>">
+                  <video class="remote-video" autoplay></video>
+                </div>
+                
+                <div id="ok"></div>
+                <div id='feedback'></div>
+             </section>
             </div>
             <input type="hidden" id="connect-to-peer">
           </div>
@@ -44,9 +54,7 @@
         <section id="divMessageTo">
           
         </section>
-        <div id="divWebrtc>">
-          <video class="remote-video" autoplay></video>
-        </div>
+        
     </section>
     <section id="input_zone">
       <textarea name='message' id="message" rows="1" class="auto_height vertical-align" onkeypress="auto_height(this)"  tabindex="0" autofocus="autofocus" onkeyup="checkForEnterKey(this.value)"></textarea>
@@ -55,7 +63,7 @@
       <hr>
       <button id="gravarAudio"> Gravar Audio</button>
       <button id="pararAudio"> Parar Audio</button>
-      <button id="getWebcallid"> Webcall </button>
+      <button id="startWebcallGetRoomid"> Webcall </button>
       <div id="ok">
       </div>
    </section>

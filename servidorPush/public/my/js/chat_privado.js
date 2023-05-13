@@ -10,33 +10,18 @@ var contadorAposNItensPrivateMensagensObj = new Map([
 	["oranges", 200]
   ]);
 
-function incContadorAposNItensPrivateMensagensObj(user){
-	console.log("##INC##")
-	console.log("USER="+user)
+// function incContadorAposNItensPrivateMensagensObj(user){
+// 	console.log("##INC##")
+// 	console.log("USER="+user)
 
-	console.log("RESULT="+contadorAposNItensPrivateMensagensObj.get(user))
+// 	console.log("RESULT="+contadorAposNItensPrivateMensagensObj.get(user))
 
-}
+// }
 
 function loadChatWith(username, aposNItens) {
-	
-	
 
-	console.log("contadorAposNItensPrivateMensagensObj."+username+"= "+contadorAposNItensPrivateMensagensObj.get(username))
-	// if (!contadorAposNItensPrivateMensagensObj.username){
-	// 	contadorAposNItensPrivateMensagensObj.username += 10
-	// 	console.log("ZEREI O CONTATOR DO "+username)
-	// }
-	// else{
-		//Nao sei se tem q fazer isso, acho q sim
-		//contadorAposNItensPrivateMensagensObj = {}
-		console.log("CONTADOR CARREGANDO CORRETAMENTE: contadorAposNItensPrivateMensagensObj."+username+"= "+contadorAposNItensPrivateMensagensObj.get(username))
-		// contadorAposNItensPrivateMensagensObj.username += aposNItens
-
-	// }
-
-
-	$("."+username).addClass("selected")
+	addClassSelected(username)
+	//$("."+username).addClass("selected")
 
 	var usr = $("#myname");
 	myname = usr[0].innerText;
@@ -46,20 +31,12 @@ function loadChatWith(username, aposNItens) {
 	var imgContactTo = $("#imgContactTo")
 	var cList  = $("#contactList")
 	var feedback = $("#feedback")
-		//Limpa o board divMessageTo para carregar as mensagens com o amigo que foi selecionado.
-		
-		feedback.empty();
+
+	//Limpa o board divMessageTo para carregar as mensagens com o amigo que foi selecionado.
+	feedback.empty();
 
 	imgContactTo.attr("src","usersAvatar/"+username+"-user-icon.png");
 	
-	//Limpar a lista no div=contacts caso tenha mensagemNaoLida, agora no carregamento. 
-	for (cont=0;cont<cList[0].children.length;cont++){
-		if (cList[0].children[cont].innerText == username )
-			$( cList[0].children[cont]).removeClass("temMensagemNaoLida");
-	}
-
-	// console.log ("aqui foi chamado a loadChatWith/"+loggedUser+"/"+username+"/");
-
 	divContato.innerHTML = username;
 	// if (!contadorAposNItensPrivateMensagensObj.username >= 0)
 	// 	contadorAposNItensPrivateMensagensObj.username = 0
@@ -74,7 +51,7 @@ function loadChatWith(username, aposNItens) {
 
 		data.forEach(item => { 
 		    // console.log("ITEM:");
-			console.log(item)
+			// console.log(item)
 			de = item.from
 			para = item.to
 			mensagem = item.message
@@ -91,21 +68,71 @@ function loadChatWith(username, aposNItens) {
 		});
 	}
     });
+    removeClassTemMensagemNaoLida(username)
 } 
 
 function auto_height(elem) {
 	elem.style.height = "1px"
 	elem.style.height = (elem.scrollHeight) + "px"
 }
+
 function removeClassTemMensagemNaoLida(username){
-	$("#contacts:contains("+username+")").removeClass("temMensagemNaoLida")
+	var cList  = $("#contactList")
+	for (cont=0;cont<cList[0].children.length;cont++){
+		str = cList[0].children[cont].innerText
+		str = str.replace(/(\r\n|\n|\r)/gm, "").trim()
+		if (str == username ){
+			$( cList[0].children[cont]).children().removeClass("temMensagemNaoLida");
+		}
+	}
 }
+
+function addClassSelected(username){
+	var cList  = $("#contactList")
+	for (cont=0;cont<cList[0].children.length;cont++){
+		str = cList[0].children[cont].innerText
+		str = str.replace(/(\r\n|\n|\r)/gm, "").trim()
+		if (str == username )
+			$( cList[0].children[cont]).children().addClass("selected");
+		else
+			$( cList[0].children[cont]).children().removeClass("selected");
+	}
+}
+
+function avisoRecebendoWebcallDoAmigo(username){
+	var cList  = $("#contactList")
+	for (cont=0;cont<cList[0].children.length;cont++){
+		str = cList[0].children[cont].innerText
+		str = str.replace(/(\r\n|\n|\r)/gm, "").trim()
+		if (str == username ){
+			$('#receivingwebcall_'+username).attr("style","display:block;height:40px;width:40px")
+			$('#receivingwebcall_'+username).attr("src","../../imagem_comum/webcallreceiving.gif")
+		}
+		
+	}
+}
+
+function removeAvisoRecebendoWebcallDoAmigo(){
+	username=divContato.innerText
+	var cList  = $("#contactList")
+	for (cont=0;cont<cList[0].children.length;cont++){
+		str = cList[0].children[cont].innerText
+		str = str.replace(/(\r\n|\n|\r)/gm, "").trim()
+		if (str == username ){
+			$('#receivingwebcall_'+username).attr("style","display:none")
+			$('#receivingwebcall_'+username).attr("src","")
+		}
+	}
+}
+
 function usuarioLogado(nome){
 	$("#"+nome+"_logged_user").addClass("logged_user")
 }
+
 function usuarioDeslogado(nome){
 	$("#"+nome+"_logged_user").removeClass("logged_user")
 }
+
 function blinkLoggedUsers(){
 	//limpando tudo antes
 	globalContatosList.forEach( item => {
@@ -127,12 +154,10 @@ function limpaBoard(username) {
 	var messageTo = $("#divMessageTo")
 	//alert("limpando o board do"+username)
 	contadorAposNItensPrivateMensagensObj.set(username,0);
-	console.log("### CHILDREN: ")
-	console.log($("#contactLine").children())
+	//console.log("### CHILDREN: ")
+	//console.log($("#contactLine").children())
 	// .removeClass("selected")
 	messageTo.empty();
-
-
 
 	let videoEl = document.querySelector('.remote-video');
 	$('.remote-video').get(0).pause();
@@ -141,8 +166,40 @@ function limpaBoard(username) {
 	//$('.remote-video').remove();
 
 	var divWebrtc = $("#divWebrtc")
-	console.log("UUUUOI"+divWebrtc)
-	divWebrtc.append("<video class='remote-video' autoplay=''></video>")
+	//console.log("UUUUOI"+divWebrtc)
+	divWebrtc.html("<video class='remote-video' autoplay=''></video>")
+}
+
+
+function acceptWebcall(salaID){
+
+	let videoEl = document.querySelector('.remote-video');
+	let peerIdEl = document.querySelector('#connect-to-peer');
+	let peerId = salaID;
+
+	//onde está meu peerserver
+	let peer = new Peer({
+		host: 'ubuntu',
+		port: 1443,
+		path: '/peerjs/myapp',
+		secure: true
+	  });
+
+	let renderVideo = (stream) => {
+		videoEl.srcObject = stream;
+	};
+	  
+	navigator.mediaDevices.getUserMedia({video: true, audio: true})
+	  .then((stream) => {
+		let call = peer.call(peerId, stream);
+		call.on('stream', renderVideo);
+
+	  })
+	  .catch((err) => {
+		console.log('Failed to get local stream', err);
+	  });
+
+	  removeAvisoRecebendoWebcallDoAmigo()
 
 }
 
@@ -158,7 +215,8 @@ $(function(){
 	var message = $("#message")
 	var username = $("#username")
 	var send_message = $("#send_message")
-	var getWebcallid = $("#getWebcallid")
+	var acceptWebcall = $("#acceptWebcall")
+	var startWebcallGetRoomid = $("#startWebcallGetRoomid")
 	var send_username = $("#send_username")
 	var divMessageTo = $("#divMessageTo")
 	var contacts = $("#contacts")
@@ -212,45 +270,32 @@ $(function(){
 		$.ajax(
 			{ url: "./consumers"
 		}).then(function(obj_consumers) {
-				
 			usuarios_kong = obj_consumers.data;
 			// console.log(usuarios_kong);
 
 			//salvando na variavel global para usar no blinkLoggedUsers
 			globalContatosList = usuarios_kong;
-
 			usuarios_kong.forEach(item => { 
 					//fazer isso para remover o nome do usuario logado e nao mostrar na lista de contatos, pois ele tmb esta na lista e nao faz sentido ele falar com ele.
 					if ( item.username != myname[0].innerText ){
 						username = item.username
 						contadorAposNItensPrivateMensagensObj.set(username,0)
 						console.log("contadorAposNItensPrivateMensagensObj.get("+username+")="+contadorAposNItensPrivateMensagensObj.get(username))
-						contactList.innerHTML += "<div onclick='limpaBoard(\""+item.username+"\"); loadChatWith(\""+item.username+"\","+contadorAposNItensPrivateMensagensObj.get(username)+");'>   <div id='contactLine' class='"+item.username+"'>  <img class='avatarContactList' src='usersAvatar/"+item.username+"-user-icon.png' alt='"+item.username+"'> <div id='"+item.username+"_logged_user' ></div> &nbsp; <div id='contacts' >" + item.username + "</div> </div> </div>";
-						// contactList.innerHTML += "<div id='contactLine' class='"+item.username+"'> <div id='contacts' onclick='limpaBoard(\""+item.username+"\"); loadChatWith(this.innerHTML,"+contadorAposNItensPrivateMensagensObj.username+");'>" + item.username + "</div> <div id='"+item.username+"_logged_user' ></div><img class='miniAvatar' src='usersAvatar/"+item.username+"-user-icon.png' alt='"+item.username+"'> </div>";
+						contactList.innerHTML += "<div onclick='limpaBoard(\""+item.username+"\"); loadChatWith(\""+item.username+"\","+contadorAposNItensPrivateMensagensObj.get(username)+");'>   <div id='contactLine' class='"+item.username+"'>  <img class='avatarContactList' src='usersAvatar/"+item.username+"-user-icon.png' alt='"+item.username+"'> <div id='"+item.username+"_logged_user' ></div> &nbsp; <div id='contacts' >" + item.username + "</div> <img style='display:none; height:40px; width:40px' id='receivingwebcall_"+item.username+"' src=''> </div>  </div>";
 					}
 			});
 
 		//por fim deixar os usuarios logados com a bolinha verde.
 		blinkLoggedUsers();
-
 		});
-
-
 	}
 
 
-	function getWebcallid(){
-	
-		
 
-	}
-
-	getWebcallid.click(function(){
-	
+	startWebcallGetRoomid.click(function(){
 		var peerId
 		let videoEl = document.querySelector('.remote-video');
 		let peerIdEl = document.querySelector('#connect-to-peer');
-
 
 		let renderVideo = (stream) => {
 			videoEl.srcObject = stream;
@@ -268,6 +313,7 @@ $(function(){
 			console.log(peerId);
 			var logged_usr = myname[0].innerText
 			socket.emit("live", {message : peerId ,from:logged_usr,toContact:divContato.innerText,time:new Date()})
+			socket.emit("offerLive", {message : "<img style='display:block; height:30px; width:30px' src='imagem_comum/webcallreceiving.gif'>" +  logged_usr + "<br>   <button id='acceptWebcall' onclick='acceptWebcall(\""+peerId+"\")'> Aceitar  </button> x <button> Rejeitar </button> " ,from:logged_usr,toContact:divContato.innerText,time:new Date()})
 			//logMessage(id);
 			peerIdEl.value = peerId
 		  });
@@ -298,10 +344,6 @@ $(function(){
 			  });
 		  });
 
-			// let peerId = peerIdEl.value;
-			
-			//logMessage(`Connecting to ${peerId}...`);
-			
 			let conn = peer.connect(peerId);
 			// conn.on('data', (data) => {
 			//   logMessage(`received: ${data}`);
@@ -318,120 +360,53 @@ $(function(){
 			  .catch((err) => {
 				logMessage('Failed to get local stream', err);
 			  });
-		 
-		 
 	})
 
-//Wait on new message on channel "live"
-socket.on('live', (data) => {
-	to = data.toContact
-	friendUsername=divContato.innerText
-	loggedUser = $("#myname")[0].innerText
+// //Wait on new message on channel "live"
+// socket.on('live', (data) => {
+// 	to = data.toContact
+// 	friendUsername=divContato.innerText
+// 	loggedUser = $("#myname")[0].innerText
 
-	//GATAO no divMessageTo, o certo seria trocar tudo por peerIdEL
-	let peerIdEl = document.querySelector('#connect-to-peer');
-	let videoEl = document.querySelector('.remote-video');
+// 	//GATAO no divMessageTo, o certo seria trocar tudo por peerIdEL
+// 	let peerIdEl = document.querySelector('#connect-to-peer');
+// 	let videoEl = document.querySelector('.remote-video');
 	
 	
-	console.log("##WEBRTC## [data] = ")
-	console.log(data)
+// 	console.log("##WEBRTC## [data] = ")
+// 	console.log(data)
+
+// 	hora = new Date(data.time).toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
+		
+// 	//colocar minhas mensagens com a pessoa e for mensagem para mim, no board.
 	
-	peerIdEl.innerText = data.message
-
-
-		let peerId = data.message;
-		//logMessage(`Connecting to ${peerId}...`);
-
-		//onde está meu peerserver
-		let peer = new Peer({
-			host: 'ubuntu',
-			port: 1443,
-			path: '/peerjs/myapp',
-			secure: true
-		  });
-
-		let renderVideo = (stream) => {
-			videoEl.srcObject = stream;
-		};
-		  
+// 	if (data.from == friendUsername && data.toContact == loggedUser){
+// 		contadorAposNItensPrivateMensagensObj.set(to, contadorAposNItensPrivateMensagensObj.get(to) + 1)
 		
-		let conn = peer.connect(peerId);
-		conn.on('data', (data) => {
-		  console.log(`received: ${data}`);
-		});
-		conn.on('open', () => {
-		  conn.send('hi!');
-		});
 		
-		navigator.mediaDevices.getUserMedia({video: true, audio: true})
-		  .then((stream) => {
-			let call = peer.call(peerId, stream);
-			call.on('stream', renderVideo);
-		  })
-		  .catch((err) => {
-			console.log('Failed to get local stream', err);
-		  });
 	
-
-
-
-
-
-	hora = new Date(data.time).toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
+// 	}
+// 	else{ 
 		
-	//colocar minhas mensagens com a pessoa e for mensagem para mim, no board.
-	if (data.toContact == friendUsername && data.from == loggedUser){
-		
-		// contadorAposNItensPrivateMensagensObj[to] += 1
-		contadorAposNItensPrivateMensagensObj.set(to, contadorAposNItensPrivateMensagensObj.get(to) + 1)
-
-		console.log("#sockert.on## contadorAposNItensPrivateMensagensObj[to]="+contadorAposNItensPrivateMensagensObj[to])
-
-
-		if (data.from == loggedUser)
-			divMessageTo.append("<p class='messageTo'> <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'> <font color='gray'>  " + hora + "</font> <br>" + data.message + "</p>")
-		else
-			divMessageTo.append("<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>  " + hora + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'>  <br> "+ data.message +" </p>");
-	}
-	else{ 
-		//caso o board do seu contato nao esteja selecionado, e nao seja o seu board
-		if (data.toContact == loggedUser && data.from != divContato.innerText){
-			// console.log("aqui é a hora do vermelho?")
-			var cont =0;
-			//caso nao estava selecionado o board de mensagens do contato, rastreiar os outros para destacar em vermelho como MENSAGEM NAO LIDA.
-			for (cont=0;cont<cList[0].children.length;cont++){
-				if (cList[0].children[cont].innerText == data.from ){
-					//console.log( "ACHEI: Alterando o div do: " + cList[0].children[cont].innerText);
-					quemMandouMensagem = $( cList[0].children[cont])
-					quemMandouMensagem.fadeOut(500);
-					quemMandouMensagem.addClass("temMensagemNaoLida");
-					quemMandouMensagem.fadeIn(500);
-					$('#playSoundOnNewMessage')[0].play();
-				}
-			}
-		}
-		
-	}
-	//caso eu esteja com o board de mensagens do amigo selecionada, colocar as mensagens dele pra mim, e soa um bip
-	if (data.from == divContato.innerText && data.toContact == loggedUser ){
-		// alert("aqui rodou o ultimo if, que coloca as mensagens dos amigos")
-		divMessageTo.append("<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>  " + hora + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'>  <br> "+ data.message +" </p>");
-		$('#playSoundOnNewMessage')[0].play();
-		feedback.empty();
-		// incContadorAposNItensPrivateMensagensObj(data.from)
-		contadorAposNItensPrivateMensagensObj.set(data.from, contadorAposNItensPrivateMensagensObj.get(data.from) + 1)
-
-		// to = data.from
-		// contadorAposNItensPrivateMensagensObj.to += 1
-		// console.log('to='+to)
-		// console.log("#sockert.on## contadorAposNItensPrivateMensagensObj.to="+contadorAposNItensPrivateMensagensObj.to)
-
-	}
-})
+// 		//caso o board do seu contato nao esteja selecionado, e nao seja o seu board
+// 		if (data.toContact == loggedUser && data.from != divContato.innerText){
+// 			//console.log("tem alguem me chamando?")
+// 			avisoRecebendoWebcallDoAmigo(data.from)
+// 			$('#playSoundOnReceivingWebcall')[0].play();
+// 		}
+// 	}
+	
+// 	// caso a webcall seja pro usuário logado, mas ele nao está com o board do friend aberto, colocar um icone de video no friend piscando.
+// 	// if (data.from != divContato.innerText && data.toContact == loggedUser ){
+// 	// 	// alert("aqui rodou o ultimo if, que coloca as mensagens dos amigos")
+// 	// 	//divMessageTo.append("<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>  " + hora + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'>  <br> "+ data.message +" </p>");
+// 	// 	//contadorAposNItensPrivateMensagensObj.set(data.from, contadorAposNItensPrivateMensagensObj.get(data.from) + 1)
+// 	// }
+// 	})
 
 
 
-
+	
 
 
 	//Send message
@@ -512,7 +487,7 @@ socket.on('live', (data) => {
 			// contadorAposNItensPrivateMensagensObj[to] += 1
 			contadorAposNItensPrivateMensagensObj.set(to, contadorAposNItensPrivateMensagensObj.get(to) + 1)
 
-			console.log("#sockert.on## contadorAposNItensPrivateMensagensObj[to]="+contadorAposNItensPrivateMensagensObj[to])
+			// console.log("#sockert.on## contadorAposNItensPrivateMensagensObj[to]="+contadorAposNItensPrivateMensagensObj[to])
 
 
 			if (data.from == loggedUser)
@@ -523,21 +498,32 @@ socket.on('live', (data) => {
 		else{ 
 			//caso o board do seu contato nao esteja selecionado, e nao seja o seu board
 			if (data.toContact == loggedUser && data.from != divContato.innerText){
-				// console.log("aqui é a hora do vermelho?")
+				// console.log("aqui é a hora do vermelho? \n data.from='"+data.from+"' \n tamanho do count=" + cList[0].children.length)
 				var cont =0;
 			    //caso nao estava selecionado o board de mensagens do contato, rastreiar os outros para destacar em vermelho como MENSAGEM NAO LIDA.
 				for (cont=0;cont<cList[0].children.length;cont++){
-					if (cList[0].children[cont].innerText == data.from ){
-						//console.log( "ACHEI: Alterando o div do: " + cList[0].children[cont].innerText);
-						quemMandouMensagem = $( cList[0].children[cont])
+					str = cList[0].children[cont].children[0].innerText
+					str = str.replace(/(\r\n|\n|\r)/gm, "").trim()
+					console.log("VERIFICANDO SE tem algum igual\n data.from='"+data.from+"' cList[0].children[cont].children[0].innerTex='"+ str +"' \n tamanho do count=" + cList[0].children.length)
+					console.log("cList[0].children[cont].children[0].innerText = ") 
+					console.log("["+str+"]")
+
+					
+					if (str == data.from ){
+						console.log("BINGO="+data.from)
+
+						quemMandouMensagem = $( cList[0].children[cont].children[0])
 						quemMandouMensagem.fadeOut(500);
 						quemMandouMensagem.addClass("temMensagemNaoLida");
 						quemMandouMensagem.fadeIn(500);
+
+						$('#playSoundOnNewMessage')[0].loop = true
+						setTimeout(() =>$('#playSoundOnNewMessage')[0].loop = false, (2142 * (1)));
 						$('#playSoundOnNewMessage')[0].play();
+						
 					}
 				}
 			}
-			
 		}
 		//caso eu esteja com o board de mensagens do amigo selecionada, colocar as mensagens dele pra mim, e soa um bip
 		if (data.from == divContato.innerText && data.toContact == loggedUser ){
@@ -555,6 +541,54 @@ socket.on('live', (data) => {
 
 		}
 	})
+
+
+//Wait on new message on channel "contactTo"
+socket.on('offerLive', (data, peerId) => {
+	to = data.toContact
+	friendUsername=divContato.innerText
+	loggedUser = $("#myname")[0].innerText
+	hora = new Date(data.time).toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
+		
+	//colocar minhas mensagens com a pessoa e for mensagem para mim, no board.
+	if (data.toContact == friendUsername && data.from == loggedUser){
+		
+		// contadorAposNItensPrivateMensagensObj[to] += 1
+		contadorAposNItensPrivateMensagensObj.set(to, contadorAposNItensPrivateMensagensObj.get(to) + 1)
+	
+
+		if (data.from == loggedUser)
+			divMessageTo.append("<p class='messageTo'> <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'> <font color='gray'>  " + hora + "</font> <br> " + loggedUser + " ligando... <br> <button> Cancelar </button>  </p>")
+			//socket.emit("offerLive", {message : logged_usr + " ligando... <br> <button id='acceptWebcall' onclick='acceptWebcall(\""+peerId+"\")'> Aceitar  </button> x <button> Rejeitar </button> " ,from:logged_usr,toContact:divContato.innerText,time:new Date()},peerId)
+		else
+			divMessageTo.append("<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>  " + hora + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'>  <br> " + loggedUser + " ligando... <br> <img style='display:block; height:30px; width:30px' src='imagem_comum/webcallreceiving.gif'> <button id='acceptWebcall' onclick='acceptWebcall(\""+peerId+"\")'> Aceitar  </button> x <button> Rejeitar </button> </p>");
+	}
+	else{ 
+		//caso o board do seu contato nao esteja selecionado, e nao seja o seu board
+		if (data.toContact == loggedUser && data.from != divContato.innerText){
+			avisoRecebendoWebcallDoAmigo(data.from)
+			$('#playSoundOnReceivingWebcall')[0].play();
+		}
+	}
+	//caso eu esteja com o board de mensagens do amigo selecionada, colocar as mensagens dele pra mim, e soa um bip
+	if (data.from == divContato.innerText && data.toContact == loggedUser ){
+		// alert("aqui rodou o ultimo if, que coloca as mensagens dos amigos")
+		divMessageTo.append("<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>  " + hora + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'>  <br> "+ data.message +" </p>");
+		
+		avisoRecebendoWebcallDoAmigo(data.from)
+		$('#playSoundOnReceivingWebcall')[0].play();
+		
+		// incContadorAposNItensPrivateMensagensObj(data.from)
+		contadorAposNItensPrivateMensagensObj.set(data.from, contadorAposNItensPrivateMensagensObj.get(data.from) + 1)
+
+		// to = data.from
+		// contadorAposNItensPrivateMensagensObj.to += 1
+		// console.log('to='+to)
+		// console.log("#sockert.on## contadorAposNItensPrivateMensagensObj.to="+contadorAposNItensPrivateMensagensObj.to)
+
+	}
+})
+
 	
 
 	gravarAudio.click(function(from,){

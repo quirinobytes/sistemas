@@ -1032,6 +1032,15 @@ io.on('connection', (socket) => {
                                              "* version -> exibe a versao do cdshell <br>"+
                                              "* date    -> retorna a data ", username : "evolua.bot" , time:time})
 		}
+		if (data.message == "lula"){
+			io.sockets.emit('message', {message : "<br>Ladrao de bosta, "+
+										  "estou preparado para atender os comandos: <br> "+
+										  "* deploy  -> inicia o deploy cdshell <br>"+
+										  "* version -> exibe a versao do cdshell <br>"+
+										  "* date    -> retorna a data ", username : "evolua.bot" , time:time})
+	 }
+
+
         if (data.message == "ntp"){
 			  io.sockets.emit('command', {message : "ntp ntp.cais.rnp.br", username : socket.username, time:time})
       	}
@@ -1055,12 +1064,17 @@ io.on('connection', (socket) => {
 			console.log("error on:contactTo = faltou from, to, ou message")
     })
 
-    socket.on('beos', (data) => {
-        io.sockets.emit('beos', {message : data.message, username : socket.username, time:data.time})
-    })
+    // socket.on('beos', (data) => {
+    //     io.sockets.emit('beos', {message : data.message, username : socket.username, time:data.time})
+    // })
 
-	socket.on('live', (data) => {
-        io.sockets.emit('live', data)
+	// socket.on('live', (data) => {
+    //     io.sockets.emit('live', data)
+    // })
+
+	socket.on('offerLive', (data,peerId) => {
+		addMessageContactToPerson({from:data.from, to:data.toContact, message:data.message,time:data.time,identificador:data.identificador})
+        io.sockets.emit('offerLive', data,peerId)
     })
 
 	socket.on('command', (data) => {
