@@ -1074,7 +1074,13 @@ io.on('connection', (socket) => {
 
 	socket.on('offerLive', (data,peerId) => {
 		addMessageContactToPerson({from:data.from, to:data.toContact, message:data.message,time:data.time,identificador:data.identificador})
+
+		//injetada de dados no meio do envio do offerLive, salvando primeiro sem o icone da imagem no banco e mostrando nas telas chamando sempre a ultima mensagem.
+		data.message = "<img style='display:block; height:30px; width:30px' src='imagem_comum/webcallreceiving.gif'>" + data.message
         io.sockets.emit('offerLive', data,peerId)
+    })
+	socket.on('liveAccepted', (obj) => {
+        io.sockets.emit('liveAccepted', obj)
     })
 
 	socket.on('command', (data) => {

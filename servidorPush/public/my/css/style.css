@@ -127,8 +127,14 @@ div.container {
     vertical-align: bottom;
     align-content: center;
     width: 100%;
+    padding: 10px;
 }
 
+
+button{
+    background-color: rgb(11, 11, 109);
+    border: 0px;
+}
 
 #divUserAvatarName {
     text-align: center;
@@ -338,7 +344,7 @@ p.messageTo{
     max-width: 55%;
     font-weight: regular;
     font-family: arial, sans-serif;
-    /* word-wrap: break-word; */
+    word-wrap: break-word;
     border-radius: 8px;
     text-align: left;
     margin: 10px;
@@ -354,13 +360,15 @@ p.messageTo{
 }
 
 .remote-video{
-    height: 110px;
-    width: 146px;
+    border-radius: 20px;
+    height: 140px;
+    width: 180px;
     position: relative;
-    display: node;
-    margin-right: 306px;
-    margin-top: -79px;
-    display:node;
+    display: none;
+    margin-left:200px; margin-top:-80px;
+    
+    /* margin-left: 10px; */
+    /* margin-top: -79px; */
     /* background:url("../../imagem_comum/webcallreceiving.gif"); */
 
 }
@@ -380,7 +388,7 @@ section {
   /* remover width */
     /* width: 50%; */
     background-color: rgb(16, 16, 80);
-    padding: 10px;
+    /* padding: 10px; */
     /* color: white; */
     /* justify-content: space-between; */
     display: flow-root;
@@ -418,13 +426,13 @@ section#input_zone {
     text-align: right;
     background-color: rgb(213, 215, 216);
     color: rgb(44, 46, 61);
-    padding: 30px;
+    padding: 0px;
     background-color: rgb(11, 11, 109);
     align-content: center;
     border-radius: 5px;
     position:relative;
     bottom: 0;
-    border: 1px solid white;
+    /* border: 1px solid white; */
     
 }
 section#filebox{
@@ -435,7 +443,9 @@ section#filebox{
 section#titulo {
     border: 2px white solid;
     background-color: rgb(11, 11, 109);
-    padding: 10px;
+    /* padding-top: 10px; */
+    padding-left: 10px;
+    padding-right: 10px;
     display: block;
     color: white;
     font-size: 12px;
@@ -490,6 +500,13 @@ section#titulo {
     background-color: blueviolet;
     animation: blinker 1s linear infinite;
 
+}
+
+.textarea-Privado{
+    width: 70%;
+    margin-bottom: 8px;
+    font-size: large;
+    /* margin-right: 300px; */
 }
 
 @keyframes blinker {
