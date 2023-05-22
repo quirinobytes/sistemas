@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: peerserver
+  labels:
+    app: peerserver
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: peerserver
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: peerserver
+        version: v1
+    spec:
+      containers:
+      - name: peerserver
+        image: docker.io/quirinobytes/peerserver@sha256:bcb4b0538f1b354f611c806d305807231574a3e496d9e0b6265495cebe623444
+        resources:
+          requests:
+            cpu: "100m"
+        imagePullPolicy: IfNotPresent #Always
+        ports:
+        - containerPort: 1443
+
+
