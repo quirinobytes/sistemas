@@ -30,18 +30,24 @@
             <div style="text-align:right;align-items:center;">
 
               <section id="input_zone">
-                
-                <button id="gravarAudio"> <img id="imgGravarAudio" class="button-privado" src="imagem_comum/button-gravar-audio.png"/></button>
-                <button id="startWebcallGetRoomid" ><img class="button-privado"  src="imagem_comum/button-iniciar-webcall.png"/></button>  
-                <img id="imgContactTo" class="nav-auth-img" src="usersAvatar/-user-icon.png"/>
+                <button id="send_message" class="vertical-align" role="button" type="submit" value="submit">
+                  <img src="imagem_comum/button-enviar-mensagem.png"/>
+                </button>
+                <textarea name='message' id="message" class="textarea-Privado auto_height" rows="1" class="" onkeypress="auto_height(this)"  tabindex="0" autofocus="autofocus" onkeyup="checkForEnterKey(this.value)"></textarea>
+                  
+                <button id="gravarAudio" class="vertical-align">
+                  <img id="imgGravarAudio" class="button-privado" src="imagem_comum/button-gravar-audio.png"/>
+                </button>
+                <button id="startWebcallGetRoomid" class="vertical-align">
+                  <img class="button-privado"  src="imagem_comum/button-iniciar-webcall.png"/>
+                </button>  
+                  <img id="imgContactTo" class="nav-auth-img vertical-align" src="usersAvatar/-user-icon.png"/>
                 <div id='divContato'></div>
                 <div id="webcallhide">
                   <video class="remote-video" onclick="maximizaWebcallTelaCheia()" autoplay></video>
                 </div>
  
-                <button id="send_message" class="vertical-align" role="button" type="submit" value="submit"><img src="imagem_comum/button-enviar-mensagem.png"/>  </button>
-                <textarea name='message' id="message" class="textarea-Privado auto_height" rows="2" class="" onkeypress="auto_height(this)"  tabindex="0" autofocus="autofocus" onkeyup="checkForEnterKey(this.value)"></textarea>
-                               
+                             
                 <div id="ok" style="display:none"></div>
                 <div id='feedback' style="display:none"></div>
              </section>

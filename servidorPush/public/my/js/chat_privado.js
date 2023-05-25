@@ -63,22 +63,31 @@ function loadChatWith(username, aposNItens) {
 
 			// if (mensagem != undefined)
 			if (mensagem){
+				
 				if (para == myname)
 					//messageTo.append("<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>  " + hora + "</font>  <img class='miniAvatar' src='usersAvatar/"+de+"-user-icon.png' alt='"+de+"'>  <br> "+ mensagem +" </p>") 
 					messageTo.prepend("<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>  " + hora + "</font>  <img class='miniAvatar' src='usersAvatar/"+de+"-user-icon.png' alt='"+de+"'>  <br> "+ mensagem +" </p>") 
 		  	  	else
 		  			//messageTo.append("<p class='messageTo'> <img class='miniAvatar' src='usersAvatar/"+de+"-user-icon.png' alt='"+de+"'> <font color='gray'>  " + hora + "</font> <br>" + mensagem + "</p>") 
 		  			messageTo.prepend("<p class='messageTo'> <img class='miniAvatar' src='usersAvatar/"+de+"-user-icon.png' alt='"+de+"'> <font color='gray'>  " + hora + "</font> <br>" + mensagem + "</p>") 
+			
+			
+			
 			}
 		});
+		//fazer depois mesmo
+		$('div.container').scrollTop($('div.container').scrollTop() +1)
 	}
     });
+
+	
+
     removeClassTemMensagemNaoLida(username)
 } 
 
 function auto_height(elem) {
 	//elem.style.height = "2"
-	elem.attr("rows",3)
+	elem.attr("rows",1)
 	
 	elem.style.height = (elem.scrollHeight) + "px"
 }
@@ -135,11 +144,11 @@ function removeAvisoRecebendoWebcallDoAmigo(){
 function maximizaWebcallTelaCheia(){
 	var video = $('.remote-video')
 		if (!telacheia){
-			video.attr("style","height:300px; width:300px; margin-top:-120px; display:block; ")
+			video.attr("style","height:300px; width:300px; margin-top:-160px; margin-left:-340px; display:block; ")
 			telacheia=true
 		}
 		else{
-			video.attr("style","height:140px; width:180px; margin-top:-80px; display:block; padding-bottom:10px")
+			video.attr("style","height:140px; width:180px; margin-top:-60px; display:block; padding-bottom:10px")
 			telacheia=false
 		}
 }
@@ -203,8 +212,8 @@ function acceptWebcall(salaID){
 
 	//onde está meu peerserver
 	let peer = new Peer({
-		host: 'ubuntu',
-		port: 1443,
+		host: 'evolua.antidrone.com.br',
+		port: 30443,
 		path: '/peerjs/myapp',
 		secure: true
 	  });
@@ -278,12 +287,20 @@ $(function(){
 		// o /consumers é um api gateway para dentro do konga na 8001, control plane port
 		loadConsumers()
 
+		
+
 		$('div.container').on('scroll', function() {
 			to = divContato.innerHTML
-			if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight-1) {
-				console.log("APOS CARREGAR CORRETAMENTE: contadorAposNItensPrivateMensagensObj["+to+"]= "+contadorAposNItensPrivateMensagensObj[to])
-				
+			//quando o scroll chegar no inicio da pagina
+			if($(this).scrollTop() <= 0 ) {
+				console.log("SUBINDO CORRETAMENTE: contadorAposNItensPrivateMensagensObj["+to+"]= "+contadorAposNItensPrivateMensagensObj[to])
 				loadChatWith(to, contadorAposNItensPrivateMensagensObj[to])
+			}
+			//quando o scroll chegar no final da pagina
+			if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight-1) {
+				//console.log("APOS CARREGAR CORRETAMENTE: contadorAposNItensPrivateMensagensObj["+to+"]= "+contadorAposNItensPrivateMensagensObj[to])
+				
+				//loadChatWith(to, contadorAposNItensPrivateMensagensObj[to])
 			}
 		})
 
@@ -333,8 +350,8 @@ $(function(){
 		  
 		  // Register with the peer server
 		  let peer = new Peer({
-			host: 'ubuntu',
-			port: 1443,
+			host: 'evolua.antidrone.com.br',
+			port: 30443,
 			path: '/peerjs/myapp',
 			secure: true
 		  });
@@ -344,7 +361,7 @@ $(function(){
 			var logged_usr = myname[0].innerText
 			socket.emit("live", {message : peerId ,from:logged_usr,toContact:divContato.innerText,time:new Date()})
 			// socket.emit("offerLive", {message : "<img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'>  <br> " + loggedUser + " ligando... <br> <img style='display:block; height:30px; width:30px' src='imagem_comum/webcallreceiving.gif'>" +  logged_usr + "<br>   <button id='acceptWebcall' onclick='acceptWebcall(\""+peerId+"\")'> Aceitar  </button> x <button> Rejeitar </button> " ,from:logged_usr,toContact:divContato.innerText,time:new Date()})
-			socket.emit("offerLive", {message : "" +  logged_usr + " <br>   <button id='acceptWebcall' onclick='acceptWebcall(\""+peerId+"\")'> Aceitar  </button> x <button id='btn-finishWebcall' onclick='finishWebcall(\""+peerId+"\")'> Rejeitar </button> " ,from:logged_usr,toContact:divContato.innerText,time:new Date()})
+			socket.emit("offerLive", {message : "" +  logged_usr + " <br>   <button id='acceptWebcall' style='background-color:inherit' onclick='acceptWebcall(\""+peerId+"\")'>   <img style='background-color:inherit' src='imagem_comum/button-aceitar-webcall.png'>  </button> x <button id='btn_rejectWebcall' style='background-color:inherit' onclick='rejectWebcall(\""+peerId+"\")'> <img style='background-color:inherit' src='imagem_comum/button-rejeitar-webcall.png'> </button> " ,from:logged_usr,toContact:divContato.innerText,time:new Date()})
 
 			//logMessage(id);
 			peerIdEl.value = peerId
@@ -446,14 +463,14 @@ $(function(){
 		if (divContato.innerText == "") { 
 			alert("selecione um contato para enviar mensagens")
 			message.val('')
-			message.attr("rows","2")
+			message.attr("rows","1")
 		}
 		else{
 			var logged_usr = myname[0].innerText
 			socket.emit("contactTo", {message : message.val(),from:logged_usr,toContact:divContato.innerText,time:new Date()})
 			//limpar o inputbox do message, depois que enviar mensagem
 			message.val('')
-			message.attr("rows","2")
+			message.attr("rows","1")
 		}
 	})
 
@@ -502,7 +519,7 @@ $(function(){
 		if (data.from == myname.text() && data.src!="" && data.to == contatoSelecionado){
 				data.time = new Date(data.time).toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
 				var audiotag = "<audio preload='auto' src='"+data.audiosrc+"' controls='1'></audio>"
-				var message = "<p class='messageTo' style='text-align:left;margin-right:auto'><font color='gray'>" + data.time + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png'>  <br> "+ audiotag + " </p>"
+				var message = "<p class='messageTo' style='text-align:left;margin-right:auto'> <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png'> <font color='gray'>" + data.time + "</font>    <br> "+ audiotag + " </p>"
 				//divMessageTo.append(message)
 				divMessageTo.prepend(message)
 		}

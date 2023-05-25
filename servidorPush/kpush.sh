@@ -58,12 +58,13 @@ while(true); do
 
       if [ $? == 0 ]; then
             listras.sh
+            sleep 2
             NOVO_POD=$(cat /tmp/pods.txt | grep -E 'ContainerCreating|Invalid' | awk '{print $1}' )
             echo -en "${yellow}Aguardando o pod entrar em estado: [Running] ...$normal\n"
             
             while(true); do
                   k_get.sh pods > /tmp/pods.txt
-                  cat /tmp/pods.txt | grep $NOVO_POD | grep -E 'Running|Invalid'
+                  cat /tmp/pods.txt | grep -i "$NOVO_POD" | grep -E 'Running|Invalid'
 
                   if [ $? == 0 ]; then
                         STATUS=$(kubectl get pods $NOVO_POD -n $NAMESPACE --no-headers=true | awk '{print $3}')

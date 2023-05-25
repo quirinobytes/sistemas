@@ -19,8 +19,8 @@ let renderVideo = (stream) => {
 
 // Register with the peer server
 let peer = new Peer({
-  host: 'ubuntu',
-  port: 1443,
+  host: 'evolua.antidrone.com.br',
+  port: 30443,
   path: '/peerjs/myapp',
   secure: true
 });

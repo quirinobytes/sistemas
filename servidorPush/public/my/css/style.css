@@ -67,6 +67,16 @@ body {
 button#send_message {
     display: inline-block;
 }
+
+button#acceptWebcall{
+    background-color: 'inherit';
+}
+
+button#btn_rejectWebcall{
+    background-color: 'inherit';
+}
+
+
 #contacts{
     justify-content: flex-end;
     display: flex;
@@ -76,7 +86,7 @@ button#send_message {
 #contactLine {
     font-size: large;
     text-align: right;
-    padding: 10px;
+    padding: 8px;
     display: flex;
 }
 #contactLine:hover {
@@ -365,7 +375,8 @@ p.messageTo{
     width: 180px;
     position: relative;
     display: none;
-    margin-left:200px; margin-top:-80px;
+    margin-left:-280px;
+    margin-top:-40px;
     
     /* margin-left: 10px; */
     /* margin-top: -79px; */
@@ -420,13 +431,14 @@ section#contactRoom {
     display: flex;
     text-align: left;
     min-width: none;
+    border-bottom-left-radius: 20px;
+    border-top-right-radius: 20px;
 }
 section#input_zone {
     /*height: 20%;*/
     text-align: right;
-    background-color: rgb(213, 215, 216);
     color: rgb(44, 46, 61);
-    padding: 0px;
+    padding-top: 20px;
     background-color: rgb(11, 11, 109);
     align-content: center;
     border-radius: 5px;
@@ -503,7 +515,7 @@ section#titulo {
 }
 
 .textarea-Privado{
-    width: 70%;
+    width: 40%;
     margin-bottom: 8px;
     font-size: large;
     /* margin-right: 300px; */
