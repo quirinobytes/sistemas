@@ -212,7 +212,9 @@ app.use(express.static('public/js'))
 app.use(express.static('public/jquery'))
 
 
-app.use(express.static('lib/css'))
+//app.use(express.static('lib/css'))
+app.use(express.static('public/my/css'))
+
 app.use(express.static('lib/js'))
 app.use(express.static('lib'))
 
