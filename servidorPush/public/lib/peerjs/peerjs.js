@@ -10134,4 +10134,4 @@ window.peerjs = exports.peerjs;
 
 window.Peer = peer_1.Peer;
 },{"./util":"BHXf","./peer":"Hxpd"}]},{},["iTK6"], null)
-//# sourceMappingURL=/peerjs.js.map
+sourceMappingURL="/lib/peerjs/peerjs.min.map"

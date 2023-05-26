@@ -210,10 +210,10 @@ app.use(express.static('images'))
 app.use(express.static('public'))
 app.use(express.static('public/js'))
 app.use(express.static('public/jquery'))
-
+app.use(express.static('public/jquery'))
 
 //app.use(express.static('lib/css'))
-app.use(express.static('public/my/css'))
+app.use(express.static('public/lib/js/peerjs'))
 
 app.use(express.static('lib/js'))
 app.use(express.static('lib'))
@@ -256,14 +256,15 @@ app.get('/mural', (req, res) => {
 const favicon = require('serve-favicon');
 app.use(favicon(__dirname + '/public/imagem_comum/favicon.ico'));
 
-// app.get('/favicon.ico', (req, res) => {
-// 	PATH="public/imagem_comum/favicon.ico"
-// 	fs.readFile(PATH,function(err,data){
-// 		res.contentType(type="image/x-icon")
-// 		res.write(data)
-// 	})
-// 	res.end
-// })
+app.get('/style.css', (req,res) => {
+	res.contentType(type="text/css")
+	fs.readFile('public/my/css/style.css', function(err, style) {
+		res.writeHead(200, {'Content-Type': 'text/css'});
+		res.end(style);
+		
+	});
+})
+
 
 app.get('/ultimosItensChatMessage/:apos', (req, res) => {
 	var aposX = req.params.apos;

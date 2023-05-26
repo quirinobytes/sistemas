@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: peerserver
-        image: docker.io/quirinobytes/peerserver@sha256:bcb4b0538f1b354f611c806d305807231574a3e496d9e0b6265495cebe623444
+        image: docker.io/quirinobytes/peerserver@sha256:f418d8698afdaecd73f5b0453f341e6c1543578b21dbcc45937485bf0fe6806d
         resources:
           requests:
             cpu: "100m"
