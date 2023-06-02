@@ -206,15 +206,11 @@ app.set('view engine', 'ejs')
 //usando o layout do EJS
 app.use(expressLayouts)
 //middlewares
-app.use(express.static('images'))
+//app.use(express.static('images'))
 app.use(express.static('public'))
 app.use(express.static('public/js'))
 app.use(express.static('public/jquery'))
-app.use(express.static('public/jquery'))
-
-//app.use(express.static('lib/css'))
 app.use(express.static('public/lib/js/peerjs'))
-
 app.use(express.static('lib/js'))
 app.use(express.static('lib'))
 
@@ -244,24 +240,41 @@ app.use(apiMetrics({
 	}
   }))
 
+// //############################################################
+// // OPEN TELEMETRY
+
+//   function getRandomNumber(min, max) {
+// 	return Math.floor(Math.random() * (max - min) + min);
+//   }
+  
+//   app.get("/rolldice", (req, res) => {
+// 	res.send(getRandomNumber(1, 6).toString());
+//   });
+  
 
 
-//route /
+
+//   //############################################################
+
+
+
+//routes//
+const favicon = require('serve-favicon')
+app.use(favicon(__dirname + '/public/imagem_comum/favicon.ico'))
+
+
 app.get('/mural', (req, res) => {
 	nome = getUsernameFromHeadersAuthorization(req)
 	if (nome == '') {nome = "anonymous"}
 	res.render('mural',{usuario:nome })
 })
 
-const favicon = require('serve-favicon');
-app.use(favicon(__dirname + '/public/imagem_comum/favicon.ico'));
 
 app.get('/style.css', (req,res) => {
 	res.contentType(type="text/css")
 	fs.readFile('public/my/css/style.css', function(err, style) {
 		res.writeHead(200, {'Content-Type': 'text/css'});
 		res.end(style);
-		
 	});
 })
 
@@ -298,7 +311,7 @@ app.get('/getVotosPorIdentificador/:identificador', (req, res) => {
 	})
 })
 
-//route /contact
+// GET /privado
 app.get ('/privado',function (req,res) {
 	nome = getUsernameFromHeadersAuthorization(req)
 	if (nome == '') {nome = "anonymous"}
@@ -311,7 +324,7 @@ app.get ('/privado',function (req,res) {
 	res.render('privado',{usuario:nome })
 })
 
-//route /logged_users
+// GET /logged_users
 app.get ('/logged_users',function (req,res) {
 	//console.log(logged_users)
 	res.json(logged_users)
@@ -950,14 +963,12 @@ io.on('connection', (socket) => {
 
     //listen on change_username
     socket.on('username', (data) => {
+		//console.log("chamando a socket.on('username');");	
 		socket.username = data.username
 		if (debug) console.log(' ## New USER (' + socket.username +") CONNECTED on Websocket channel: username" )
 		username = data.username;
 		//if (!logged_users.includes(username))
 			logged_users.push(username);	
-		
-		//console.log("chamando a socket.on('username');");	
-		//console.log(logged_users)
 		io.sockets.emit('newlogin', { message : data.message})
     })
  
@@ -967,8 +978,8 @@ io.on('connection', (socket) => {
 		if (debug) console.log("  # USER (" +socket.username +") ")
 		if (debug) console.log("  # Conn.ID: " + socket.client.conn.id + "(" + socket.client.conn.remoteAddress + ")" )
 		if (debug) console.log("<-- Socket Disconnect  ")
-
 		if (debug) console.log("### POP: "+ socket.username)
+
 		if (socket.username != undefined ){
 			//remove somente a primeira ocorrencia do usuário que fechou a tela de login, se houver outras, que permacecam no array.
 			const idx = logged_users.indexOf(socket.username)
@@ -1067,14 +1078,6 @@ io.on('connection', (socket) => {
 			console.log("error on:contactTo = faltou from, to, ou message")
     })
 
-    // socket.on('beos', (data) => {
-    //     io.sockets.emit('beos', {message : data.message, username : socket.username, time:data.time})
-    // })
-
-	// socket.on('live', (data) => {
-    //     io.sockets.emit('live', data)
-    // })
-
 	socket.on('offerLive', (data,peerId) => {
 		addMessageContactToPerson({from:data.from, to:data.toContact, message:data.message,time:data.time,identificador:data.identificador})
 
@@ -1082,6 +1085,7 @@ io.on('connection', (socket) => {
 		data.message = "<img style='display:block; height:30px; width:30px' src='imagem_comum/webcallreceiving.gif'>" + data.message
         io.sockets.emit('offerLive', data,peerId)
     })
+
 	socket.on('liveAccepted', (obj) => {
         io.sockets.emit('liveAccepted', obj)
     })
@@ -1143,5 +1147,4 @@ const ioMetrics = prometheus.metrics(io, {
 
   // Faz uma chamada na inicialização da  sistemas/servidorPush/ <- ./version para anunciar a versão pro Getnodes.sh
   const { exec } = require('child_process')
-//   const { time } = require('console')
   exec("cd /root/shell/push ; ./version.js ", (err, stdout, stderr) => {})

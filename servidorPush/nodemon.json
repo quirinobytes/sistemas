@@ -1,0 +1,11 @@
+{
+  "restartable": "rs",
+  "verbose": true,
+  "execMap": { "js": "node --require ./instrumentation.js" },
+  "ignore": [
+    ".git",
+    "node_modules/**/node_modules"
+  ],
+  "colours": true,
+  "delay": 500
+}
