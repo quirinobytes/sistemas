@@ -18,4 +18,4 @@ RUN npm install
 COPY . .
 
 EXPOSE 1443
-CMD [ "node", "index.js" ]
+CMD [ "node", "--require", "./tracing.js", "index.js" ]
