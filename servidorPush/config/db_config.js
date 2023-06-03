@@ -61,10 +61,16 @@ mongoose.connect(strConnection, options, function (err,res ){
  if (err){
 	 console.log('❌ [ERROR] Não foi possivel conectar ao servidor mongodb '+ strConnection+"\nDescrição do erro: ")
    console.log(err)
+   reconecteMongo(strConnection, options);
  }
   else
  	  console.log('🏆[SUCCESS] Mongodb: conectado com sucesso ao servidor [' + MONGO_SERVER +"]")
 })
 
+function reconecteMongo(strConnection,options){
+  mongoose.connect(strConnection, options, function (err,res ){
+    console.log(err)
+  })
+}
 
 module.exports = { mongoose }
