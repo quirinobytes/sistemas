@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
 const debug = false
+//require("./console-file");
+//console.file("/console.log");
 
 //mongo config
 var db = require('./config/db_config.js')
@@ -27,6 +29,8 @@ const messagesTotal = new Prometheus.Counter({
 	labelNames: ['add_user_message']
 })
 
+// servir o favicon.ico
+const favicon = require('serve-favicon')
 
 // usado retorno do content-type para envio de anexos permitidos.
 var mime = {
@@ -37,11 +41,11 @@ var mime = {
     jpg: 'image/jpeg',
     png: 'image/png',
     svg: 'image/svg+xml',
-    js: 'application/javascript'
+    js:  'application/javascript'
 }
 
-var Convert = require('ansi-to-html')
 //opcoes para o convert ANSI COLOR to HTML criar nova linha tmb
+var Convert = require('ansi-to-html')
 var convert = new Convert({
     fg: '#FFF',
     bg: '#000',
@@ -65,7 +69,7 @@ var formidable = require('formidable')
 // Layout do ejs
 var expressLayouts = require('express-ejs-layouts')
 
-
+// Usando Middleware Express
 const express = require('express')
 const id = require('faker/lib/locales/id_ID')
 const app = express()
@@ -128,8 +132,8 @@ function chat_add_message({username,message,identificador,filepath}){
 		return false
 		//o certo aqui era fazer erro 400, ou um reautenticate
 	}
-
 	
+	// Salvando na database
 	chatMessageController.save({id:chatMessageId,username:username,message,time,identificador,filepath}, function(data){
 		if (data.error) {
 			console.log({error:" ❌ [ERROR] Erro ao salvar mensagem id["+chatMessageId+"] na database do Mural"})
@@ -144,13 +148,12 @@ function chat_add_message({username,message,identificador,filepath}){
 
 function findValueByPrefix(object, prefix) {
 	for (var property in object) {
-	  if (object.hasOwnProperty(property) && 
-		 property.toString().startsWith(prefix)) {
-		 return object[property];
-	  }
+		if (object.hasOwnProperty(property) && 
+			property.toString().startsWith(prefix)) {
+			return object[property];
+		}
 	}
-  }
-
+}
 
 function addMessageContactToPerson({from:from,to:to,message:message,time:time, identificador:identificador}){
 	//se nao tiver carregado um board para falar com alguem, aqui pode ficar sem um para
@@ -191,29 +194,25 @@ function addMessageContactToPerson({from:from,to:to,message:message,time:time, i
 }
 
 //############################################################
-
-
-//Listen on port 3000
+// Open HTTP Listen on port 3000
 server = app.listen(3000)
 
-//socket.io instantiation
+//socket.io instantiation usando HTTP express server
 const io = require("socket.io")(server)
-
-
 
 //set the template engine ejs
 app.set('view engine', 'ejs')
 //usando o layout do EJS
 app.use(expressLayouts)
+
 //middlewares
-//app.use(express.static('images'))
 app.use(express.static('public'))
 app.use(express.static('public/js'))
 app.use(express.static('public/jquery'))
 app.use(express.static('public/lib/js/peerjs'))
 app.use(express.static('lib/js'))
 app.use(express.static('lib'))
-
+app.use(favicon(__dirname + '/public/imagem_comum/favicon.ico'))
 
 // create /metrics and add the prometheus middleware to all routes
 //app.use(metricsMiddleware)
@@ -253,22 +252,18 @@ app.use(apiMetrics({
   
 
 
-
-//   //############################################################
-
-
-
-//routes//
-const favicon = require('serve-favicon')
-app.use(favicon(__dirname + '/public/imagem_comum/favicon.ico'))
-
+//___________________________________________
+//
+//   ###########
+//   RESTful API
+//   ###########
+//___________________________________________
 
 app.get('/mural', (req, res) => {
 	nome = getUsernameFromHeadersAuthorization(req)
 	if (nome == '') {nome = "anonymous"}
 	res.render('mural',{usuario:nome })
 })
-
 
 app.get('/style.css', (req,res) => {
 	res.contentType(type="text/css")
@@ -277,7 +272,6 @@ app.get('/style.css', (req,res) => {
 		res.end(style);
 	});
 })
-
 
 app.get('/ultimosItensChatMessage/:apos', (req, res) => {
 	var aposX = req.params.apos;
@@ -311,7 +305,6 @@ app.get('/getVotosPorIdentificador/:identificador', (req, res) => {
 	})
 })
 
-// GET /privado
 app.get ('/privado',function (req,res) {
 	nome = getUsernameFromHeadersAuthorization(req)
 	if (nome == '') {nome = "anonymous"}
@@ -324,12 +317,10 @@ app.get ('/privado',function (req,res) {
 	res.render('privado',{usuario:nome })
 })
 
-// GET /logged_users
 app.get ('/logged_users',function (req,res) {
 	//console.log(logged_users)
 	res.json(logged_users)
 })
-
 
 app.get ('/rest/loadChatWith/:from/:to/:apos',function (req,res) {
 	const from = req.params.from;
@@ -358,7 +349,6 @@ app.get ('/rest/loadChatWith/:from/:to/:apos',function (req,res) {
 	// res.send(obj)
 })
 
-//route /upload
 app.get('/upload', (req, res) => {
 	nome = getUsernameFromHeadersAuthorization(req)
 	if (nome == '') nome = "anonymous"
@@ -385,9 +375,6 @@ app.post('/fileupload', (req, res) => {
 		})
 	})
 })
-
-
-
 
 // recebe o post de enviar arquivos de FOTOS E VIDEOS, salva e grava a TAG HTML correta.
 app.post('/fileuploadMural/',  (req, res) => {
@@ -471,7 +458,6 @@ app.post('/fileuploadMural/',  (req, res) => {
 	})
 })
 
-
 //para servir as imagens e videos que foram enviados via POST para a pasta no servidor fileuploadMural
 app.get('/fileuploadMural/:file', function (req, res) {
 	var path = require('path')
@@ -491,7 +477,6 @@ app.get('/fileuploadMural/:file', function (req, res) {
         res.status(404).end('Not found')
     })
 })
-
 
 app.get('/audioupload/:file', function (req, res) {
 	var path = require('path')
@@ -551,8 +536,6 @@ app.post('/post-audio/', (req, res) => {
 	})
 })
 
-
-
 app.get('/videoupload/:file', function (req, res) {
 	var path = require('path')
 
@@ -572,7 +555,6 @@ app.get('/videoupload/:file', function (req, res) {
         res.status(404).end('Not found')
     })
 })
-
 
 app.get("/votaram/:identificador/:escolha", function(req, res){
 	var identificador = req.params.identificador
@@ -687,11 +669,11 @@ app.get('/deletefile/:filename', (req,res) => {
 	res.redirect('./../upload')
 })
 
-            //###############
-			//#             #
-			//#   REST API  #
-			//#             #
-			//###############
+ //################
+ //#              #
+ //# OLD REST API #
+ //#              #
+ //################
 
 app.get ('/rest/projetos/list/',function (req,res) {
 		res.json(projetos)

@@ -1,7 +1,7 @@
 {
   "restartable": "rs",
   "verbose": true,
-  "execMap": { "js": "node --require ./instrumentation.js" },
+  "execMap": { "js": "node --require ./tracing.js" },
   "ignore": [
     ".git",
     "node_modules/**/node_modules"

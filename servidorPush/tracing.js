@@ -12,9 +12,19 @@ const { HttpInstrumentation } = require("@opentelemetry/instrumentation-http");
 const { registerInstrumentations } = require("@opentelemetry/instrumentation");
 const { Resource } = require("@opentelemetry/resources");
 
+console.log ("Iniciando o tracing.js para enviar OpenTelemetry para JAEGER...")
+
+if ( ! process.env['SERVICENAMEDISPLAYEDINJAEGER'] )
+  serviceNameDisplayedInJaeger = "evolua-backend.development"
+else
+  serviceNameDisplayedInJaeger = process.env['SERVICENAMEDISPLAYEDINJAEGER']
+
+console.log("Usando ENV_VAR SERVICENAMEDISPLAYEDINJAEGER="+serviceNameDisplayedInJaeger)
+
 var jaegerServiceName = new Resource({
-  [SemanticResourceAttributes.SERVICE_NAME]: "evolua-server",
+  [SemanticResourceAttributes.SERVICE_NAME]: serviceNameDisplayedInJaeger,
 })
+
 
     const sdk = new opentelemetry.NodeSDK({
     traceExporter: new OTLPTraceExporter({
@@ -26,9 +36,10 @@ var jaegerServiceName = new Resource({
     }),
     metricReader: new PeriodicExportingMetricReader({
       exporter: new OTLPMetricExporter({
-      url: 'http://192.168.15.3:4318/v1/metrics', // url is optional and can be omitted - default is http://localhost:4318/v1/metrics
-      headers: {}, // an optional object containing custom headers to be sent with each request
-      concurrencyLimit: 1, // an optional limit on pending requests
+      url: 'http://192.168.15.3:4318/v1/metrics', // default is http://localhost:4318/v1/metrics
+      //url: 'http://192.168.15.3:4318/v1/metrics', // default is http://localhost:4318/v1/metrics
+      headers: {}, // object containing custom headers to be sent with each request
+      concurrencyLimit: 1, // limit on pending requests
       }),
     }),
    // instrumentations: [getNodeAutoInstrumentations()],
@@ -38,7 +49,7 @@ var jaegerServiceName = new Resource({
         new MongoDBInstrumentation(),
       ],
     });
-    
+
     sdk.addResource(jaegerServiceName)
     sdk.start();
-    
+

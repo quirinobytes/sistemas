@@ -1,0 +1,9 @@
+
+
+		 __________________
+		 | 🇧🇷 🇧🇷 🇧🇷 |  -> START <-
+		 ------------------
+☢ [INFO] Mongodb: sem nenhum ENV_VAR de conexão encontrada, usando 'str=default' !
+⌛[WAIT] Mongodb: conectando ao servidor ...
+☑ [CONFIG] Chave para HASH das midias configurada com [sha256:12c4af5c666b25bf5d355bb7e0bbb4cc45e774563d36315cf4ab88f13c097bb8]
+🏆[SUCCESS] Mongodb: conectado com sucesso ao servidor [localhost]

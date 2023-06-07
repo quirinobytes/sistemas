@@ -1,6 +1,8 @@
 #!/bin/bash 
 
 NAMESPACE=evolua
+IMAGE_NAME=evolua
+REGISTRY_SERVER=hp.antidrone.com.br
 
 function printTable(){
   L1=""
@@ -22,10 +24,10 @@ function printTable(){
 
 printTable "Building..."
 cp /evolua.key .
-docker build . -t quirinobytes/evolua
+docker build . -t $REGISTRY_SERVER/$IMAGE_NAME
 rm evolua.key
 printTable "Pushing ..."
-docker push quirinobytes/evolua | tee /tmp/dockerpush.txt
+docker push $REGISTRY_SERVER/$IMAGE_NAME | tee /tmp/dockerpush.txt
 
 printTable "Applying..."
 NEW_VERSION=$(cat /tmp/dockerpush.txt | grep "latest: digest" | awk '{print $3}')
