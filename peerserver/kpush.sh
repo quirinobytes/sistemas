@@ -2,6 +2,7 @@
 
 NAMESPACE=evolua
 IMAGE=peerserver
+DOCKER_REGISTRY=hp.antidrone.com.br
 
 function printTable(){
   L1=""
@@ -22,10 +23,10 @@ function printTable(){
 }
 
 printTable "Building..."
-docker build . -t quirinobytes/$IMAGE
+docker build . -t $DOCKER_REGISTRY/$IMAGE
 
 printTable "Pushing ..."
-docker push quirinobytes/$IMAGE | tee /tmp/$IMAGE.dockerpush.txt
+docker push $DOCKER_REGISTRY/$IMAGE | tee /tmp/$IMAGE.dockerpush.txt
 
 printTable "Applying..."
 NEW_VERSION=$(cat /tmp/$IMAGE.dockerpush.txt | grep "latest: digest" | awk '{print $3}')

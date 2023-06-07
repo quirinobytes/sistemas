@@ -17,9 +17,11 @@ spec:
         app: peerserver
         version: v1
     spec:
+      imagePullSecrets:
+        - name: regcred
       containers:
       - name: peerserver
-        image: docker.io/quirinobytes/peerserver@sha256:de1d4f7592e5edba37c4fb458edac8ad8a4b0bf5ee09c05a6656d58f0af5ba9d
+        image: hp.antidrone.com.br/peerserver@sha256:7324e840aa00fee85622402bae649ecc0406e986145707f6d9c2a078f4899f61
         resources:
           requests:
             cpu: "100m"

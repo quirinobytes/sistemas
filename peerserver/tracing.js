@@ -13,7 +13,7 @@ const { registerInstrumentations } = require("@opentelemetry/instrumentation");
 const { Resource } = require("@opentelemetry/resources");
 
 var jaegerServiceName = new Resource({
-  [SemanticResourceAttributes.SERVICE_NAME]: "evolua-peerserver",
+  [SemanticResourceAttributes.SERVICE_NAME]: "evolua-microservice-peerserver",
 })
 
     const sdk = new opentelemetry.NodeSDK({
