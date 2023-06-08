@@ -19,4 +19,4 @@ RUN npm install
 COPY . .
 
 EXPOSE 3000
-CMD [ "node", "--require", "./tracing.js", "servidorPush.js", ">", "log.txt","2>&1" ]
+CMD [ "node", "--require", "./tracing.js", "servidorPush.js" ]
