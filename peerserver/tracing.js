@@ -12,14 +12,31 @@ const { HttpInstrumentation } = require("@opentelemetry/instrumentation-http");
 const { registerInstrumentations } = require("@opentelemetry/instrumentation");
 const { Resource } = require("@opentelemetry/resources");
 
+
+servicename = "evolua-peerserver"
+console.log ("Iniciando o tracing.js para enviar OpenTelemetry para JAEGER...")
+
+if ( ! process.env['SERVICENAME_IN_JAEGER'] )
+  serviceNameDisplayedInJaeger = servicename+".development"
+else
+  serviceNameDisplayedInJaeger = process.env['SERVICENAME_IN_JAEGER']
+
+if ( ! process.env['JAEGER_ENDPOINT'] )
+  jaeger_endpoint = "http://192.168.15.3:4318/v1/traces"
+else
+  jaeger_endpoint = process.env['JAEGER_ENDPOINT']
+
+  console.log("Usando ENV VARs:")
+  console.log("- SERVICENAME_IN_JAEGER= "+serviceNameDisplayedInJaeger)
+  console.log("- JAEGER_ENDPOINT= "+jaeger_endpoint)
+
 var jaegerServiceName = new Resource({
-  [SemanticResourceAttributes.SERVICE_NAME]: "evolua-microservice-peerserver",
+  [SemanticResourceAttributes.SERVICE_NAME]: serviceNameDisplayedInJaeger,
 })
 
     const sdk = new opentelemetry.NodeSDK({
     traceExporter: new OTLPTraceExporter({
-      // optional - default url is http://localhost:4318/v1/traces
-      url: "http://192.168.15.3:4318/v1/traces",
+      url: jaeger_endpoint,
       // optional - collection of custom headers to be sent with each request, empty by default
       headers: {},
     }),
