@@ -301,6 +301,53 @@ app.get('/ultimosItensChatMessage/:apos', (req, res) => {
 })
 
 
+
+
+
+
+
+
+
+
+
+
+
+app.get('/loadMuralPosts/:apos', (req, res) => {
+	var aposX = req.params.apos;
+    // console.log("quero chatMessages APOS ["+aposX+"] itens agora")
+
+	chatMessageController.loadMuralPosts(parseInt(aposX),function(resp){
+		var array = []
+		if (resp.resposta) 
+			console.log("❌ [ERROR] Deu ruim na obtencao de chatmessages no mural")
+		else
+			if (resp)
+				resp.forEach(function(item){
+					array.push(item._doc)
+				})
+			res.json(array)
+			res.end()
+	})
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 app.get('/getVotosPorIdentificador/:identificador', (req, res) => {
 	var identificador = req.params.identificador;
 	chatMessageController.getVotosPorIdentificador(identificador,function(resp){

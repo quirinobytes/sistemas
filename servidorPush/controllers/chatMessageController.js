@@ -81,6 +81,31 @@ exports.ultimosItens = function (aposNItens, callback){
 	})
 }
 
+
+
+
+
+
+
+
+// resgatar as proximas 10 mensagens a partir de "aposNItens" mensagens.
+exports.loadMuralPosts = function (aposNItens, callback){
+	var query = ChatMessageModel.find({}).sort({time:-1}).limit(10).skip(aposNItens)
+	query.exec(function(error, chatmessage){
+		if(!error){
+			callback(chatmessage)
+		}
+		else{
+			callback({resposta: "Nao foi possivel resgatar no maximo 10 mensagens a partir do item: "+aposNItens})
+		}
+	})
+}
+
+
+
+
+
+
 exports.getVotosPorIdentificador = function (identificador, callback){
 	ChatMessageModel.findOne({identificador: identificador})
 	.then(doc => {

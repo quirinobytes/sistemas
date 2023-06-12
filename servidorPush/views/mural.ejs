@@ -36,35 +36,57 @@
           </div>
           <div id="loader" ></div>
 
+          <section id="input_zone">
+
+
+            <form id="formSendImagemToMural" action="fileuploadMural" method="post" enctype="multipart/form-data">
+                <input id="usuario" name="usuario" type="text" style="display:none;" value="<%=usuario%>" />
+                <input id="messageInAttach" name="messageInAttach" type="text" style="display:none;" value="" />
+                <div style="display:flex"> 
+                  <input id="filetoupload" class="input-mural-sendmessage-icon" name="filetoupload" type="file"/>
+                </div>
+            </form>
+
+
+          </section>
+
+          <section id="apelido">
+            
+            <button id="send_Foto" class="vertical-align" tabindex="1" role="button" onclick="enviarMensagemEOUFoto()"> 
+              <img class="button-privado"  src="imagem_comum/button-enviar-mensagem.png"/>
+            </button>
+            
+            <textarea id="message" name="message" class="textarea-sendmessage-mural" rows="1" class="auto_height" onkeypress="auto_height(this)"  tabindex="0" autofocus="autofocus" onkeyup="checkForEnterKey(this.value)"></textarea>
+            <button id="send_message" class="vertical-align" role="button" type="submit" value="submit"  style="display: none;" ></button>
+
+
+            <div>
+              <input id="username" type="text" />
+              <button id="send_username" type="button">
+                <img class="button-privado"  src="imagem_comum/button-nickname.png"/>
+              </button>
+            </div>
+          
+          
+          
+          </section>
+
+          
         </div>
+        
         </header>
     </section>
 
-  <section id="apelido">
-    <div>
-		  <input id="username" type="text" />
-		  <button id="send_username" type="button">Apelido</button>
-    </div>
-  </section>
+
+
+  
 
   <section id="chatroom">
   </section>
 
 </body>
 
-  <section id="input_zone">
-    <form id="formSendImagemToMural" action="fileuploadMural" method="post" enctype="multipart/form-data">
-        <input id="usuario" name="usuario" type="text" style="display:none;" value="<%=usuario%>" />
-        <input id="messageInAttach" name="messageInAttach" type="text" style="display:none;" value="" />
-        <div style="display:flex"> 
-          <input id="filetoupload" name="filetoupload" type="file"/>
-        </div>
-    </form>
-
-    <button id="send_Foto" class="vertical-align" tabindex="1" role="button" onclick="enviarMensagemEOUFoto()"> Enviar </button>
-    <textarea id="message" name="message" rows="1" class="auto_height" onkeypress="auto_height(this)"  tabindex="0" autofocus="autofocus" onkeyup="checkForEnterKey(this.value)"></textarea>
-    <button id="send_message" class="vertical-align" role="button" type="submit" value="submit"  style="display: none;" ></button>
-  </section>
+  
 
  
 

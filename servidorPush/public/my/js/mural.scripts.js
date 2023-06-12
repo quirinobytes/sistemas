@@ -89,12 +89,12 @@ $(function(){
 	$( document ).ready(function() {
 
 		socket.emit('username', {username : loggeduser.text()});
-		carregaMaisAlguns(contadorMuralMensagens);
+		loadMuralPosts(contadorMuralMensagens);
 
 		$('div.container').on('scroll', function() {
 			//se chegar no fim, carrega mais alguns.
 			if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight-1) 
-				carregaMaisAlguns(contadorMuralMensagens)
+			loadMuralPosts(contadorMuralMensagens)
 		})
 
 
@@ -141,9 +141,9 @@ $(function(){
    		const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
 		  
 		    if (data.username == loggeduser.text())
-				chatroom.append("<div class='left'>  <p class='message'> <img class='miniAvatar' src='usersAvatar/"+data.username+"-user-icon.png'/> <b>[" + data.username + "]</b> <font color='gray'> " + hora + "</font> " + data.message + "</p> </div>")
+				chatroom.prepend("<div class='left'>  <p class='message'> <img class='miniAvatar' src='usersAvatar/"+data.username+"-user-icon.png'/> <b>[" + data.username + "]</b> <font color='gray'> " + hora + "</font> " + data.message + "</p> </div>")
 	        else
-				chatroom.append("<div class='right'> <p class='message'> <img class='miniAvatar' src='usersAvatar/"+data.username+"-user-icon.png'/> <b>[" + data.username + "]</b> <font color='gray'> " + hora + "</font>  "+ data.message + "</p> </div>" ) 
+				chatroom.prepend("<div class='right'> <p class='message'> <img class='miniAvatar' src='usersAvatar/"+data.username+"-user-icon.png'/> <b>[" + data.username + "]</b> <font color='gray'> " + hora + "</font>  "+ data.message + "</p> </div>" ) 
 				
 		//fazer o scroll down a cada mensagem nova.
 		container.animate({"scrollTop": $('#chatroom:last-child').outerHeight()}, "slow")
@@ -192,15 +192,75 @@ $(function(){
 	
 
 	//#####################################
-	function carregaMaisAlguns(aposXItens){
+	// function carregaMaisAlguns(aposXItens){
+	// 	$.ajax({
+	// 		url: "ultimosItensChatMessage/"+aposXItens
+	// 	}).then(function(data) {
+	// 		if (data.length > 0){
+
+	// 			// isso tem q ir pro fim, no fim incremente caso tudo tenha dado certo, somente no final, senao pode dar ruim.
+	// 			contadorMuralMensagens+= data.length
+				
+	// 			data.forEach(item => { 
+	// 				var dt = new Date(item.time);
+	// 				const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
+	// 				if (item.username == loggeduser.text()){
+	// 					chatroom.append( "<div class='left'> <p class='message'> <img class='miniAvatar' src='usersAvatar/"+item.username+"-user-icon.png'/> <b>[" + item.username + "]</b> <font color='gray'> " + hora + "</font> " + item.message + "</p> </div>") 
+	// 				}
+	// 				else{
+	// 					chatroom.append( "<div class='right'> <p class='message'> <img class='miniAvatar' src='usersAvatar/"+item.username+"-user-icon.png'/> <b>[" + item.username + "]</b> <font color='gray'> " + hora + "</font>  "+ item.message + "</p> </div>" ) 
+	// 				}
+
+	// 				if (item.identificador) getVotosPorIdentificador(item.identificador)
+	// 			});
+	// 			// $("#loader").attr("style","display:none")
+
+				
+	// 			if (aposXItens<=11) {
+	// 				var totalWidth = 0;
+	// 				$('section#chatroom').children(0).each(function () {
+	// 						totalWidth += ( $(this).outerHeight() + 10) //somando o pading de cd elem
+	// 				})
+					
+	// 				//pelas contas faltou 70px
+	// 				$("section#chatroom").animate({scrollTop: (totalWidth+70) }, 200)
+					
+	// 			}
+
+
+	// 		}
+	// 		else{
+	// 			 console.log("Nao tem mais mensagens para resgatar, ja está na ultima")
+	// 			// $("#loader").attr("style","display:none")
+	// 		}
+
+	// 		//$("#loader").attr("style","display:none")
+	// 	});
+
+	// 	//somente na primeira vez, que traz até 10 mensagens
+		
+	// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	function loadMuralPosts(aposXItens){
 		$.ajax({
-			url: "ultimosItensChatMessage/"+aposXItens
+			url: "loadMuralPosts/"+aposXItens
 		}).then(function(data) {
 			if (data.length > 0){
-
 				// isso tem q ir pro fim, no fim incremente caso tudo tenha dado certo, somente no final, senao pode dar ruim.
 				contadorMuralMensagens+= data.length
-				
 				data.forEach(item => { 
 					var dt = new Date(item.time);
 					const hora = dt.toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
@@ -210,36 +270,43 @@ $(function(){
 					else{
 						chatroom.append( "<div class='right'> <p class='message'> <img class='miniAvatar' src='usersAvatar/"+item.username+"-user-icon.png'/> <b>[" + item.username + "]</b> <font color='gray'> " + hora + "</font>  "+ item.message + "</p> </div>" ) 
 					}
-
 					if (item.identificador) getVotosPorIdentificador(item.identificador)
 				});
 				// $("#loader").attr("style","display:none")
-
-				
 				if (aposXItens<=11) {
 					var totalWidth = 0;
 					$('section#chatroom').children(0).each(function () {
 							totalWidth += ( $(this).outerHeight() + 10) //somando o pading de cd elem
 					})
-					
 					//pelas contas faltou 70px
 					$("section#chatroom").animate({scrollTop: (totalWidth+70) }, 200)
-					
 				}
-
-
 			}
 			else{
 				 console.log("Nao tem mais mensagens para resgatar, ja está na ultima")
 				// $("#loader").attr("style","display:none")
 			}
-
 			//$("#loader").attr("style","display:none")
 		});
-
 		//somente na primeira vez, que traz até 10 mensagens
-		
 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	function getVotosPorIdentificador(identificador){
 		$.ajax({
