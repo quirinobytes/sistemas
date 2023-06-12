@@ -18,5 +18,8 @@ RUN npm install
 # Bundle app source
 COPY . .
 
+#RUN apt update
+#RUN apt install netcat net-tools -y
+
 EXPOSE 3000
 CMD [ "node", "--require", "./tracing.js", "servidorPush.js" ]

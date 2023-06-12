@@ -70,11 +70,10 @@ function loadChatWith(username, aposNItens) {
 		  	  	else
 		  			//messageTo.append("<p class='messageTo'> <img class='miniAvatar' src='usersAvatar/"+de+"-user-icon.png' alt='"+de+"'> <font color='gray'>  " + hora + "</font> <br>" + mensagem + "</p>") 
 		  			messageTo.prepend("<p class='messageTo'> <img class='miniAvatar' src='usersAvatar/"+de+"-user-icon.png' alt='"+de+"'> <font color='gray'>  " + hora + "</font> <br>" + mensagem + "</p>") 
-			
-			
-			
 			}
 		});
+		//ja volta o foco do cursor pro input box de mensagens.
+		$("#message").focus()
 		//fazer depois mesmo
 		$('div.container').scrollTop($('div.container').scrollTop() +1)
 	}
@@ -335,6 +334,20 @@ $(function(){
 		});
 	}
 
+	function logaInicioDaWebCall(from,to){
+		$.ajax(
+			{ 
+				url: "https://evolua.antidrone.com.br:30443/chamandoconf/"+from+"/"+to,
+				type: "GET",
+				processData: false,
+				contentType: false,
+				// contentType: "application/x-www-form-urlencoded",
+				//enctype: "multipart/form-data",
+			}).then(function(result) {
+				console.log(new Date())
+				console.log(from+" chamando webcall com "+to)
+			});
+	}
 
 	startWebcallGetRoomid.click(function(){
 		var peerId
@@ -362,6 +375,9 @@ $(function(){
 			socket.emit("live", {message : peerId ,from:logged_usr,toContact:divContato.innerText,time:new Date()})
 			// socket.emit("offerLive", {message : "<img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'>  <br> " + loggedUser + " ligando... <br> <img style='display:block; height:30px; width:30px' src='imagem_comum/webcallreceiving.gif'>" +  logged_usr + "<br>   <button id='acceptWebcall' onclick='acceptWebcall(\""+peerId+"\")'> Aceitar  </button> x <button> Rejeitar </button> " ,from:logged_usr,toContact:divContato.innerText,time:new Date()})
 			socket.emit("offerLive", {message : "" +  logged_usr + " <br>   <button id='acceptWebcall' style='background-color:inherit' onclick='acceptWebcall(\""+peerId+"\")'>   <img style='background-color:inherit' src='imagem_comum/button-aceitar-webcall.png'>  </button> x <button id='btn_rejectWebcall' style='background-color:inherit' onclick='rejectWebcall(\""+peerId+"\")'> <img style='background-color:inherit' src='imagem_comum/button-rejeitar-webcall.png'> </button> " ,from:logged_usr,toContact:divContato.innerText,time:new Date()})
+			
+			//para aparecer no log do peerserver quem está iniciando a chamada.
+			logaInicioDaWebCall(logged_usr,divContato.innerText)
 
 			//logMessage(id);
 			peerIdEl.value = peerId

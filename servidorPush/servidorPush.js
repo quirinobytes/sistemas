@@ -265,6 +265,11 @@ app.get('/mural', (req, res) => {
 	res.render('mural',{usuario:nome })
 })
 
+app.get('/plenario', (req, res) => {
+	res.write("quik maluco")
+	res.end()
+})
+
 app.get('/style.css', (req,res) => {
 	res.contentType(type="text/css")
 	fs.readFile('public/my/css/style.css', function(err, style) {
