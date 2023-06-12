@@ -15,10 +15,10 @@ RUN npm install
 # RUN npm ci --only=production
 
 RUN apt update
-RUN apt install netcat tcpdump curl -y
+RUN apt install netcat tcpdump curl net-tools -y
 
 # Bundle app source
 COPY . .
 
 EXPOSE 1443
-CMD [ "node", "--require", "./tracing.js", "index.js" ]
+CMD [ "node", "--require", "./tracing.js", "peerserver.js" ]

@@ -41,10 +41,15 @@ const peerServer = ExpressPeerServer(httpsServer, {
 	path: "/myapp", 
 });
 
-app.use("/peerjs", peerServer)
 
-app.get("/id", (req, res) => {
+app.get("/chamandoconf/:from/:to", (req,res) => {
+  from = req.params.from
+  to = req.params.to
+  timestamp = new Date(data.time).toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
+  console.log("[ ✆ ] "+timestamp+ " ⏯ @"+from+" iniciando webcall com @"+to)
 })
+
+app.use("/peerjs", peerServer)
 
 app.get("/", (req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*")

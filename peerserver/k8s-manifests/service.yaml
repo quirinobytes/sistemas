@@ -6,7 +6,7 @@ metadata:
     app: peerserver
     service: peerserver-service
   annotations:
-    metallb.universe.tf/loadBalancerIPs: 192.168.15.66
+    metallb.universe.tf/loadBalancerIPs: 192.168.15.50
 spec:
   ports:
   - port: 1443

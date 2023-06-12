@@ -21,7 +21,7 @@ spec:
         - name: regcred
       containers:
       - name: peerserver
-        image: hp.antidrone.com.br/peerserver@sha256:12233e8917adb16c550169e3606470fd4d6ec279fa7e4af927bf11f327815540
+        image: hp.antidrone.com.br/peerserver@sha256:68ca4701f79e7136cfcfac8d4b43815f6702b04511fd7ff49127991aef3ffb38
         resources:
           requests:
             cpu: "100m"
@@ -32,7 +32,7 @@ spec:
         - name: SERVICENAME_IN_JAEGER
           value: "evolua-peerserver.production"
         - name: JAEGER_ENDPOINT
-          value: "http://optl-opentelemetry-collector.observability.svc.cluster.local:4318/v1/traces"
+          value: "http://opentelemetry-opentelemetry-collector.observability.svc.cluster.local:4318/v1/traces"
 
 
 
