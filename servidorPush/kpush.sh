@@ -7,6 +7,10 @@ function reiniciarKpush(){
   echo [crtl+\] Reiniciando kpush
   listras.sh
   kpush.sh
+  if [ $? -eq 1 ]; then
+    echo HORA DE SAIR
+    exit 1
+  fi
 }
 
 
@@ -90,8 +94,10 @@ function kubernetesPush(){
                                 printTable "[🏆] Released -> K8S!"
                                 echo
                                 echo -en "\n - Chamando $alert[k po]$normal para acompanhar o $yellow kpush$normal\n" 
-                                k_get.sh po
-
+                                echo -en "\n   $> $alert[crtl+\]$normal para um novo $red deploy$normal\n" 
+                                listras.sh
+                                #k_get.sh po
+                                k_get.sh po || exit 1
 
                                 exit 0
                           elif [[ "$STATUS" =~ 'Invalid' ]]; then

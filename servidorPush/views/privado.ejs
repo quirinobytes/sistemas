@@ -1,73 +1,77 @@
-  <head>
-    <title>Evolua - Privado</title>
-    <script src="lib/js/jquery/jquery-latest.min.js"></script>
-    <script src="my/js/chat_privado.js"></script>
-    <script>
-      function checkForEnterKey(){
-        if (event.keyCode === 13) {
-          event.preventDefault();
-          document.getElementById("send_message").click();
-        }
+<head>
+  <title>Evolua - Privado</title>
+  <script src="lib/js/jquery/jquery-latest.min.js"></script>
+  <script src="my/js/chat_privado.js"></script>
+  <script>
+    function checkForEnterKey() {
+      if (event.keyCode === 13) {
+        event.preventDefault();
+        document.getElementById("send_message").click();
       }
-    </script>
-  </head> 
+    }
+  </script>
+</head>
 
-  <body>
-      <section id="titulo">
-          <header id="headerMenu"> 
-            <div style="display: flex; justify-content: space-between; text-align:left">
-              <div id="divUserAvatarName">
-                <img class="nav-auth-img" src='usersAvatar/<%= usuario %>-user-icon.png'/>
-              <div id="myname"><%=usuario %></div>
-            </div>
-            <h3> Privado </h3> 
-            <div style="text-align:right;align-items:center;">
-
-              <section id="input_zone_privado">
-                <button id="transferMoney" class="vertical-align">
-                  <img class="button-privado"  src="imagem_comum/button-transfer-money.png"/>
-                </button> 
-                
-                <textarea name='message' id="message" class="textarea-Privado auto_height" rows="1" class="" onkeypress="auto_height(this)"  tabindex="1" autofocus="autofocus" onkeyup="checkForEnterKey(this.value)"></textarea>
-                <button id="send_message" class="vertical-align" role="button" type="submit" value="submit">
-                  <img src="imagem_comum/button-enviar-mensagem.png"/>
-                </button>
-                <button id="gravarAudio" class="vertical-align">
-                  <img id="imgGravarAudio" class="button-privado" src="imagem_comum/button-gravar-audio.png"/>
-                </button>
-                <button id="startWebcallGetRoomid" class="vertical-align">
-                  <img class="button-privado"  src="imagem_comum/button-iniciar-webcall.png"/>
-                </button>  
-                  <img id="imgContactTo" class="nav-auth-img vertical-align" src="usersAvatar/-user-icon.png"/>
-                
-                
-                <div id='divContato'></div>
-
-                <div id="webcallhide">
-                  <video class="remote-video" onclick="maximizaWebcallTelaCheia()" autoplay></video>
-                </div>
- 
-                             
-                <div id="ok" style="display:none"></div>
-                <div id='feedback' style="display:none"></div>
-             </section>
-            </div>
-            <input type="hidden" id="connect-to-peer">
+<body>
+  <section id="titulo">
+    <header id="headerMenu">
+      <div style="display: flex; justify-content: space-between; text-align:left">
+        <div id="divUserAvatarName">
+          <img class="nav-auth-img" src='usersAvatar/<%= usuario %>-user-icon.png' />
+          <div id="myname">
+            <%=usuario %>
           </div>
-          </header>
-      </section>
-
-    <section id="contactRoom">
-        <div id="contactList">
         </div>
-        
-        <section id="divMessageTo">
-          
-        </section>
-        
-    </section>
-   
-   
-   
+        <h3> Privado </h3>
+        <div style="text-align:right;align-items:center;">
 
-  </body>
+          <section id="input_zone_privado">
+            <button id="transferMoney" class="vertical-align">
+              <img class="button-privado" src="imagem_comum/button-transfer-money.png" />
+            </button>
+
+            <textarea name='message' id="message" class="textarea-Privado auto_height" rows="1" class=""
+              onkeypress="auto_height(this)" tabindex="1" autofocus="autofocus"
+              onkeyup="checkForEnterKey(this.value)"></textarea>
+            <button id="send_message" class="vertical-align" role="button" type="submit" value="submit">
+              <img src="imagem_comum/button-enviar-mensagem.png" />
+            </button>
+            <button id="gravarAudio" class="vertical-align">
+              <img id="imgGravarAudio" class="button-privado" src="imagem_comum/button-gravar-audio.png" />
+            </button>
+            <button id="startWebcallGetRoomid" class="vertical-align">
+              <img class="button-privado" src="imagem_comum/button-iniciar-webcall.png" />
+            </button>
+            <img id="imgContactTo" class="nav-auth-img vertical-align" src="usersAvatar/-user-icon.png" />
+
+
+            <div id='divContato'></div>
+
+            <div id="webcallhide">
+              <video id="webcallPlace" class="remote-video" onclick="maximizaWebcallTelaCheia(this)" autoplay></video>
+            </div>
+
+
+            <div id="ok" style="display:none"></div>
+            <div id='feedback' style="display:none"></div>
+          </section>
+        </div>
+        <input type="hidden" id="connect-to-peer">
+      </div>
+    </header>
+  </section>
+
+  <section id="contactRoom">
+    <div id="contactList">
+    </div>
+
+    <section id="divMessageTo">
+
+    </section>
+
+  </section>
+
+
+
+
+</body>
