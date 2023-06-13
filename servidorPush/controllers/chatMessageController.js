@@ -88,7 +88,7 @@ exports.ultimosItens = function (aposNItens, callback){
 
 
 
-// resgatar as proximas 10 mensagens a partir de "aposNItens" mensagens.
+// resgatar as recentes proximas 10 mensagens a partir de "aposNItens" mensagens.
 exports.loadMuralPosts = function (aposNItens, callback){
 	var query = ChatMessageModel.find({}).sort({time:-1}).limit(10).skip(aposNItens)
 	query.exec(function(error, chatmessage){

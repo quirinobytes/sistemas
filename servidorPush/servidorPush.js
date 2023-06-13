@@ -459,7 +459,7 @@ app.post('/fileuploadMural/',  (req, res) => {
 		else{
 			if (fileExtension == ".jpg" || fileExtension == ".jpeg" || fileExtension == ".png" || fileExtension == ".gif" || fileExtension == "" ){
 				var newpath = 'fileuploadMural/' + files.filetoupload.name
-				var link = "<div class='imageBox'> <img class='imgMural' src='" + newpath +"' alt='imagem' />   </div> <div class='divVotacao'>   &nbsp; &nbsp; <img class='votar' onClick='votarSim(\""+ identificarUnico+"\")' src='imagem_comum/sim.jpg'/> <div id='"+ identificarUnico +"_like'> &nbsp; </div> &nbsp; &nbsp; <img class='votar' onClick='votarNao(\""+identificarUnico+"\")' src='imagem_comum/nao.jpg'/>  &nbsp; <div id='"+identificarUnico+"_dislike'></div> &nbsp; </div> " + messageInAttach 
+				var link = "<div class='divImageBox'> <img class='imgMural' src='" + newpath +"' alt='imagem' />   </div> <div class='divVotacao'>   &nbsp; &nbsp; <img class='votar' onClick='votarSim(\""+ identificarUnico+"\")' src='imagem_comum/sim.jpg'/> <div id='"+ identificarUnico +"_like'> &nbsp; </div> &nbsp; &nbsp; <img class='votar' onClick='votarNao(\""+identificarUnico+"\")' src='imagem_comum/nao.jpg'/>  &nbsp; <div id='"+identificarUnico+"_dislike'></div> &nbsp; </div> " + messageInAttach 
 			}
 			else{
 				console.log("❌[ERROR] Tipo de arquivo não permitido: ["+fileExtension+"]")
@@ -577,7 +577,7 @@ app.post('/post-audio/', (req, res) => {
 		io.sockets.emit("audioTo",{audiosrc:newpath,from:from,to:to,time:new Date()})
 
 		var audiotag = "<audio preload='auto' src='"+newpath+"' controls='1'></audio>"
-		var message = "<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>" + new Date() + "</font>  <img class='miniAvatar' src='usersAvatar/"+from+"-user-icon.png'>  <br> "+ audiotag + " </p>"
+		var message = "<p class='messageTo' style='text-align:right;margin-left:auto'><font class='horamessagemural' color='gray'>" + new Date() + "</font>  <img class='miniAvatar' src='usersAvatar/"+from+"-user-icon.png'>  <br> "+ audiotag + " </p>"
 		var identificarUnico = uuidv4()
 		identificarUnico = identificarUnico.replace(/-/gi, "_").trim()
 		addMessageContactToPerson({from:from, to:to, message:audiotag, time:new Date(), identificador:identificarUnico})

@@ -65,11 +65,11 @@ function loadChatWith(username, aposNItens) {
 			if (mensagem){
 				
 				if (para == myname)
-					//messageTo.append("<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>  " + hora + "</font>  <img class='miniAvatar' src='usersAvatar/"+de+"-user-icon.png' alt='"+de+"'>  <br> "+ mensagem +" </p>") 
-					messageTo.prepend("<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>  " + hora + "</font>  <img class='miniAvatar' src='usersAvatar/"+de+"-user-icon.png' alt='"+de+"'>  <br> "+ mensagem +" </p>") 
+					//messageTo.append("<p class='messageTo' style='text-align:right;margin-left:auto'><font class='horamessagemural' color='gray'>  " + hora + "</font>  <img class='miniAvatar' src='usersAvatar/"+de+"-user-icon.png' alt='"+de+"'>  <br> "+ mensagem +" </p>") 
+					messageTo.prepend("<p class='messageTo' style='text-align:right;margin-left:auto'><font class='horamessagemural' color='gray'>  " + hora + "</font>  <img class='miniAvatar' src='usersAvatar/"+de+"-user-icon.png' alt='"+de+"'>  <br> "+ mensagem +" </p>") 
 		  	  	else
-		  			//messageTo.append("<p class='messageTo'> <img class='miniAvatar' src='usersAvatar/"+de+"-user-icon.png' alt='"+de+"'> <font color='gray'>  " + hora + "</font> <br>" + mensagem + "</p>") 
-		  			messageTo.prepend("<p class='messageTo'> <img class='miniAvatar' src='usersAvatar/"+de+"-user-icon.png' alt='"+de+"'> <font color='gray'>  " + hora + "</font> <br>" + mensagem + "</p>") 
+		  			//messageTo.append("<p class='messageTo'> <img class='miniAvatar' src='usersAvatar/"+de+"-user-icon.png' alt='"+de+"'> <font class='horamessagemural' color='gray'>  " + hora + "</font> <br>" + mensagem + "</p>") 
+		  			messageTo.prepend("<p class='messageTo'> <img class='miniAvatar' src='usersAvatar/"+de+"-user-icon.png' alt='"+de+"'> <font class='horamessagemural' color='gray'>  " + hora + "</font> <br>" + mensagem + "</p>") 
 			}
 		});
 		//ja volta o foco do cursor pro input box de mensagens.
@@ -464,7 +464,7 @@ $(function(){
 // 	// caso a webcall seja pro usuário logado, mas ele nao está com o board do friend aberto, colocar um icone de video no friend piscando.
 // 	// if (data.from != divContato.innerText && data.toContact == loggedUser ){
 // 	// 	// alert("aqui rodou o ultimo if, que coloca as mensagens dos amigos")
-// 	// 	//divMessageTo.append("<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>  " + hora + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'>  <br> "+ data.message +" </p>");
+// 	// 	//divMessageTo.append("<p class='messageTo' style='text-align:right;margin-left:auto'><font class='horamessagemural' color='gray'>  " + hora + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'>  <br> "+ data.message +" </p>");
 // 	// 	//contadorAposNItensPrivateMensagensObj.set(data.from, contadorAposNItensPrivateMensagensObj.get(data.from) + 1)
 // 	// }
 // 	})
@@ -528,14 +528,14 @@ $(function(){
 		if (data.to == myname.text() && data.src!="" && data.from == contatoSelecionado){
 				data.time = new Date(data.time).toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
 				var audiotag = "<audio preload='auto' src='"+data.audiosrc+"' controls='1'></audio>"
-				var message = "<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>" + data.time + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png'>  <br> "+ audiotag + " </p>"
+				var message = "<p class='messageTo' style='text-align:right;margin-left:auto'><font class='horamessagemural' color='gray'>" + data.time + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png'>  <br> "+ audiotag + " </p>"
 				//divMessageTo.append(message)
 				divMessageTo.prepend(message)
 		}
 		if (data.from == myname.text() && data.src!="" && data.to == contatoSelecionado){
 				data.time = new Date(data.time).toLocaleString("en-us", {hour: '2-digit', minute: '2-digit', second: "2-digit"});
 				var audiotag = "<audio preload='auto' src='"+data.audiosrc+"' controls='1'></audio>"
-				var message = "<p class='messageTo' style='text-align:left;margin-right:auto'> <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png'> <font color='gray'>" + data.time + "</font>    <br> "+ audiotag + " </p>"
+				var message = "<p class='messageTo' style='text-align:left;margin-right:auto'> <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png'> <font class='horamessagemural' color='gray'>" + data.time + "</font>    <br> "+ audiotag + " </p>"
 				//divMessageTo.append(message)
 				divMessageTo.prepend(message)
 		}
@@ -558,11 +558,11 @@ $(function(){
 
 
 			if (data.from == loggedUser)
-				//divMessageTo.append("<p class='messageTo'> <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'> <font color='gray'>  " + hora + "</font> <br>" + data.message + "</p>")
-				divMessageTo.prepend("<p class='messageTo'> <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'> <font color='gray'>  " + hora + "</font> <br>" + data.message + "</p>")
+				//divMessageTo.append("<p class='messageTo'> <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'> <font class='horamessagemural' color='gray'>  " + hora + "</font> <br>" + data.message + "</p>")
+				divMessageTo.prepend("<p class='messageTo'> <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'> <font class='horamessagemural' color='gray'>  " + hora + "</font> <br>" + data.message + "</p>")
 			else
-				// divMessageTo.append("<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>  " + hora + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'>  <br> "+ data.message +" </p>");
-				divMessageTo.prepend("<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>  " + hora + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'>  <br> "+ data.message +" </p>");
+				// divMessageTo.append("<p class='messageTo' style='text-align:right;margin-left:auto'><font class='horamessagemural' color='gray'>  " + hora + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'>  <br> "+ data.message +" </p>");
+				divMessageTo.prepend("<p class='messageTo' style='text-align:right;margin-left:auto'><font class='horamessagemural' color='gray'>  " + hora + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'>  <br> "+ data.message +" </p>");
 		}
 		else{ 
 			//caso o board do seu contato nao esteja selecionado, e nao seja o seu board
@@ -597,8 +597,8 @@ $(function(){
 		//caso eu esteja com o board de mensagens do amigo selecionada, colocar as mensagens dele pra mim, e soa um bip
 		if (data.from == divContato.innerText && data.toContact == loggedUser ){
 			// alert("aqui rodou o ultimo if, que coloca as mensagens dos amigos")
-			//divMessageTo.append("<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>  " + hora + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'>  <br> "+ data.message +" </p>");
-			divMessageTo.prepend("<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>  " + hora + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'>  <br> "+ data.message +" </p>");
+			//divMessageTo.append("<p class='messageTo' style='text-align:right;margin-left:auto'><font class='horamessagemural' color='gray'>  " + hora + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'>  <br> "+ data.message +" </p>");
+			divMessageTo.prepend("<p class='messageTo' style='text-align:right;margin-left:auto'><font class='horamessagemural' color='gray'>  " + hora + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'>  <br> "+ data.message +" </p>");
 			$('#playSoundOnNewMessage')[0].play();
 			feedback.empty();
 			// incContadorAposNItensPrivateMensagensObj(data.from)
@@ -627,11 +627,11 @@ socket.on('offerLive', (data, peerId) => {
 		contadorAposNItensPrivateMensagensObj.set(to, contadorAposNItensPrivateMensagensObj.get(to) + 1)
 
 		if (data.from == loggedUser)
-		// divMessageTo.append("<p class='messageTo'> <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'> <font color='gray'>  " + hora + "</font> <br> <img style='display:block; height:30px; width:30px' src='imagem_comum/webcallreceiving.gif'> " + loggedUser + " ligando... <br> <button> Cancelar </button>  </p>")
-			divMessageTo.prepend("<p class='messageTo'> <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'> <font color='gray'>  " + hora + "</font> <br> <img style='display:block; height:30px; width:30px' src='imagem_comum/webcallreceiving.gif'> " + loggedUser + " ligando... <br> <button> Cancelar </button>  </p>")
+		// divMessageTo.append("<p class='messageTo'> <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'> <font class='horamessagemural' color='gray'>  " + hora + "</font> <br> <img style='display:block; height:30px; width:30px' src='imagem_comum/webcallreceiving.gif'> " + loggedUser + " ligando... <br> <button> Cancelar </button>  </p>")
+			divMessageTo.prepend("<p class='messageTo'> <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'> <font class='horamessagemural' color='gray'>  " + hora + "</font> <br> <img style='display:block; height:30px; width:30px' src='imagem_comum/webcallreceiving.gif'> " + loggedUser + " ligando... <br> <button> Cancelar </button>  </p>")
 		else
-		//divMessageTo.append("<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>  " + hora + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'>  <br> " + loggedUser + " ligando... <br> <img style='display:block; height:30px; width:30px' src='imagem_comum/webcallreceiving.gif'> <button id='acceptWebcall' onclick='acceptWebcall(\""+peerId+"\")'> Aceitar  </button> x <button> Rejeitar </button> </p>");
-			divMessageTo.prepend("<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>  " + hora + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'>  <br> " + loggedUser + " ligando... <br> <img style='display:block; height:30px; width:30px' src='imagem_comum/webcallreceiving.gif'> <button id='acceptWebcall' onclick='acceptWebcall(\""+peerId+"\")'> Aceitar  </button> x <button> Rejeitar </button> </p>");
+		//divMessageTo.append("<p class='messageTo' style='text-align:right;margin-left:auto'><font class='horamessagemural' color='gray'>  " + hora + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'>  <br> " + loggedUser + " ligando... <br> <img style='display:block; height:30px; width:30px' src='imagem_comum/webcallreceiving.gif'> <button id='acceptWebcall' onclick='acceptWebcall(\""+peerId+"\")'> Aceitar  </button> x <button> Rejeitar </button> </p>");
+			divMessageTo.prepend("<p class='messageTo' style='text-align:right;margin-left:auto'><font class='horamessagemural' color='gray'>  " + hora + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'>  <br> " + loggedUser + " ligando... <br> <img style='display:block; height:30px; width:30px' src='imagem_comum/webcallreceiving.gif'> <button id='acceptWebcall' onclick='acceptWebcall(\""+peerId+"\")'> Aceitar  </button> x <button> Rejeitar </button> </p>");
 	}
 	else{ 
 		//caso o board do seu contato nao esteja selecionado, e nao seja o seu board
@@ -643,8 +643,8 @@ socket.on('offerLive', (data, peerId) => {
 	//caso eu esteja com o board de mensagens do amigo selecionada, colocar as mensagens dele pra mim, e soa um bip
 	if (data.from == divContato.innerText && data.toContact == loggedUser ){
 		// alert("aqui rodou o ultimo if, que coloca as mensagens dos amigos")
-		//divMessageTo.append("<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>  " + hora + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'>  <br>  "+ data.message +" </p>");
-		divMessageTo.prepend("<p class='messageTo' style='text-align:right;margin-left:auto'><font color='gray'>  " + hora + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'>  <br>  "+ data.message +" </p>");
+		//divMessageTo.append("<p class='messageTo' style='text-align:right;margin-left:auto'><font class='horamessagemural' color='gray'>  " + hora + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'>  <br>  "+ data.message +" </p>");
+		divMessageTo.prepend("<p class='messageTo' style='text-align:right;margin-left:auto'><font class='horamessagemural' color='gray'>  " + hora + "</font>  <img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'>  <br>  "+ data.message +" </p>");
 		
 		avisoRecebendoWebcallDoAmigo(data.from)
 		$('#playSoundOnReceivingWebcall')[0].play();

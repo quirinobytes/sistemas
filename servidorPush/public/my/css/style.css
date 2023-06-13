@@ -6,42 +6,44 @@
 
 
 @mixin vertical-align {
-  position: relative;
-  top: 50%;
-  -webkit-transform: translateY(50%);
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
+    position: relative;
+    top: 50%;
+    -webkit-transform: translateY(50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
 }
 
 * {
     box-sizing: border-box;
 }
 
-audio{
+audio {
     width: 100%;
 }
 
 html {
     display: flex;
-    flex-flow: row nowrap;  
+    flex-flow: row nowrap;
     justify-content: center;
     align-content: center;
     align-items: center;
-    height:100%;
+    height: 100%;
     margin: 0;
     padding: 0;
 
-   /* width: 50%; */
+    /* width: 50%; */
 }
-.p, p {
+
+.p,
+p {
     font-size: 25px;
 }
 
-main{
+main {
     vertical-align: middle;
     overflow-y: scroll;
     object-fit: contain;
-    width:inherit;
+    width: inherit;
 }
 
 body {
@@ -51,16 +53,16 @@ body {
     background-color: black;
     justify-content: center;
     box-shadow: 0px 0px 96px 0px rgba(224, 210, 210, 0.75);
-            width: 80%;
-            /* height: 50%; */
-            margin: 5% 10% 5% 10%;
-            border: 1px solid;
-           
-            object-fit: contain;
-            box-sizing:content-box;
+    width: 80%;
+    /* height: 50%; */
+    margin: 5% 10% 5% 10%;
+    border: 1px solid;
+
+    object-fit: contain;
+    box-sizing: content-box;
 }
 
-.auto_height { 
+.auto_height {
     width: 100%;
 }
 
@@ -68,16 +70,21 @@ button#send_message {
     display: inline-block;
 }
 
-button#acceptWebcall{
+/* img button send_message está aqui */
+button#send_Foto {
+    margin-top: -10px;
+    margin-left: 10px;
+}
+
+button#acceptWebcall {
     background-color: 'inherit';
 }
 
-button#btn_rejectWebcall{
+button#btn_rejectWebcall {
     background-color: 'inherit';
 }
 
-
-#contacts{
+#contacts {
     justify-content: flex-end;
     display: flex;
     text-align: center;
@@ -89,28 +96,34 @@ button#btn_rejectWebcall{
     padding: 8px;
     display: flex;
 }
+
 #contactLine:hover {
     background-color: rgb(11, 11, 124) !important;
     color: white;
     transition: background-color 0.5s;
-    box-shadow: 0 2px 15px rgba(0,0,0,0.6);
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.6);
     border: white 1px solid;
 }
 
-#contactLine:nth-child(even){
-    background-color:  rgb(101, 153, 248);
+#contactLine:nth-child(even) {
+    background-color: rgb(101, 153, 248);
 }
 
-#contactLine:nth-child(odd){
+#contactLine:nth-child(odd) {
     background-color: rgb(158, 188, 243);
 }
-#contactList{
+
+#contactList {
     display: block;
-    position:static;
+    position: static;
 }
 
-div#myname { 
+div#myname,
+div#loggeduser {
     text-align: center;
+    font-size: small;
+    color: white;
+    margin-top: 3px;
 }
 
 div#box {
@@ -122,15 +135,15 @@ div#box {
 }
 
 div.container {
-   /* width: auto; */
-   /* min-width: min-content; */
-   width:inherit;
-   align-content: center;
-   position: absolute;
-   overflow-y: scroll;
-   padding-right: 15px;
-   padding-left: 15px;
-   max-height: 75%;
+    /* width: auto; */
+    /* min-width: min-content; */
+    width: inherit;
+    align-content: center;
+    position: absolute;
+    overflow-y: scroll;
+    padding-right: 15px;
+    padding-left: 15px;
+    max-height: 75%;
 }
 
 #divMessageTo {
@@ -141,7 +154,7 @@ div.container {
 }
 
 
-button{
+button {
     background-color: rgb(11, 11, 109);
     border: 0px;
 }
@@ -149,18 +162,34 @@ button{
 #divUserAvatarName {
     text-align: center;
     display: block;
-}
-#divChatContactTitulo, #divContato{
- text-align: left;
-}
-#divChatContactTitulo, #divContato{
-    text-align: center;
+    margin-top: 10px;
 }
 
-div#change_username{
+#divContato {
+    color: white;
+    margin-right: 5px;
+    margin-top: -28px;
+    font-size: small;
+}
+
+#divChatContactTitulo {
+    text-align: right;
+    color: white;
+}
+
+div#change_username {
     border: 2px outset rgb(74, 123, 179);
     text-align: right;
 }
+
+/* o botao de anexar arquivo está aqui no form */
+form#formSendImagemToMural {
+    /* height: 5px; */
+    /* margin-top: -90px; */
+    margin-top: -5px;
+    margin-right: 25px;
+}
+
 input#username {
     font-family: 'Comfortaa', sans-serif;
 }
@@ -171,15 +200,21 @@ input#username {
     font-size:xx-large;
     margin-top: 3px;
 } */
-.divVotacao{
-    display:flex;
-    justify-content:center;
-    font-size:xx-large;
+.divVotacao {
+    display: flex;
+    justify-content: center;
+    font-size: xx-large;
     margin-top: 10px;
 }
-.imageBox{
+
+.divImageBox {
     position: relative;
-    width: 100%;
+    
+    /* width: 100%; */
+    width: 250px;
+    height: 250px;
+    
+    
     /* height: 300px;     */
     min-height: 200px;
     display: flex;
@@ -188,42 +223,76 @@ input#username {
     /* flex-wrap: wrap; */
     object-fit: cover;
 }
+
 .imgMural {
-    position:absolute;
+    position: absolute;
     max-width: 100%;
-    max-height: 200px;
+    /* max-height: 200px; */
     border: 4px solid black;
     float: right;
+
+    object-fit: cover;
 }
+
 input#message {
     display: inline-block;
     width: 100%;
     /*height: 100%;*/
     font-family: 'Comfortaa', sans-serif;
-    
-/*    font-size: 1vh; */
+
+
+    /*    font-size: 1vh; */
+}
+
+input#filetoupload {
+    /* width:100%;
+    height:250px;
+    overflow:hidden; 
+    position:relative; */
+    display: none;
+}
+
+/* acho que nao usa */
+/* input#filetoupload img {
+    width:100%;
+} */
+
+div#fileupload {
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#fileupload input[type='file'] {
+    display: none;
 }
 
 .input-mural-sendmessage-icon {
     padding-left: 25px;
     background: url("https://static.thenounproject.com/png/101791-200.png") no-repeat left;
     background-size: 20px;
-  } 
+}
 
 .input-mural-sendmessage-icon-rtl {
     padding-right: 25px;
     background: url("https://static.thenounproject.com/png/101791-200.png") no-repeat right;
     background-size: 20px;
-  } 
-
-textarea.textarea-sendmessage-mural{
-    width: 80%;
-    height: 5em;
 }
 
-input#filetoupload{
-    color:white;
+/*pra alterar a orientação usar o button  */
+#img-anexar-arquivo {
+    border-radius: 100%;
+    border: 2px #3498db solid;
 }
+
+textarea.textarea-sendmessage-mural {
+    width: 100%;
+    height: 40px;
+}
+
+
+
 
 .loader {
     border: 16px solid #f3f3f3;
@@ -231,27 +300,29 @@ input#filetoupload{
     border-top: 16px solid #3498db;
     width: 120px;
     height: 120px;
-    -webkit-animation: spin 2s linear infinite; /* Safari */
+    -webkit-animation: spin 2s linear infinite;
+    /* Safari */
     animation: spin 2s linear infinite;
     position: relative;
     float: right;
-  }
-  
-  
-  #loader {
-      border: 16px solid #f3f3f3;
-      border-radius: 50%;
-      border-top: 16px solid #3498db;
-      width: 12px;
-      height: 12px;
-      -webkit-animation: spin 2s linear infinite; /* Safari */
-      animation: spin 2s linear infinite;
-      display: block;
-  }
-  
+}
 
 
-.left{
+#loader {
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #3498db;
+    width: 12px;
+    height: 12px;
+    -webkit-animation: spin 2s linear infinite;
+    /* Safari */
+    animation: spin 2s linear infinite;
+    display: block;
+}
+
+
+
+.left {
     width: 52%;
     background-color: rgb(218, 219, 235);
     justify-content: center;
@@ -262,7 +333,8 @@ input#filetoupload{
     border-radius: 35px;
     float: left;
 }
-.right{
+
+.right {
     width: 52%;
     justify-content: center;
     text-align: -webkit-right;
@@ -283,6 +355,7 @@ input#filetoupload{
     width: 55px;
     padding: 10px;
 }
+
 /* 
 h1 {
     font-family: 'Comfortaa', sans-serif;
@@ -290,7 +363,7 @@ h1 {
 } */
 
 header#headerMenu {
-    text-align: center;    
+    text-align: center;
     display: grid;
     margin: 10px 10px 0px 10px;
 }
@@ -303,6 +376,7 @@ header#headerMenu {
 .message:nth-child(odd) {
     background-color: rgb(210, 226, 241);
 }
+
 .messageTo:nth-child(even) {
     background-color: rgb(180, 214, 224);
 }
@@ -311,16 +385,16 @@ header#headerMenu {
     background-color: rgb(210, 226, 241);
 }
 
-.miniAvatar{
-    height: 75px;
-    width:  75px;
+.miniAvatar {
+    height: 55px;
+    width: 55px;
     border-radius: 100%;
     border: 1px black solid;
 }
 
-.avatarContactList{
+.avatarContactList {
     height: 45px;
-    width:  45px;
+    width: 45px;
     border-radius: 100%;
     border: 1px black solid;
     margin-right: 5px;
@@ -328,19 +402,19 @@ header#headerMenu {
 }
 
 
-.navbar{
+.navbar {
     border-radius: 12px;
     background-color: #292929;
 }
 
-.navbar-inverse .navbar-nav > li > a:hover{
+.navbar-inverse .navbar-nav>li>a:hover {
     color: #4cf80d;
     background-color: black;
     border-radius: 10px;
     font-weight: bold;
 }
 
-.nav-auth-img{
+.nav-auth-img {
     width: 60px;
     height: 60px;
     border-radius: 20%;
@@ -348,16 +422,16 @@ header#headerMenu {
     padding: 2px;
 }
 
-.nav-auth-img-container{
+.nav-auth-img-container {
     align-content: left;
     padding: 0px;
     color: 'white'
 }
 
-p.message   {
+p.message {
     padding-left: 4px;
     padding-right: 4px;
-    width:fit-content;
+    width: fit-content;
     /*height: 40px;*/
     font-weight: regular;
     font-family: arial, sans-serif;
@@ -365,10 +439,11 @@ p.message   {
     border-radius: 8px;
 }
 
-p.messageTo{
+p.messageTo {
     padding-left: 14px;
     padding-right: 14px;
-    width: fit-content;    /*height: 40px;*/
+    width: fit-content;
+    /*height: 40px;*/
     max-width: 55%;
     font-weight: regular;
     font-family: arial, sans-serif;
@@ -379,42 +454,47 @@ p.messageTo{
     padding: 14px;
 }
 
-.selected{
+/* formata hora */
+.horamessagemural{
+    font-size: medium;
+}
+
+.selected {
     background-color: rgb(11, 11, 124) !important;
     color: white;
     transition: background-color 0.5s;
-    box-shadow: 0 2px 15px rgba(0,0,0,0.6);
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.6);
     border: white 1px solid;
 }
 
-.remote-video{
+.remote-video {
     border-radius: 20px;
     height: 140px;
     width: 180px;
     position: relative;
     display: none;
-    margin-left:-280px;
-    margin-top:-40px;
-    
+    margin-left: -280px;
+    margin-top: -40px;
+
     /* margin-left: 10px; */
     /* margin-top: -79px; */
     /* background:url("../../imagem_comum/webcallreceiving.gif"); */
 
 }
 
-#receivingwebcall{
+#receivingwebcall {
     background-image: url("../../imagem_comum/webcallreceiving.gif");
     margin-left: 100px;
     margin-top: 30px;
     position: relative;
-    display:block;
-    background:url("../../imagem_comum/webcallreceiving.gif");
+    display: block;
+    background: url("../../imagem_comum/webcallreceiving.gif");
 
 }
 
 section {
-    border: 2px ;
-  /* remover width */
+    border: 2px;
+    /* remover width */
     /* width: 50%; */
     background-color: rgb(16, 16, 80);
     /* padding: 10px; */
@@ -424,6 +504,7 @@ section {
     align-content: center;
     position: relative;
 }
+
 section#apelido {
     /* border: px ; */
     border: white 0px solid;
@@ -436,13 +517,15 @@ section#apelido {
     flex-direction: row-reverse;
     border-radius: 8px;
 }
-section#chatroom{
+
+section#chatroom {
     /* border: 2px white solid ; */
     /* background-color: rgb(200, 200, 230); */
     padding: 10px;
     text-align: left;
     word-wrap: break-word;
 }
+
 section#contactRoom {
     background-color: rgb(192, 192, 218);
     align-content: center;
@@ -452,26 +535,46 @@ section#contactRoom {
     border-bottom-left-radius: 20px;
     border-top-right-radius: 20px;
 }
-section#input_zone {
+
+section#input_zone_mural {
     text-align: right;
     color: rgb(44, 46, 61);
     padding-top: 20px;
     background-color: rgb(11, 11, 109);
     align-content: center;
     border-radius: 5px;
-    position:relative;
+    position: relative;
     bottom: 0;
     border: white 0px solid;
+    width: 280px;
+    height: 80px;
     /* border: 1px solid white; */
-    
 }
-section#filebox{
+
+section#input_zone_privado {
+    text-align: right;
+    color: rgb(44, 46, 61);
+    padding-top: 20px;
+    background-color: rgb(11, 11, 109);
+    align-content: center;
+    border-radius: 5px;
+    position: relative;
+    bottom: 0;
+    border: white 0px solid;
+    /* width: 60px; */
+    /* border: 1px solid white; */
+}
+
+
+section#filebox {
     color: white;
     font-size: large;
 
 }
+
 section#titulo {
     border: 2px white solid;
+    margin-top: 1px;
     background-color: rgb(11, 11, 109);
     /* padding-top: 10px; */
     padding-left: 10px;
@@ -487,10 +590,10 @@ section#titulo {
 }
 
 
-.videoBox{
+.videoBox {
     position: relative;
     width: 100%;
-    height: 300px;    
+    height: 300px;
     display: flex;
     justify-content: inherit;
     /* justify-items: flex-end; */
@@ -501,7 +604,7 @@ section#titulo {
 
 
 .vdMural {
-    position:absolute;
+    position: absolute;
     max-width: 100%;
     max-height: 100%;
     border: 4px solid black;
@@ -509,7 +612,7 @@ section#titulo {
 }
 
 
-.votar{
+.votar {
     height: 40px;
     width: 40px;
 }
@@ -523,7 +626,7 @@ section#titulo {
     margin-top: 15px;
 }
 
-.temMensagemNaoLida{
+.temMensagemNaoLida {
     color: red;
     font-weight: bold;
     transition: background-color 1.5s;
@@ -532,7 +635,7 @@ section#titulo {
 
 }
 
-.textarea-Privado{
+.textarea-Privado {
     width: 40%;
     margin-bottom: 8px;
     font-size: large;
@@ -541,11 +644,16 @@ section#titulo {
 
 @keyframes blinker {
     50% {
-      background-color: blue;
+        background-color: blue;
     }
-  }
+}
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
