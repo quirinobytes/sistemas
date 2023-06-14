@@ -1,39 +1,30 @@
-
-var globalContatosList = [];
-var globalAudio;
 var contadorAposNItensPrivateMensagens = 0
-var telacheia = false;
-var gravando = false;
+var globalContatosList = []
+var globalAudio
+var telacheia = false
+var gravando = false
 
-// var contadorAposNItensPrivateMensagensObj = {}
-// var contadorAposNItensPrivateMensagensObj = {}
 var contadorAposNItensPrivateMensagensObj = new Map([
 	["username", 500],
 	["bananas", 300],
 	["oranges", 200]
-]);
-
-// function incContadorAposNItensPrivateMensagensObj(user){
-// 	console.log("##INC##")
-// 	console.log("USER="+user)
-
-// 	console.log("RESULT="+contadorAposNItensPrivateMensagensObj.get(user))
-
-// }
+])
 
 function loadChatWith(username, aposNItens) {
-
-	//destacando o contato selecionado no contactList
+	//destacar o usuário que selecionado no: <div id='contactList'>
+	// testar uma forma rapida/simple de efetuar a mudança de classe, sem precisar da função addClassSelected
+	//$("."+username).addClass("selected")
 	addClassSelected(username)
+
 
 	var usr = $("#myname");
 	myname = usr[0].innerText;
 	loggedUser = usr[0].innerText;
 
-	var imgContactTo = $("#imgContactTo")
 	var messageTo = $("#divMessageTo")
-	var feedback = $("#feedback")
+	var imgContactTo = $("#imgContactTo")
 	var cList = $("#contactList")
+	var feedback = $("#feedback")
 
 	//Limpa o board divMessageTo para carregar as mensagens com o amigo que foi selecionado.
 	feedback.empty();
@@ -140,29 +131,39 @@ function removeAvisoRecebendoWebcallDoAmigo() {
 	}
 }
 
-function maximizaWebcallTelaCheia(elem) {
-	// var video = $('.remote-video')
-	// 	if (!telacheia){
-	// 		video.attr("style","height:300px; width:300px; margin-top:-160px; margin-left:-340px; display:block; ")
-	// 		telacheia=true
-	// 	}
-	// 	else{
-	// 		video.attr("style","height:140px; width:180px; margin-top:-60px; display:block; padding-bottom:10px")
-	// 		telacheia=false
-	// 	}
+function maximizaWebcallTelaCheia() {
+	var video = $('.remote-video')
+	if (!telacheia) {
+		video.attr("style", "height:300px; width:300px; margin-top:-160px; margin-left:-340px; display:block; ")
+		telacheia = true
+	}
+	else {
+		video.attr("style", "height:140px; width:180px; margin-top:-60px; display:block; padding-bottom:10px")
+		telacheia = false
+	}
+}
 
-	if (elem.className.match(/\showVideoFullScreen\b/)) {
-		elem.classList.add("showVideoNormalScreen");
-		elem.classList.remove("showVideoFullScreen");
+function toogleWebcallFullScreen(elem) {
+	// alert("ENTREI")
+	if (elem.className.match(/\btoogleWebcallFullScreen\b/)) {
+		elem.classList.add("videoWebcallInitialConfigScreen")
+		//elem.classList.add("remote-video")
+
+		elem.classList.remove("toogleWebcallFullScreen")
+
 	}
 	else
-		if (elem.className.match(/\showVideoNormalScreen\b/)) {
-			elem.classList.add("showVideoFullScreen");
-			elem.classList.remove("showVideoNormalScreen");
+		if (elem.className.match(/\btoogleWebcallNormalScreen\b/)) {
+			elem.classList.add("toogleWebcallFullScreen")
+			elem.classList.remove("toogleWebcallNormalScreen")
 		}
 		else
-			elem.classList.add("showVideoFullScreen");
+			if (elem.className.match(/\bvideoWebcallInitialConfigScreen\b/)) {
+				elem.classList.add("toogleWebcallNormalScreen")
+				elem.classList.remove("videoWebcallInitialConfigScreen")
+				// elem.classList.remove("remote-video")
 
+			}
 
 }
 
@@ -177,6 +178,7 @@ function usuarioDeslogado(nome) {
 
 function blinkLoggedUsers() {
 	//limpando tudo antes
+
 	globalContatosList.forEach(item => {
 		if (item.username != undefined) {
 			usuarioDeslogado(item.username)
@@ -193,34 +195,47 @@ function blinkLoggedUsers() {
 }
 
 function limpaBoard(username) {
-	var messageTo = $("#divMessageTo")
 	//alert("limpando o board do"+username)
-	contadorAposNItensPrivateMensagensObj.set(username, 0);
-	//console.log("### CHILDREN: ")
-	//console.log($("#contactLine").children())
-	// .removeClass("selected")
+	var messageTo = $("#divMessageTo")
 	messageTo.empty();
 
-	let videoEl = document.querySelector('.remote-video');
-	$('.remote-video').get(0).pause();
-	$('.remote-video').get(0).currentTime = 0;
-	$('.remote-video').empty();
-	//$('.remote-video').remove();
+	//reseta o contador de páginas usuário
+	contadorAposNItensPrivateMensagensObj.set(username, 0);
 
-	var divWebrtc = $("#divWebrtc")
-	//console.log("UUUUOI"+divWebrtc)
-	//divWebrtc.html("<video class='remote-video' autoplay=''></video>")
+	//remover isso, igual ao abaixo.
+	let videoEl = document.querySelector('.remote-video');
+	//$('.remote-video').get(0).pause();
+	//$('.remote-video').get(0).currentTime = 0;
+	//$('.remote-video').empty();
+
+	//videoElem = document.getElementById('videoWebcallPlace');
+	$('#videoWebcallPlace').get(0).pause();
+	$('#videoWebcallPlace').get(0).currentTime = 0;
+	$('#videoWebcallPlace').empty();
+	$('#videoWebcallPlace').addClass("remote-video")
+	//var divWebrtc = $("#divWebrtc")
 }
 
 
 
 function acceptWebcall(salaID) {
 
-	let videoEl = document.querySelector('.remote-video');
+	let videoEl = document.querySelector('.remote-video'); // remover isso e usar somente o de baixo.
+	let videoElem = document.querySelector('#videoWebcallPlace');
+
+
 	let peerIdEl = document.querySelector('#connect-to-peer');
 	let peerId = salaID;
 
-	$(".remote-video").attr("style", "height: 140px;width: 180px;  display:block;")
+
+	//////////////////$(".remote-video").attr("style", "height: 140px;width: 180px;  display:block;")
+
+	videoElem.classList.add("videoWebcallInitialConfigScreen")
+	videoElem.classList.remove("remote-video")
+
+	//$(".remote-video").attr("style", "display:block;")
+
+
 	//$(".remote-video").attr("style","display:block")
 
 	//onde está meu peerserver
@@ -251,6 +266,7 @@ function acceptWebcall(salaID) {
 
 function finishWebcall(salaID) {
 	$(".remote-video").attr("style", "height: 0px;width: 0px;")
+	$(".remote-video").attr("style", "display:none;")
 }
 
 
@@ -286,7 +302,7 @@ $(function () {
 
 	$(document).ready(function () {
 
-		socket.emit('username', { username: myname.text() });
+		socket.emit('username', { username: myname[0].innerText });
 
 		$.ajax(
 			{
@@ -368,13 +384,16 @@ $(function () {
 	startWebcallGetRoomid.click(function () {
 		var peerId
 		let videoEl = document.querySelector('.remote-video');
+		let videoElem = document.querySelector('#videoWebcallPlace');
 		let peerIdEl = document.querySelector('#connect-to-peer');
 
-		$(".remote-video").attr("style", "height: 130px;width: 170px; display:block;")
+		//$(".remote-video").attr("style", "height: 130px;width: 170px; display:block;")
+		videoElem.classList.add("videoWebcallInitialConfigScreen")
+		videoElem.classList.remove("remote-video")
 
 
 		let renderVideo = (stream) => {
-			videoEl.srcObject = stream;
+			videoElem.srcObject = stream;
 		};
 
 		// Register with the peer server
@@ -386,7 +405,7 @@ $(function () {
 		});
 		peer.on('open', (peerId) => {
 			peerId = peerId
-			console.log(peerId);
+			console.log("Webcall aceita ID: " + peerId);
 			var logged_usr = myname[0].innerText
 			socket.emit("live", { message: peerId, from: logged_usr, toContact: divContato.innerText, time: new Date() })
 			// socket.emit("offerLive", {message : "<img class='miniAvatar' src='usersAvatar/"+data.from+"-user-icon.png' alt='"+data.from+"'>  <br> " + loggedUser + " ligando... <br> <img style='display:block; height:30px; width:30px' src='imagem_comum/webcallreceiving.gif'>" +  logged_usr + "<br>   <button id='acceptWebcall' onclick='acceptWebcall(\""+peerId+"\")'> Aceitar  </button> x <button> Rejeitar </button> " ,from:logged_usr,toContact:divContato.innerText,time:new Date()})

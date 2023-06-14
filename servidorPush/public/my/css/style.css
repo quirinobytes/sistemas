@@ -242,7 +242,7 @@ input#username {
     border: 3px solid rgb(26, 255, 0);
 }
 
-.showVideoInitialScreen {
+.remote-video {
     border-radius: 20px;
     height: 140px;
     width: 180px;
@@ -250,30 +250,45 @@ input#username {
     display: none;
     margin-left: -280px;
     margin-top: -40px;
+    /* margin-left: 10px; */
+    /* margin-top: -79px; */
+    /* background:url("../../imagem_comum/webcallreceiving.gif"); */
 }
 
-.showVideoFullScreen {
-    height: 300px;
-    width: 300px;
-    margin-top: -160px;
-    margin-left: -340px;
-    display: block;
-}
-
-.showVideoNormalScreen {
+.videoWebcallInitialConfigScreen {
+    border-radius: 20px;
     height: 140px;
     width: 180px;
-    margin-top: -60px;
+    position: relative;
+    margin-left: -280px;
+    margin-top: -40px;
     display: block;
-    padding-bottom: 10px"
-
 }
 
+.toogleWebcallNormalScreen {
+    height: 60%;
+    left: 10;
+    top: 0;
+    z-index: 999;
+    object-fit: contain;
+    max-height: -webkit-fill-available;
+    margin-left: -60px;
+    border: 3px solid rgb(26, 255, 0);
+}
+
+.toogleWebcallFullScreen {
+    top: 0;
+    left: 0;
+    z-index: 1;
+    object-fit: contain;
+    border: 3px solid rgb(26, 255, 0);
+    height: 800px;
+    position: fixed;
+}
 
 input#message {
     display: inline-block;
     width: 100%;
-    /*height: 100%;*/
     font-family: 'Comfortaa', sans-serif;
 }
 
@@ -496,20 +511,7 @@ p.messageTo {
     border: white 1px solid;
 }
 
-.remote-video {
-    border-radius: 20px;
-    height: 140px;
-    width: 180px;
-    position: relative;
-    display: none;
-    margin-left: -280px;
-    margin-top: -40px;
 
-    /* margin-left: 10px; */
-    /* margin-top: -79px; */
-    /* background:url("../../imagem_comum/webcallreceiving.gif"); */
-
-}
 
 #receivingwebcall {
     background-image: url("../../imagem_comum/webcallreceiving.gif");

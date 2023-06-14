@@ -7,6 +7,7 @@ function reiniciarKpush(){
   echo [crtl+\] Reiniciando kpush
   listras.sh
   kpush.sh
+  echo HORA DE TESTAR O ERRO DO kpush = [$?]
   if [ $? -eq 1 ]; then
     echo HORA DE SAIR
     exit 1

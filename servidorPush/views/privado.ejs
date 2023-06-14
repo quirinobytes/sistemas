@@ -1,7 +1,7 @@
 <head>
   <title>Evolua - Privado</title>
   <script src="lib/js/jquery/jquery-latest.min.js"></script>
-  <script src="my/js/chat_privado.js"></script>
+  <script src="my/js/privado.scripts.js"></script>
   <script>
     function checkForEnterKey() {
       if (event.keyCode === 13) {
@@ -47,10 +47,12 @@
 
             <div id='divContato'></div>
 
-            <div id="webcallhide">
-              <video id="webcallPlace" class="remote-video" onclick="maximizaWebcallTelaCheia(this)" autoplay></video>
-            </div>
 
+
+            <div id="webcallhide">
+              <video id="videoWebcallPlace" class="remote-video" onclick="toogleWebcallFullScreen(this)"
+                autoplay></video>
+            </div>
 
             <div id="ok" style="display:none"></div>
             <div id='feedback' style="display:none"></div>

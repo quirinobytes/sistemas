@@ -302,19 +302,8 @@ app.get('/ultimosItensChatMessage/:apos', (req, res) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
 app.get('/loadMuralPosts/:apos', (req, res) => {
 	var aposX = req.params.apos;
-	// console.log("quero chatMessages APOS ["+aposX+"] itens agora")
 
 	chatMessageController.loadMuralPosts(parseInt(aposX), function (resp) {
 		var array = []
@@ -372,6 +361,7 @@ app.get('/privado', function (req, res) {
 app.get('/logged_users', function (req, res) {
 	//console.log(logged_users)
 	res.json(logged_users)
+	res.end()
 })
 
 app.get('/rest/loadChatWith/:from/:to/:apos', function (req, res) {
@@ -459,7 +449,7 @@ app.post('/fileuploadMural/', (req, res) => {
 		else {
 			if (fileExtension == ".jpg" || fileExtension == ".jpeg" || fileExtension == ".png" || fileExtension == ".gif" || fileExtension == "") {
 				var newpath = 'fileuploadMural/' + files.filetoupload.name
-				var link = "<div class='divImageBox'> <img class='imgMural' src='" + newpath + "' onclick='toogleItFullScreen(this)' alt='imagem' />   </div> <div class='divVotacao'>   &nbsp; &nbsp; <img class='votar' onClick='votarSim(\"" + identificarUnico + "\")' src='imagem_comum/sim.jpg'/> <div id='" + identificarUnico + "_like'> &nbsp; </div> &nbsp; &nbsp; <img class='votar' onClick='votarNao(\"" + identificarUnico + "\")' src='imagem_comum/nao.jpg'/>  &nbsp; <div id='" + identificarUnico + "_dislike'></div> &nbsp; </div> " + messageInAttach
+				var link = "<div class='divImageBox'> <img class='imgMural' src='" + newpath + "' onclick='toogleImageFullScreen(this)' alt='imagem' />   </div> <div class='divVotacao'>   &nbsp; &nbsp; <img class='votar' onClick='votarSim(\"" + identificarUnico + "\")' src='imagem_comum/sim.jpg'/> <div id='" + identificarUnico + "_like'> &nbsp; </div> &nbsp; &nbsp; <img class='votar' onClick='votarNao(\"" + identificarUnico + "\")' src='imagem_comum/nao.jpg'/>  &nbsp; <div id='" + identificarUnico + "_dislike'></div> &nbsp; </div> " + messageInAttach
 			}
 			else {
 				console.log("❌[ERROR] Tipo de arquivo não permitido: [" + fileExtension + "]")

@@ -21,7 +21,7 @@ $(function () {
 
 });
 
-function toogleItFullScreen(elem) {
+function toogleImageFullScreen(elem) {
     // alert("entrei full screen")
     if (elem.className.match(/\bshowImageFullScreen\b/)) {
         elem.classList.add("imgMural");
@@ -32,3 +32,8 @@ function toogleItFullScreen(elem) {
         elem.classList.remove("imgMural");
     }
 }
+
+
+
+
+
