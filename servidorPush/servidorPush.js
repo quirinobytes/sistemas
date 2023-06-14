@@ -361,7 +361,7 @@ app.get('/privado', function (req, res) {
 app.get('/logged_users', function (req, res) {
 	//console.log(logged_users)
 	res.json(logged_users)
-	res.end()
+	//res.end()
 })
 
 app.get('/rest/loadChatWith/:from/:to/:apos', function (req, res) {

@@ -18,7 +18,7 @@ function loadChatWith(username, aposNItens) {
 
 
 	var usr = $("#myname");
-	myname = usr[0].innerText;
+	//myname = usr[0].innerText;
 	loggedUser = usr[0].innerText;
 
 	var messageTo = $("#divMessageTo")
@@ -559,15 +559,17 @@ $(function () {
 
 	socket.on('audioTo', (data) => {
 		contatoSelecionado = divContato.innerText
+		loggedUser = $("#myname")[0].innerText
 
-		if (data.to == myname.text() && data.src != "" && data.from == contatoSelecionado) {
+
+		if (data.to == loggedUser && data.src != "" && data.from == contatoSelecionado) {
 			data.time = new Date(data.time).toLocaleString("en-us", { hour: '2-digit', minute: '2-digit', second: "2-digit" });
 			var audiotag = "<audio preload='auto' src='" + data.audiosrc + "' controls='1'></audio>"
 			var message = "<p class='messageTo' style='text-align:right;margin-left:auto'><font class='horamessagemural' color='gray'>" + data.time + "</font>  <img class='miniAvatar' src='usersAvatar/" + data.from + "-user-icon.png'>  <br> " + audiotag + " </p>"
 			//divMessageTo.append(message)
 			divMessageTo.prepend(message)
 		}
-		if (data.from == myname.text() && data.src != "" && data.to == contatoSelecionado) {
+		if (data.from == loggedUser && data.src != "" && data.to == contatoSelecionado) {
 			data.time = new Date(data.time).toLocaleString("en-us", { hour: '2-digit', minute: '2-digit', second: "2-digit" });
 			var audiotag = "<audio preload='auto' src='" + data.audiosrc + "' controls='1'></audio>"
 			var message = "<p class='messageTo' style='text-align:left;margin-right:auto'> <img class='miniAvatar' src='usersAvatar/" + data.from + "-user-icon.png'> <font class='horamessagemural' color='gray'>" + data.time + "</font>    <br> " + audiotag + " </p>"
@@ -735,8 +737,10 @@ $(function () {
 						const formData = new FormData()
 						formData.append('fname', "blob.ogg")
 						formData.append('file', blob, "audio.ogg")
-						formData.append('from', myname.text())
+						formData.append('from', myname[0].innerText)
 						formData.append('to', divContato.innerText)
+
+						console.log("myname[0].innerText" + myname[0].innerText)
 
 						$.ajax(
 							{
